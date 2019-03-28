@@ -32,7 +32,11 @@ export const logoutFailure = createAction(LOGOUT_FAILURE);
 
 export const registerRequest = data => dispatch => {
   return axios
-    .post('/auth/register/', { ...data, user_img: 'test', user_bgimg: 'test' })
+    .post('/api/auth/register/', {
+      ...data,
+      user_img: 'test',
+      user_bgimg: 'test',
+    })
     .then(res => {
       dispatch(registerSuccess(res.data));
     })
@@ -43,7 +47,7 @@ export const registerRequest = data => dispatch => {
 export const loginRequest = data => dispatch => {
   dispatch(login());
   return axios
-    .post('/auth/login/', data)
+    .post('/api/auth/login/', data)
     .then(res => {
       dispatch(loginSuccess(res.data));
     })
@@ -51,10 +55,11 @@ export const loginRequest = data => dispatch => {
       if (err.response) dispatch(loginFailure(err.response));
     });
 };
-export const logoutRequest = data => dispatch => {
+export const logoutRequest = () => dispatch => {
   return axios
-    .post('/auth/logout/', data)
+    .post('/api/auth/logout/')
     .then(res => {
+      localStorage.removeItem('userInfo');
       dispatch(logoutSuccess(res.data));
     })
     .catch(err => {
@@ -65,15 +70,14 @@ export const userRequest = () => dispatch => {
   const token = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo')).token
     : null;
-  console.log(token);
+  axios.defaults.headers.common.Authorization = `token ${token}`;
   return axios
-    .get('/auth/user/', {
-      Authorization: `token ${token}`,
-    })
+    .get('/api/auth/user/')
     .then(res => {
-      dispatch(checkUserSuccess(res));
+      dispatch(checkUserSuccess(res.data));
     })
     .catch(err => {
+      axios.defaults.headers.common.Authorization = ``;
       if (err.response) dispatch(checkUserFailure(err.response));
     });
 };
@@ -166,7 +170,6 @@ export default handleActions(
     [LOGIN]: state => produce(state, draft => {}),
     [LOGIN_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        console.log(action.payload);
         draft.logged = true;
         draft.userInfo = {
           user_email: action.payload.user.user_email,
@@ -200,7 +203,10 @@ export default handleActions(
           message: '',
         };
       }),
-    [CHECK_USER_SUCCESS]: state => produce(state, draft => {}),
+    [CHECK_USER_SUCCESS]: state =>
+      produce(state, draft => {
+        draft.logged = true;
+      }),
     [CHECK_USER_FAILURE]: state =>
       produce(state, draft => {
         draft.logged = false;

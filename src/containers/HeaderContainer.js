@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import Header from '../components/base/Header';
 import * as authActions from '../store/modules/auth';
 
@@ -17,28 +18,27 @@ export class HeaderContainer extends Component {
   }
 
   checkUser = () => {
-    const { logged, userRequest, setUserTemp, history } = this.props;
-
+    const { history, AuthActions } = this.props;
     if (localStorage.getItem('userInfo')) {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      setUserTemp({
-        id: userInfo.id,
-        username: userInfo.username,
+      AuthActions.setUserTemp({
+        user_email: userInfo.user_email,
+        user_name: userInfo.username,
         token: userInfo.token,
       });
-      return;
     }
 
-    userRequest();
-
-    if (!logged && !window.location.pathname.includes('auth')) {
-      history.push('/auth/login');
-    }
+    AuthActions.userRequest().then(() => {
+      const { logged } = this.props;
+      if (!logged && !window.location.pathname.includes('auth')) {
+        history.push('/auth/login');
+      }
+    });
   };
 
   handleLogout = () => {
-    const { logout } = this.props;
-    logout();
+    const { AuthActions } = this.props;
+    AuthActions.logoutRequest();
   };
 
   render() {
@@ -53,15 +53,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDisaptchToProps = dispatch => ({
-  logoutRequest: data => {
-    dispatch(authActions.logoutRequest(data));
-  },
-  userRequest: data => {
-    dispatch(authActions.userRequest(data));
-  },
-  setUserTemp: ({ id, username }) => {
-    dispatch(authActions.setUserTemp({ id, username }));
-  },
+  AuthActions: bindActionCreators(authActions, dispatch),
 });
 
 export default withRouter(

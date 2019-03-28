@@ -22,13 +22,12 @@ export class AuthContainer extends Component {
     if (prevProps.kind !== kind) {
       this.initialize();
     }
-    console.log(logged);
 
     if (prevProps.logged !== logged && logged) {
       localStorage.setItem(
         'userInfo',
         JSON.stringify({
-          id: userInfo.id,
+          user_email: userInfo.user_email,
           user_name: userInfo.user_name,
           token: userInfo.token,
         }),
@@ -49,13 +48,13 @@ export class AuthContainer extends Component {
   };
 
   handleLogin = () => {
-    const { AuthActions } = this.props;
-    const { user_email, password } = this.props;
+    const { form, AuthActions } = this.props;
+    const { user_email, password } = form;
     AuthActions.loginRequest({ user_email, password });
   };
 
   handleRegister = () => {
-    const { AuthActions } = this.props;
+    const { form, AuthActions } = this.props;
     const {
       user_email,
       password,
@@ -64,7 +63,7 @@ export class AuthContainer extends Component {
       user_birth_MM,
       user_birth_DD,
       user_gender,
-    } = this.props;
+    } = form;
     AuthActions.registerRequest({
       user_email,
       password,
@@ -78,28 +77,18 @@ export class AuthContainer extends Component {
   };
 
   render() {
-    const {
-      kind,
-      user_email,
-      password,
-      user_name,
-      user_birth_YYYY,
-      user_birth_MM,
-      user_birth_DD,
-      user_gender,
-      error,
-    } = this.props;
+    const { kind, form, error } = this.props;
     const { handleChangeInput, handleLogin, handleRegister } = this;
 
     return (
       <AuthWrapper
         kind={kind}
-        user_email={user_email}
-        password={password}
-        user_name={user_name}
-        user_birth_YYYY={user_birth_YYYY}
-        user_birth_MM={user_birth_MM}
-        user_birth_DD={user_birth_DD}
+        user_email={form.user_email}
+        password={form.password}
+        user_name={form.user_name}
+        user_birth_YYYY={form.user_birth_YYYY}
+        user_birth_MM={form.user_birth_MM}
+        user_birth_DD={form.user_birth_DD}
         onChangeInput={handleChangeInput}
         onLogin={handleLogin}
         onRegister={handleRegister}
@@ -110,42 +99,14 @@ export class AuthContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  // auth form
-  user_email: state.auth.form.user_email,
-  password: state.auth.form.password,
-  user_name: state.auth.form.user_name,
-  user_birth_YYYY: state.auth.form.user_birth_YYYY,
-  user_birth_MM: state.auth.form.user_birth_MM,
-  user_birth_DD: state.auth.form.user_birth_DD,
-  user_gender: state.auth.form.user_gender,
-
-  // auth error
+  form: state.auth.form,
   error: state.auth.error,
-
-  // auth logged
   logged: state.auth.logged,
-
-  // user info
   userInfo: state.auth.userInfo,
 });
 
 const mapDispatchToProps = dispatch => ({
   AuthActions: bindActionCreators(authActions, dispatch),
-  // initializeInput: () => {
-  //   dispatch(authActions.initializeInput());
-  // },
-  // changeInput: ({ name, value }) => {
-  //   dispatch(authActions.changeInput({ name, value }));
-  // },
-  // initializeError: () => {
-  //   dispatch(authActions.initializeError());
-  // },
-  // registerRequest: data => {
-  //   dispatch(authActions.registerRequest(data));
-  // },
-  // loginRequest: data => {
-  //   dispatch(authActions.loginRequest(data));
-  // },
 });
 
 export default withRouter(

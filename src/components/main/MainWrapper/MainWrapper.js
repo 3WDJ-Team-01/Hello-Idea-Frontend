@@ -15,9 +15,7 @@ const MainWrapper = () => {
             </div>
           </details>
         </div>
-        <div className={styles.notes}>
-          <div className={styles.title}></div>
-        </div>
+        <div className={styles.notes} />
       </div>
       <div className={styles.wall} />
       <div className={styles.discover} />

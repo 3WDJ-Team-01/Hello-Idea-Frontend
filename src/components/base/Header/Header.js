@@ -11,6 +11,18 @@ const Header = ({ onLogout }) => (
         alt=""
       />
     </Link>
+
+    <div className={styles.account} style={{ color: 'white' }}>
+      <details>
+        <summary>username_1</summary>
+        <div>
+          <p>username_2</p>
+          <p>username_3</p>
+          <p>username_4</p>
+        </div>
+      </details>
+    </div>
+
     <div className={styles.logout}>
       <MdLock onClick={onLogout} />
     </div>
