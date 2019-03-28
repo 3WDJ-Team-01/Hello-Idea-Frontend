@@ -1,0 +1,158 @@
+@import '../../../styles/utils.scss';
+
+.form_wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  @include media('<medium') {
+    width: 100%;
+    top: 0%;
+    flex-direction: column;
+  }
+  .form {
+    display: flex;
+    width: 400px;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .error {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: $oc-red-7;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 5.5rem;
+    padding: 0.5rem;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+  }
+  input {
+    height: 3rem;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid $oc-gray-6;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .input_row {
+    text-align: center;
+    width: 100%;
+    height: 3rem;
+  }
+  .input_row + .input_row {
+    margin-left: 15%;
+  }
+  label {
+    display: block;
+    width: 100%;
+    input {
+      visibility: hidden;
+      position: absolute;
+    }
+    input:checked + div {
+      background: $oc-green-7;
+      color: $oc-gray-0;
+    }
+  }
+  label + label {
+    margin-left: 2.5%;
+  }
+  .button_row {
+    text-align: center;
+    line-height: 3rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: 1px solid $oc-gray-6;
+    color: $oc-gray-7;
+    width: 100%;
+    height: 3rem;
+    cursor: pointer;
+
+    &:hover {
+      background: $oc-green-7;
+      color: $oc-gray-0;
+    }
+
+    &:active {
+      background: $oc-green-8;
+      color: $oc-gray-0;
+    }
+  }
+  .auth_button {
+    background: $oc-green-8;
+    margin-top: 3rem;
+    border: 1px solid $oc-green-8;
+    border-radius: 30px;
+    padding: 0.5rem 0.25rem;
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background: $oc-green-7;
+    }
+
+    &:active {
+      background: $oc-green-8;
+    }
+  }
+  .description {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: row-reverse;
+    font-size: 1.2rem;
+    color: $oc-blue-7;
+
+    @include media('<medium') {
+      justify-content: center;
+    }
+  }
+  .divider_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+    height: 225px;
+    color: $oc-gray-6;
+
+    @include media('<medium') {
+      flex-direction: row;
+      align-items: space-between;
+      justify-content: center;
+      width: 400px;
+      height: 100px;
+      margin: auto;
+    }
+    .divider {
+      width: 1px;
+      height: 100px;
+      background-color: $oc-gray-6;
+
+      @include media('<medium') {
+        width: 180px;
+        height: 1px;
+        margin: auto;
+      }
+    }
+  }
+  .button + .button {
+    margin-top: 3rem;
+
+    @include media('<medium') {
+      margin-top: 1rem;
+    }
+  }
+}

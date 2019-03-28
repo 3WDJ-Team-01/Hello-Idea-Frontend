@@ -1,0 +1,43 @@
+@import '../../../styles/utils.scss';
+
+.social_button {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  color: white;
+  font-size: 2.5rem;
+  cursor: pointer;
+  user-select: none;
+
+  @include media('<medium') {
+    font-size: 1.5rem;
+  }
+
+  span {
+    margin-left: 1rem;
+    font-size: 1.2rem;
+  }
+}
+
+.facebook {
+  background: $oc-blue-9;
+
+  &:hover {
+    background: $oc-blue-8;
+  }
+
+  &:active {
+    background: $oc-blue-9;
+  }
+}
+.google {
+  background: $oc-red-9;
+
+  &:hover {
+    background: $oc-red-8;
+  }
+
+  &:active {
+    background: $oc-red-9;
+  }
+}

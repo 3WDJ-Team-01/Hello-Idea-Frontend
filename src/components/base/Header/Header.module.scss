@@ -1,0 +1,37 @@
+@import '../../../styles/utils.scss';
+
+.header {
+  background: $oc-gray-8;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+
+  .logo {
+    color: white;
+
+    font-weight: 800;
+    font-size: 1.5rem;
+
+    cursor: pointer;
+
+    margin-left: 1rem;
+
+    user-select: none;
+
+    img {
+      height: 2.5rem;
+    }
+  }
+
+  .logout {
+    margin-left: auto;
+    margin-right: 1rem;
+    color: white;
+
+    font-weight: 800;
+    font-size: 2rem;
+
+    cursor: pointer;
+  }
+}
