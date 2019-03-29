@@ -1,0 +1,20 @@
+@import '../../../styles/utils.scss';
+
+.friendRec {
+  width: 100%;
+  -webkit-box-shadow: 3px 4px 10px -1px rgba(168, 168, 168, 0.5);
+  -moz-box-shadow: 3px 4px 10px -1px rgba(168, 168, 168, 0.5);
+  box-shadow: 3px 4px 10px -1px rgba(168, 168, 168, 0.5);
+
+  img {
+    margin-right: 3%;
+    padding: 3%;
+    width: 18%;
+    float: left;
+    background-color: #99bddc;
+  }
+}
+
+.friendRec + .friendRec {
+  margin-top: 5%;
+}

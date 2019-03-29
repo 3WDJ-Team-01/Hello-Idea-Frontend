@@ -27,32 +27,23 @@
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    height: 5.5rem;
     padding: 0.5rem;
+
+    div {
+      margin: 0;
+    }
   }
   .row {
     display: flex;
     justify-content: space-between;
     width: 100%;
     height: 100%;
+
+    div + div {
+      margin-left: 5%;
+    }
   }
-  input {
-    height: 3rem;
-    outline: none;
-    border: none;
-    border-bottom: 1px solid $oc-gray-6;
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-  .input_row {
-    text-align: center;
-    width: 100%;
-    height: 3rem;
-  }
-  .input_row + .input_row {
-    margin-left: 15%;
-  }
-  label {
+  .gender {
     display: block;
     width: 100%;
     input {
@@ -60,8 +51,8 @@
       position: absolute;
     }
     input:checked + div {
-      background: $oc-green-7;
-      color: $oc-gray-0;
+      background: #4285f4;
+      color: white;
     }
   }
   label + label {
@@ -70,44 +61,22 @@
   .button_row {
     text-align: center;
     line-height: 3rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    border: 1px solid $oc-gray-6;
+    font-size: 1.4rem;
+    border: 1px solid #dadce0;
     color: $oc-gray-7;
     width: 100%;
     height: 3rem;
     cursor: pointer;
 
     &:hover {
-      background: $oc-green-7;
-      color: $oc-gray-0;
-    }
-
-    &:active {
-      background: $oc-green-8;
-      color: $oc-gray-0;
+      border: 1px solid #4285f4;
+      color: #4285f4;
     }
   }
-  .auth_button {
-    background: $oc-green-8;
-    margin-top: 3rem;
-    border: 1px solid $oc-green-8;
-    border-radius: 30px;
-    padding: 0.5rem 0.25rem;
-    text-align: center;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    user-select: none;
-
-    &:hover {
-      background: $oc-green-7;
-    }
-
-    &:active {
-      background: $oc-green-8;
-    }
+  button {
+    margin-top: 2rem;
   }
+
   .description {
     padding-top: 1rem;
     display: flex;

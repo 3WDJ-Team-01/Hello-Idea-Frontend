@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { MDBInput, MDBBtn } from 'mdbreact';
 import styles from './AuthForm.module.scss';
 import { FacebookLoginButton, GoogleLoginButton } from '../SocialLoginButton';
 
@@ -16,30 +17,36 @@ const LoginForm = ({
   <div className={styles.form_wrapper}>
     <div className={styles.form}>
       <div className={styles.column}>
-        <input
+        <MDBInput
+          label="이메일"
+          outline
           type="email"
           name="user_email"
-          placeholder="email"
+          size="lg"
           value={user_email}
           onChange={handleChange}
+          error={error.message}
         />
       </div>
       <div className={styles.column}>
-        <input
+        <MDBInput
+          label="비밀번호"
+          outline
           type="password"
           name="password"
-          placeholder="password"
+          size="lg"
           value={password}
           onChange={handleChange}
           onKeyPress={handleKeyPress}
+          error={error.message}
         />
-        <span className={styles.error}>{error.message}</span>
       </div>
-      <div className={styles.auth_button} onClick={handleOnClick}>
-        LOGIN
-      </div>
+
+      <MDBBtn size="lg" color="primary" onClick={handleOnClick}>
+        로그인
+      </MDBBtn>
       <Link to="/auth/register" className={styles.description}>
-        if you don't have an account...
+        아직 계정이 없으신가요?
       </Link>
     </div>
     <div className={styles.divider_wrapper}>

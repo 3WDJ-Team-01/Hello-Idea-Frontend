@@ -1,0 +1,37 @@
+@import '../../../styles/utils.scss';
+
+.feedlist {
+  margin-top: 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.together {
+  margin-bottom: 5%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .feed {
+    -webkit-box-shadow: 3px 4px 10px -1px rgba(168, 168, 168, 0.5);
+    -moz-box-shadow: 3px 4px 10px -1px rgba(168, 168, 168, 0.5);
+    box-shadow: 3px 4px 10px -1px rgba(168, 168, 168, 0.5);
+  }
+
+  .feed img {
+    margin-right: 3%;
+    padding: 2%;
+    width: 11%;
+    height: 11%;
+    float: left;
+    background-color: #99bddc;
+  }
+
+  .usertime {
+    margin-right: 2%;
+    float: right;
+    color: gray;
+  }
+}

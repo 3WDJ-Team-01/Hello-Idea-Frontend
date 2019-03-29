@@ -2,10 +2,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import MainWrapper from '../components/main/MainWrapper';
+import Discover from '../components/main/Discover';
+import Repository from '../components/main/Repository';
+import Wall from '../components/main/Wall';
 
 export class MainContainer extends Component {
   render() {
-    return <MainWrapper />;
+    return (
+      <MainWrapper>
+        <section>
+          <Repository />
+          <Wall />
+        </section>
+        <aside>
+          <Discover />
+        </aside>
+      </MainWrapper>
+    );
   }
 }
 const mapStateToProps = state => ({});
