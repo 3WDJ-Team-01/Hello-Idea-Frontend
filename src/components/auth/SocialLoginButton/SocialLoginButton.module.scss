@@ -1,7 +1,8 @@
-@import '../../../styles/utils.scss';
+@import '~styles/utils.scss';
 
 .social_button {
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 1rem;
   color: white;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { FaFacebookSquare } from 'react-icons/fa';
+import { MDBIcon } from 'mdbreact';
 import styles from './SocialLoginButton.module.scss';
 
 const FacebookLoginButton = () => (
   <div className={`${styles.social_button} ${styles.facebook}`}>
-    <FaFacebookSquare />
+    <MDBIcon fab icon="facebook-f" />
     <span>Facebook Login...</span>
   </div>
 );

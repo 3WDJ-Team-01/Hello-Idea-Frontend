@@ -1,10 +1,10 @@
 import React from 'react';
-import { FaGoogle } from 'react-icons/fa';
+import { MDBIcon } from 'mdbreact';
 import styles from './SocialLoginButton.module.scss';
 
 const GoogleLoginButton = () => (
   <div className={`${styles.social_button} ${styles.google}`}>
-    <FaGoogle />
+    <MDBIcon fab icon="google-plus-g" />
     <span>Google Login...</span>
   </div>
 );

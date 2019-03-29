@@ -8,8 +8,22 @@ const Root = () => (
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        <Route path="/" exact component={Main} />
-        <Route path="/auth/:kind" exact component={Auth} />
+        <Route path="/" component={Main} />
+        <Route path="/auth/:kind" component={Auth} />
+
+        {/* 
+        <Route path="/searchResult" component={SearchResult} />
+        <Route path="/Check" component={Check} />
+        <Route path="/MyPage" component={MyPage} />
+        <Route path="/GroupPage" component={GroupPage} />
+        <Route path="/ProjectPage" component={ProjectPage} />
+        <Route path="/Modify" component={Modify} />
+        <Route path="/BrainStorming" component={BrainStorming} />
+        <Route path="/Explore" component={Explore} />
+        <Route path="/Trends" component={Trends} />
+        <Route path="/TrendsResult" component={TrendsResult} />
+        <Route path="/StartPage" component={StartPage} /> 
+        */}
         <Route component={NotFound} />
       </Switch>
     </BrowserRouter>
