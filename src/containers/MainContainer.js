@@ -6,7 +6,7 @@ import Discover from '../components/main/Discover';
 import Repository from '../components/main/Repository';
 import Wall from '../components/main/Wall';
 
-export class MainContainer extends Component {
+class MainContainer extends Component {
   render() {
     return (
       <MainWrapper>

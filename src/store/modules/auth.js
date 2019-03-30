@@ -83,15 +83,6 @@ export const userRequest = () => dispatch => {
 };
 
 const initialState = {
-  form: {
-    user_email: '',
-    password: '',
-    user_name: '',
-    user_birth_YYYY: '',
-    user_birth_MM: '',
-    user_birth_DD: '',
-    user_gender: '',
-  },
   error: {
     triggered: false,
     message: '',
@@ -106,39 +97,6 @@ const initialState = {
 
 export default handleActions(
   {
-    [INITIALIZE_INPUT]: state =>
-      produce(state, draft => {
-        draft.form = {
-          user_email: '',
-          password: '',
-          user_name: '',
-          user_birth_YYYY: '',
-          user_birth_MM: '',
-          user_birth_DD: '',
-          user_gender: '',
-        };
-      }),
-    [CHANGE_INPUT]: (state, action) =>
-      produce(state, draft => {
-        switch (action.payload.name) {
-          case 'user_birth_YYYY':
-            const d = new Date();
-            if (action.payload.value <= d.getFullYear())
-              draft.form[action.payload.name] = action.payload.value;
-            break;
-          case 'user_birth_MM':
-            if (action.payload.value < 13)
-              draft.form[action.payload.name] = action.payload.value;
-            break;
-          case 'user_birth_DD':
-            if (action.payload.value < 32)
-              draft.form[action.payload.name] = action.payload.value;
-            break;
-          default:
-            draft.form[action.payload.name] = action.payload.value;
-            break;
-        }
-      }),
     [REGISTER_SUCCESS]: (state, action) =>
       produce(state, draft => {
         draft.logged = true;

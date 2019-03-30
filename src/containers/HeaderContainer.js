@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import Header from '../components/base/Header';
 import * as authActions from '../store/modules/auth';
 
-export class HeaderContainer extends Component {
+class HeaderContainer extends Component {
   componentDidMount() {
     this.checkUser();
   }
@@ -42,9 +42,10 @@ export class HeaderContainer extends Component {
   };
 
   render() {
+    const { isHidden } = this.props;
     const { handleLogout } = this;
 
-    return <Header onLogout={handleLogout} />;
+    return isHidden ? null : <Header onLogout={handleLogout} />;
   }
 }
 

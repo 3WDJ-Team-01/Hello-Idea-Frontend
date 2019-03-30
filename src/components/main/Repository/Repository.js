@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MDBInput, MDBBtn, MDBIcon } from 'mdbreact';
+import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Repository.module.scss';
 
 const Header = () => (

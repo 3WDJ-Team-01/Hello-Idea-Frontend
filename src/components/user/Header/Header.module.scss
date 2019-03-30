@@ -1,0 +1,107 @@
+@import '~styles/utils.scss';
+
+$image_maxsize: 200px;
+$backIMGHeight: 175px;
+$descSpace: 35px;
+$navHeight: 60px;
+
+.backgroundImg {
+  background-color: rgb(238, 238, 238);
+  width: 100%;
+  height: $backIMGHeight;
+  position: absolute;
+  z-index: -1;
+}
+.userHeader {
+  overflow: visible;
+  width: $app_width;
+  height: $backIMGHeight;
+  display: flex;
+  margin: 0 auto;
+  > a {
+    margin-top: $image_maxsize - $backIMGHeight;
+    button {
+      border-radius: 50px;
+    }
+  }
+}
+.userProfileImg {
+  position: relative;
+  z-index: 990;
+  max-width: $image_maxsize;
+  max-height: $image_maxsize;
+  top: $image_maxsize - $backIMGHeight;
+  > div {
+    text-align: center;
+    border-radius: 50%;
+    background-color: lightblue;
+    width: 200px;
+    height: 200px;
+  }
+}
+
+.userDescWrapper {
+  flex: 1;
+  height: $backIMGHeight;
+  margin: 0 $descSpace;
+  padding-top: $image_maxsize - $backIMGHeight;
+}
+.userProfileName {
+  margin-bottom: 0.5rem;
+  a {
+    font-size: 2rem;
+    color: black;
+    &:hover {
+      text-decoration: none;
+      color: black;
+    }
+  }
+}
+.userDescription {
+  font-size: 1.1rem;
+}
+.userNavWrapper {
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: $navHeight;
+  //border-bottom: 2px solid $gray; // 스크롤 시 visible
+
+  background-color: white;
+  > div {
+    display: flex;
+    margin: 0 auto;
+    width: $app_width;
+    padding-left: $descSpace;
+  }
+}
+.profile {
+  width: $image_maxsize;
+  height: 100%;
+}
+.userNav {
+  box-sizing: border-box;
+  left: $image_maxsize;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  margin-left: $descSpace;
+  border-bottom: 2px solid $gray;
+  font-size: 1.1rem;
+  font-weight: 500; /* 선택 된 것만 굵게 */
+  a {
+    color: black;
+
+    margin-right: 3%;
+    &:hover {
+      text-decoration: none;
+      color: black;
+    }
+  }
+  a div {
+    line-height: $navHeight;
+    height: 100;
+    padding: 0 15%;
+  }
+}

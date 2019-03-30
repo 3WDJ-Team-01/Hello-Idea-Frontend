@@ -2,17 +2,17 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store/configure';
-import { Main, Auth, NotFound } from './pages';
+import { Main, Auth, User, NotFound } from './pages';
 
 const Root = () => (
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        <Route path="/" component={Main} />
-        <Route path="/auth/:kind" component={Auth} />
+        <Route path="/" exact component={Main} />
+        <Route path="/auth/:kind" exact component={Auth} />
+        <Route path="/:user" exact component={User} />
 
         {/* 
-        <Route path="/searchResult" component={SearchResult} />
         <Route path="/Check" component={Check} />
         <Route path="/MyPage" component={MyPage} />
         <Route path="/GroupPage" component={GroupPage} />

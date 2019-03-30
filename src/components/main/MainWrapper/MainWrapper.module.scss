@@ -5,7 +5,7 @@
   justify-content: space-between;
 
   height: 100%;
-  width: 1300px;
+  width: $app_width;
   margin: 1rem auto;
   @include media('<wide') {
     justify-content: center;
