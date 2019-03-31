@@ -31,20 +31,20 @@
 .activityDate {
   display: flex;
   padding-left: 4%;
-  .verticlLine {
-    width: 2px;
-    height: 400px;
-    background-color: $gray;
-  }
-  .activiryList {
-    width: 100%;
-  }
-  .activityGroup {
-    padding: 2% 5%;
-    border-bottom: 2px solid $gray;
-  }
-  .activities {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-  }
+}
+.verticlLine {
+  width: 2px;
+  height: 400px;
+  background-color: $gray;
+}
+.activityList {
+  width: 100%;
+}
+.activityGroup {
+  padding: 2% 5%;
+  border-bottom: 2px solid $gray;
+}
+.activities {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
 }

@@ -11,6 +11,10 @@ const Root = () => (
         <Route path="/" exact component={Main} />
         <Route path="/auth/:kind" exact component={Auth} />
         <Route path="/:user" exact component={User} />
+        <Route path="/:user/repositories" exact component={User} />
+        <Route path="/:user/followers" exact component={User} />
+        <Route path="/:user/followings" exact component={User} />
+        <Route path="/:user/modify" exact component={User} />
 
         {/* 
         <Route path="/Check" component={Check} />

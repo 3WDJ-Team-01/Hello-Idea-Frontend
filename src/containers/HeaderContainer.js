@@ -11,29 +11,26 @@ class HeaderContainer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { logged } = this.props;
-    if (prevProps.logged !== logged && !logged) {
-      window.location.href = `/auth/login`;
-    }
+    this.checkUser();
   }
 
   checkUser = () => {
     const { history, AuthActions } = this.props;
-    if (localStorage.getItem('userInfo')) {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      AuthActions.setUserTemp({
-        user_email: userInfo.user_email,
-        user_name: userInfo.username,
-        token: userInfo.token,
-      });
-    }
+    // if (localStorage.getItem('userInfo')) {
+    //   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    //   AuthActions.setUserTemp({
+    //     user_email: userInfo.user_email,
+    //     user_name: userInfo.username,
+    //     token: userInfo.token,
+    //   });
+    // }
 
-    AuthActions.userRequest().then(() => {
-      const { logged } = this.props;
-      if (!logged && !window.location.pathname.includes('auth')) {
-        history.push('/auth/login');
-      }
-    });
+    // AuthActions.userRequest().then(() => {
+    //   const { logged } = this.props;
+    //   if (!logged && !window.location.pathname.includes('auth')) {
+    //     history.push('/auth/login');
+    //   }
+    // });
   };
 
   handleLogout = () => {

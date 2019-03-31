@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { MDBBtn } from 'mdbreact';
 import styles from './Header.module.scss';
 
 const Header = ({ url, user }) => {
+  const category = url.split('/')[2];
   return (
     <>
       <div className={styles.backgroundImg}>img</div>
@@ -17,26 +18,67 @@ const Header = ({ url, user }) => {
           </div>
           <div className={styles.userDescription}>userDescription</div>
         </div>
-        <Link to="/Modify">
-          <MDBBtn outline color="primary">
-            EDIT
-          </MDBBtn>
+        <Link to={`/${user}/modify`}>
+          {category === 'modify' ? (
+            <MDBBtn color="primary">EDIT</MDBBtn>
+          ) : (
+            <MDBBtn outline color="primary">
+              EDIT
+            </MDBBtn>
+          )}
         </Link>
       </div>
       <div className={styles.userNavWrapper}>
         <div>
           <div className={styles.profile} />
           <div className={styles.userNav}>
-            <Link to={`${url}/Overview`}>
+            <Link
+              to={`/${user}`}
+              style={
+                !category
+                  ? { borderBottom: `3px solid red`, fontWeight: 500 }
+                  : {}
+              }
+            >
               <div className={styles.MyPageOverview}>Overview</div>
             </Link>
-            <Link to={`${url}/Repositories`}>
+            <Link
+              to={`/${user}/repositories`}
+              style={
+                category === 'repositories'
+                  ? {
+                      borderBottom: `3px solid red`,
+                      fontWeight: 600,
+                    }
+                  : {}
+              }
+            >
               <div className={styles.MyPageRepositories}>Repositories</div>
             </Link>
-            <Link to={`${url}/Followers`}>
+            <Link
+              to={`/${user}/followers`}
+              style={
+                category === 'followers'
+                  ? {
+                      borderBottom: `3px solid red`,
+                      fontWeight: 500,
+                    }
+                  : {}
+              }
+            >
               <div className={styles.MyPageFollowers}>Followers</div>
             </Link>
-            <Link to={`${url}/Followings`}>
+            <Link
+              to={`/${user}/followings`}
+              style={
+                category === 'followings'
+                  ? {
+                      borderBottom: `3px solid red`,
+                      fontWeight: 500,
+                    }
+                  : {}
+              }
+            >
               <div className={styles.MyPageFollowing}>Followings</div>
             </Link>
           </div>

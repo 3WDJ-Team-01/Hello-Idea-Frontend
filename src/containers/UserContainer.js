@@ -3,21 +3,21 @@ import UserWrapper from 'components/user/UserWrapper';
 import Header from 'components/user/Header';
 import Overview from 'components/user/Overview';
 import Repositories from 'components/user/Repositories';
-import Followers from 'components/user/Followers';
-import Followings from 'components/user/Followings';
+import Following from 'components/user/Following';
+import Modify from 'components/user/Modify';
 
 class UserContainer extends Component {
   render() {
     const { user, url } = this.props;
     return (
       <>
-        <Header />
+        <Header url={url} user={user} />
         <UserWrapper
-          url={url}
+          user={user}
           Overview={Overview}
           Repositories={Repositories}
-          Followers={Followers}
-          Followings={Followings}
+          Following={Following}
+          Modify={Modify}
         />
       </>
     );

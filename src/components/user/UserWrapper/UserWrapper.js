@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import styles from './UserWrapper.module.scss';
 
 const UserWrapper = ({
@@ -7,16 +7,19 @@ const UserWrapper = ({
   url,
   Overview,
   Repositories,
-  Followers,
-  Followings,
+  Following,
+  Modify,
   children,
 }) => {
   return (
     <div className={styles.userWrapper}>
-      <Route path={`${url}`} exact component={Overview} />
-      <Route path={`${url}/Repositories`} component={Repositories} />
-      <Route path={`${url}/Followers`} component={Followers} />
-      <Route path={`${url}/Followings`} component={Followings} />
+      <Switch>
+        <Route path={`/${user}/repositories`} component={Repositories} />
+        <Route path={`/${user}/followers`} component={Following} />
+        <Route path={`/${user}/followings`} component={Following} />
+        <Route path={`/${user}/modify`} component={Modify} />
+        <Route path={`/${user}`} exact component={Overview} />
+      </Switch>
     </div>
   );
 };

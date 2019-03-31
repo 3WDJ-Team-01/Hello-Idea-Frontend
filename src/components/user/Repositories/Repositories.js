@@ -1,6 +1,32 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styles from './Repositories.module.scss';
+
+const Repository = () => (
+  <div className={styles.repository}>
+    <div className={styles.contents}>
+      <div className={styles.title}>
+        <Link to="/">title</Link>
+      </div>
+
+      <div className={styles.body}>
+        Lorem Ipsum has been the industry's standard dummy text ever since the
+        1500s, when an unknown printer took a galley of type and scrambled it to
+        make a type specimen book.
+      </div>
+      <div className={styles.property}>
+        <div className={styles.category}>
+          <div>IT</div>
+        </div>
+        <div className={styles.date}>Updated 7days ago</div>
+      </div>
+    </div>
+
+    <Link to="/">
+      <div className={styles.image}>이미지</div>
+    </Link>
+  </div>
+);
 
 const Repositories = ({
   user,
@@ -11,47 +37,27 @@ const Repositories = ({
   children,
 }) => {
   return (
-    <>
-      <div className={styles.userHeader}>
-        <Link to="/Modify">
-          <button type="button" className="btn btn-primary">
-            EDIT
-          </button>
-        </Link>
-
-        <div className={styles.userProfileImg}>img</div>
-        <div className={styles.userProfileName}>
-          <Link to="*/">
-            <h5>UserName</h5>
-          </Link>
-        </div>
-        <div className={styles.userDescription}>userDescription</div>
-        <div className={styles.backgroundImg}>img</div>
+    <div className={styles.repositories}>
+      <div className={styles.repoCategory}>
+        <div>Category</div>
+        <ul>
+          <li>
+            <Link to="/">IT</Link>
+          </li>
+          <li>
+            <Link to="/">LIFE</Link>
+          </li>
+          <li>
+            <Link to="/">SPORTS</Link>
+          </li>
+        </ul>
       </div>
-
-      <div className={styles.myPageAll}>
-        {/* Choose one */}
-        <div className={styles.myPageChoose}>
-          <div className={styles.MyPageOverview}>
-            <Link to={`${url}/Overview`}>Overview</Link>
-          </div>
-          <div className={styles.MyPageRepositories}>
-            <Link to={`${url}/Repositories`}>Repositories</Link>
-          </div>
-          <div className={styles.MyPageFollowers}>
-            <Link to={`${url}/Followers`}>Followers</Link>
-          </div>
-          <div className={styles.MyPageFollowing}>
-            <Link to={`${url}/Followings`}>Followings</Link>
-          </div>
-        </div>
-
-        <Route path={`${url}`} exact component={Overview} />
-        <Route path={`${url}/Repositories`} component={Repositories} />
-        <Route path={`${url}/Followers`} component={Followers} />
-        <Route path={`${url}/Followings`} component={Followings} />
+      <div>
+        <Repository />
+        <Repository />
+        <Repository />
       </div>
-    </>
+    </div>
   );
 };
 

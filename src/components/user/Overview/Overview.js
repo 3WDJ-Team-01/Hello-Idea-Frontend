@@ -2,6 +2,18 @@ import React from 'react';
 import { Link, Route } from 'react-router-dom';
 import styles from './Overview.module.scss';
 
+const ActivityGroup = () => (
+  <div className={styles.activityGroup}>
+    <div className={styles.activityCreated}>
+      Created 10 ideas in 2 Repositories
+    </div>
+    <div className={styles.activities}>
+      <Link to="/">USERNAME/capstone</Link> 8ideas <br />
+      <Link to="/">1st GROUPUSER/free_topics</Link> 2ideas
+    </div>
+  </div>
+);
+
 const Overview = ({
   user,
   url,
@@ -25,32 +37,10 @@ const Overview = ({
           February 2019
           <div className={styles.activityDate}>
             <div className={styles.verticlLine} />
-            <div className={styles.activiryList}>
-              <div className={styles.activityGroup}>
-                <div className={styles.activityCreated}>
-                  Created 10 ideas in 2 Repositories
-                </div>
-                <div className={styles.activities}>
-                  <Link to="/">USERNAME/capstone</Link> 8ideas <br />
-                  <Link to="/">1st GROUPUSER/free_topics</Link> 2ideas
-                </div>
-              </div>
-              <div className={styles.activityGroup}>
-                <div className={styles.activityCreated}>
-                  Created 1 repositories
-                </div>
-                <div className={styles.activities}>
-                  <Link to="/">USERNAME/capstone</Link>
-                </div>
-              </div>
-              <div className={styles.activityGroup}>
-                <div className={styles.activityCreated}>
-                  Created 2 ideas in 1 repositories
-                </div>
-                <div className={styles.activities}>
-                  <Link to="/">1st GROUPUSER/free_topics</Link> 2ideas
-                </div>
-              </div>
+            <div className={styles.activityList}>
+              <ActivityGroup />
+              <ActivityGroup />
+              <ActivityGroup />
             </div>
           </div>
         </div>

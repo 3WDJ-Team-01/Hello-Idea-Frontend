@@ -66,7 +66,7 @@ $navHeight: 60px;
   top: 0;
   width: 100%;
   height: $navHeight;
-  //border-bottom: 2px solid $gray; // 스크롤 시 visible
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.1);
 
   background-color: white;
   > div {
@@ -87,16 +87,15 @@ $navHeight: 60px;
   width: 100%;
   height: 100%;
   margin-left: $descSpace;
-  border-bottom: 2px solid $gray;
   font-size: 1.1rem;
-  font-weight: 500; /* 선택 된 것만 굵게 */
   a {
+    margin-right: 3%;
     color: black;
 
-    margin-right: 3%;
     &:hover {
-      text-decoration: none;
       color: black;
+      text-decoration: none;
+      border-bottom: 3px solid darken($gray, 20%);
     }
   }
   a div {

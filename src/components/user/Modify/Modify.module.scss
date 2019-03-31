@@ -1,0 +1,45 @@
+@import '~styles/utils.scss';
+
+.modify {
+  margin: 0 20%;
+}
+.section {
+  button {
+    background-color: lighten($gray, 10%) !important;
+    font-weight: 600;
+    color: black !important;
+    border-radius: 5px;
+    margin: 0;
+    margin-top: 0.5rem;
+    &:not([disabled]):not(.disabled):active {
+      background-color: lighten($gray, 0%) !important;
+    }
+  }
+  > div {
+    font-weight: 500;
+  }
+  > div + div {
+    margin-top: 1rem;
+  }
+  .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  hr {
+    border-color: $gray;
+  }
+  input {
+    border-radius: 0.2rem;
+    border: 1px solid lightgray;
+    background-color: lighten($gray, 10%);
+    line-height: 2rem;
+    padding: 0 0.5rem;
+    width: 20rem;
+  }
+  .caution {
+    color: darken(red, 10%) !important;
+  }
+}
+.section + .section {
+  margin-top: 3rem;
+}

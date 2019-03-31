@@ -1,62 +1,62 @@
 @import '~styles/utils.scss';
-
-.userHeader {
-  background-color: rgb(238, 238, 238);
-  padding: 1%;
-  height: 7.5rem;
-}
-
-.userHeader .btn-primary {
-  float: right;
-  margin-right: 15%;
-}
-.userProfileImg {
-  float: left;
-  width: 10%;
-  line-height: 9;
-  border-radius: 50%;
-  background-color: lightblue;
-  text-align: center;
-  margin-left: 15%;
-  margin-right: 2%;
-}
-
-.userProfileName {
-  a {
-    color: black;
-    &:hover {
-      text-decoration: none;
-      color: black;
-    }
-  }
-}
-
-.backgroundImg {
-  float: right;
-}
-
-.myPageAll {
-  width: 60%;
-  margin: 0 auto;
-  margin-top: 1%;
-}
-
-.myPageChoose {
+.repositories {
   display: flex;
-  flex-direction: row;
-  font-size: 1.1rem;
-  font-weight: 500; /* 선택 된 것만 굵게 */
-  a {
-    color: black;
-    &:hover {
-      text-decoration: none;
-      color: black;
-    }
+}
+
+.repoCategory {
+  width: 20%;
+  margin-right: 5%;
+  > div {
+    width: 100%;
+    height: 3rem;
+    border-bottom: 2px solid $gray;
+    margin-bottom: 1.5rem;
+    padding-left: 0.5rem;
+  }
+  ul {
+    padding: 0;
+    padding-left: 0.5rem;
+    list-style-type: none;
+  }
+  li {
+    margin: 0.3rem 0;
   }
 }
-.MyPageOverview,
-.MyPageRepositories,
-.MyPageFollowers,
-.MyPageFollowing {
-  margin-right: 5%;
+
+.repository {
+  display: flex;
+  flex: 1;
+  padding-bottom: 2rem;
+  .contents {
+    display: flex;
+    flex-direction: column;
+  }
+  .image {
+    width: 240px;
+    height: 180px;
+    background-color: lightgray;
+  }
+  .title {
+    font-size: 2rem;
+  }
+  .body {
+    flex: 1;
+    margin: 1rem 0;
+  }
+  .property {
+    display: flex;
+    font-size: 0.9rem;
+  }
+  .category {
+    display: flex;
+    > div {
+      margin-right: 1rem;
+    }
+  }
+  .date {
+  }
+}
+.repository + .repository {
+  border-top: 2px solid $gray;
+  padding-top: 2rem;
 }
