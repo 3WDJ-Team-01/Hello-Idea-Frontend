@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Repositories.module.scss';
 
-const Repository = () => (
+const Repository = ({ title }) => (
   <div className={styles.repository}>
     <div className={styles.contents}>
       <div className={styles.title}>
-        <Link to="/">title</Link>
+        <Link to={`repositories/${title}`}>{title}</Link>
       </div>
 
       <div className={styles.body}>
@@ -22,7 +23,7 @@ const Repository = () => (
       </div>
     </div>
 
-    <Link to="/">
+    <Link to={`repositories/${title}`}>
       <div className={styles.image}>이미지</div>
     </Link>
   </div>
@@ -53,9 +54,18 @@ const Repositories = ({
         </ul>
       </div>
       <div>
-        <Repository />
-        <Repository />
-        <Repository />
+        <div className={styles.search}>
+          <Link to={`/${user}/new`}>
+            <MDBBtn color="primary">
+              <MDBIcon icon="edit" className="mr-1" />
+              NEW
+            </MDBBtn>
+          </Link>
+          <input type="text" placeholder="Find a repository..." />
+        </div>
+        <Repository title="test1" />
+        <Repository title="test2" />
+        <Repository title="test3" />
       </div>
     </div>
   );

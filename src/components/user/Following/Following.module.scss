@@ -1,7 +1,8 @@
 @import '~styles/utils.scss';
 
 .followerList {
-  margin: 0 20%;
+  max-width: $app_width / 1.5;
+  margin: 0 auto;
 }
 .followerCard {
   padding: 1.5rem 1.5rem;

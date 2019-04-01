@@ -14,7 +14,7 @@ const Modify = ({ user, url, Overview, Repositories, Followers, children }) => {
         <div>
           <label>
             <div>Old Password</div>
-            <input id="currentPW" type="password" />
+            <input type="password" />
           </label>
         </div>
 

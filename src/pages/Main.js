@@ -2,10 +2,10 @@ import React from 'react';
 import PageTemplate from '../components/base/PageTemplate';
 import MainContainer from '../containers/MainContainer';
 
-const Main = () => {
+const Main = ({ match }) => {
   return (
     <PageTemplate>
-      <MainContainer />
+      <MainContainer url={match.url} />
     </PageTemplate>
   );
 };

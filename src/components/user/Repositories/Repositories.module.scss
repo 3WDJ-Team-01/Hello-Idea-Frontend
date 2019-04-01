@@ -22,11 +22,34 @@
     margin: 0.3rem 0;
   }
 }
+.search {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 3rem;
+  margin-bottom: 2rem;
+  input {
+    margin: 0 2rem;
+    flex: 1;
+    border-radius: 0.2rem;
+    border: 1px solid lightgray;
+    background-color: lighten($gray, 10%);
+    padding: 0 0.5rem;
+    width: 20rem;
+  }
+  button {
+    margin: 0;
+    height: 100%;
+    padding: 0 2rem;
+    border-radius: 5px;
+  }
+}
 
 .repository {
   display: flex;
   flex: 1;
-  padding-bottom: 2rem;
+  padding: 2rem;
+  border-top: 2px solid $gray;
   .contents {
     display: flex;
     flex-direction: column;
@@ -55,8 +78,4 @@
   }
   .date {
   }
-}
-.repository + .repository {
-  border-top: 2px solid $gray;
-  padding-top: 2rem;
 }

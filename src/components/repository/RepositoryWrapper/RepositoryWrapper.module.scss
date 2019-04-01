@@ -1,0 +1,8 @@
+@import '~styles/utils.scss';
+
+.userWrapper {
+  max-width: $app_width / 1.5;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 6rem;
+}

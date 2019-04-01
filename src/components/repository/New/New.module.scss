@@ -1,0 +1,46 @@
+@import '~styles/utils.scss';
+
+.new {
+  max-width: $app_width / 1.8;
+  margin: 6rem auto;
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  hr {
+    border-color: $gray;
+  }
+  input,
+  textarea {
+    border-radius: 0.2rem;
+    border: 1px solid lightgray;
+    background-color: lighten($gray, 10%);
+    line-height: 2rem;
+    padding: 0 0.5rem;
+    width: 20rem;
+  }
+  select {
+    background-color: lighten($gray, 10%);
+  }
+}
+.article {
+  display: flex;
+  margin-top: 2rem;
+  width: 100%;
+  > span {
+    display: flex;
+    align-items: flex-end;
+    font-size: 2rem;
+    margin: 0 1.5rem;
+  }
+  .section {
+    .label {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+  }
+  button {
+    border-radius: 5px;
+  }
+}

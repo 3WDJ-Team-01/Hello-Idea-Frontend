@@ -14,11 +14,11 @@ const UserWrapper = ({
   return (
     <div className={styles.userWrapper}>
       <Switch>
-        <Route path={`/${user}/repositories`} component={Repositories} />
-        <Route path={`/${user}/followers`} component={Following} />
-        <Route path={`/${user}/followings`} component={Following} />
-        <Route path={`/${user}/modify`} component={Modify} />
-        <Route path={`/${user}`} exact component={Overview} />
+        <Route path="/:user/repositories" component={Repositories} />
+        <Route path="/:user/followers" component={Following} />
+        <Route path="/:user/followings" component={Following} />
+        <Route path="/:user/modify" component={Modify} />
+        <Route path="/:user" exact component={Overview} />
       </Switch>
     </div>
   );

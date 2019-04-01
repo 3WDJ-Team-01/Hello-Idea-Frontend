@@ -42,7 +42,6 @@ $navHeight: 60px;
 
 .userDescWrapper {
   flex: 1;
-  height: $backIMGHeight;
   margin: 0 $descSpace;
   padding-top: $image_maxsize - $backIMGHeight;
 }
@@ -63,6 +62,7 @@ $navHeight: 60px;
 .userNavWrapper {
   box-sizing: border-box;
   position: sticky;
+  z-index: 900;
   top: 0;
   width: 100%;
   height: $navHeight;

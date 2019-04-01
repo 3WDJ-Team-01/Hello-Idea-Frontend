@@ -48,7 +48,7 @@ const Header = ({ url, user }) => {
                 category === 'repositories'
                   ? {
                       borderBottom: `3px solid red`,
-                      fontWeight: 600,
+                      fontWeight: 500,
                     }
                   : {}
               }

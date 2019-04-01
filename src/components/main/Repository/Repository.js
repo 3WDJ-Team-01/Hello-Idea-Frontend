@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Repository.module.scss';
 
-const Header = () => (
+const Header = ({ userInfo }) => (
   <div className={styles.header}>
     <div>
       <select className="browser-default custom-select">
@@ -15,7 +15,7 @@ const Header = () => (
       <span>/</span>
       <input type="text" className="form-control" placeholder="저장소 이름" />
     </div>
-    <Link to="/BrainStorming">
+    <Link to={`${userInfo}/new`}>
       <MDBBtn color="primary">
         <MDBIcon icon="edit" className="mr-1" />
         NEW
@@ -48,10 +48,10 @@ const Item = () => (
   </div>
 );
 
-const Repository = () => {
+const Repository = ({ userInfo }) => {
   return (
     <>
-      <Header />
+      <Header userInfo={userInfo} />
       <List>
         <Item />
         <Item />
