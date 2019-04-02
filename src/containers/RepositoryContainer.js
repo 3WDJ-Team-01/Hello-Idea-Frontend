@@ -4,7 +4,7 @@ import RepositoryWrapper from 'components/repository/RepositoryWrapper';
 import Overview from 'components/repository/Overview';
 import Setting from 'components/repository/Setting';
 
-class ReadmeContainer extends Component {
+class RepositoryContainer extends Component {
   render() {
     const { url, user, repository } = this.props;
     return (
@@ -21,4 +21,4 @@ class ReadmeContainer extends Component {
   }
 }
 
-export default ReadmeContainer;
+export default RepositoryContainer;

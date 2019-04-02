@@ -1,0 +1,63 @@
+@import '~styles/utils.scss';
+
+.brainHeader {
+  margin: 0 auto;
+  height: 4rem;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 999;
+  background-color: #2f4e73;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.brainLogo {
+  margin-left: 1%;
+  display: flex;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
+.brainLogo img {
+  height: 2.5rem;
+}
+
+.projectName {
+  color: white;
+  font-size: 1.5rem;
+  font-family: 'Ubuntu', sans-serif;
+  margin-left: 1%;
+}
+
+.groupName {
+  color: rgb(255, 208, 0);
+  font-size: 1.3rem;
+  font-family: 'Ubuntu', sans-serif;
+  margin-left: 1%;
+}
+
+/**/
+.brainRightHeader {
+  padding-top: 1rem;
+  margin-right: 5rem;
+  margin-left: 43rem;
+  display: flex;
+}
+.brainRightHeader .brainHeadLink,
+.dropdown-toggle {
+  margin-left: 4.3rem;
+  font-weight: 600;
+  color: white;
+}
+
+.brainRightHeader .brainHeadLink:hover,
+.dropdown-toggle:hover {
+  color: #c5e6ef;
+  text-decoration: none;
+}
+.brainHeadUl {
+  display: flex;
+  flex-direction: row;
+}

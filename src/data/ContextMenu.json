@@ -1,0 +1,66 @@
+{
+  "options": {
+    "wrapperSize": 160,
+    "bgColor": "rgba(52, 152, 219, 0.5)",
+    "iconSize": 35,
+    "innerRadius": 40,
+    "outerRadius": 80,
+    "menuSpaceDegrees": 2
+  },
+  "canvas": {
+    "options": {
+      "bgColor": "rgba(41, 128, 185, 1.0)"
+    },
+    "list": [
+      {},
+      {
+        "type": "ADD_NODE_FROM_CANVAS",
+        "label": "add Idea",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/add.png"
+      },
+      {},
+      {
+        "type": "SEARCH",
+        "label": "search ideas",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/search.png"
+      }
+    ]
+  },
+  "node": {
+    "options": {
+      "bgColor": "rgba(41, 128, 185, 1.0)"
+    },
+    "list": [
+      {
+        "type": "REMOVE",
+        "label": "remove idea",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/remove.png"
+      },
+      {
+        "type": "ATTACH_FILE",
+        "label": "attach files",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/attachment.png"
+      },
+      {
+        "type": "ADD_NODE_FROM_NODE",
+        "label": "add Idea",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/add.png"
+      },
+      {
+        "type": "EDIT",
+        "label": "edit",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/edit.png"
+      },
+      {
+        "type": "STYLE",
+        "label": "choose style",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/style.png"
+      },
+      {
+        "type": "SEARCH",
+        "label": "search ideas",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/search.png"
+      }
+    ]
+  }
+}

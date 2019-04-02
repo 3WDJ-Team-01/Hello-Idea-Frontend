@@ -19,7 +19,12 @@ const Similar = ({ title }) => (
 const Overview = ({ repository }) => {
   return (
     <>
-      <div className={styles.sketchScreen}>screen</div>
+      <div className={styles.sketchScreen}>
+        <span>screen</span>
+        <Link to="~/editor">
+          <MDBBtn color="primary">full screen</MDBBtn>
+        </Link>
+      </div>
       <div className={styles.sketchAll}>
         <MDBBtn color="primary">nnn Likes</MDBBtn>
         <div className={styles.sketchInfor}>

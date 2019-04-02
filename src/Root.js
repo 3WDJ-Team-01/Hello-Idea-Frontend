@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store/configure';
-import { Main, Auth, User, NotFound, New, Repository } from './pages';
+import { Main, Auth, User, NotFound, New, Repository, Editor } from './pages';
 
 const Root = () => (
   <Provider store={store}>
@@ -26,7 +26,12 @@ const Root = () => (
           exact
           component={Repository}
         />
-
+        <Route
+          path="/:user/repositories/:repository/editor"
+          exact
+          component={Editor}
+        />
+        <Route path="/search" exact component={Repository} />
         {/* 
         <Route path="/Check" component={Check} />
         <Route path="/MyPage" component={MyPage} />

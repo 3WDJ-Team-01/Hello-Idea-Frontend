@@ -1,0 +1,114 @@
+[
+  {
+    "id": 0,
+    "isEditing": false,
+    "location": {
+      "x": -1358.8887939453125,
+      "y": -1407.77783203125
+    },
+    "size": {
+      "width": 100,
+      "height": 40
+    },
+    "color": "rgba(189, 195, 199, 1.0)",
+    "head": "0",
+    "parentOf": [1, 2],
+    "childOf": null
+  },
+  {
+    "id": 1,
+    "isEditing": false,
+    "location": {
+      "x": -2436.66650390625,
+      "y": -1608.888916015625
+    },
+    "size": {
+      "width": 100,
+      "height": 40
+    },
+    "color": "rgba(189, 195, 199,1.0)",
+    "head": "1",
+    "parentOf": [3],
+    "childOf": 0
+  },
+  {
+    "id": 2,
+    "isEditing": false,
+    "location": {
+      "x": -2307.77783203125,
+      "y": -1414.4444580078125
+    },
+    "size": {
+      "width": 100,
+      "height": 40
+    },
+    "color": "rgba(189, 195, 199,1.0)",
+    "head": "2",
+    "parentOf": [4],
+    "childOf": 0
+  },
+  {
+    "id": 3,
+    "isEditing": false,
+    "location": {
+      "x": -1957.7777099609375,
+      "y": -1488.888916015625
+    },
+    "size": {
+      "width": 100,
+      "height": 40
+    },
+    "color": "rgba(189, 195, 199,1.0)",
+    "head": "3",
+    "parentOf": [],
+    "childOf": 1
+  },
+  {
+    "id": 4,
+    "isEditing": false,
+    "location": {
+      "x": -2156.66650390625,
+      "y": -1193.333251953125
+    },
+    "size": {
+      "width": 100,
+      "height": 40
+    },
+    "color": "rgba(189, 195, 199,1.0)",
+    "head": "4",
+    "parentOf": [],
+    "childOf": 2
+  },
+  {
+    "id": 5,
+    "isEditing": false,
+    "location": {
+      "x": -1802.22216796875,
+      "y": -1302.22216796875
+    },
+    "size": {
+      "width": 100,
+      "height": 40
+    },
+    "color": "rgba(189, 195, 199,1.0)",
+    "head": "5",
+    "parentOf": [6],
+    "childOf": null
+  },
+  {
+    "id": 6,
+    "isEditing": false,
+    "location": {
+      "x": -2345.5556640625,
+      "y": -1184.4444580078125
+    },
+    "size": {
+      "width": 100,
+      "height": 40
+    },
+    "color": "rgba(189, 195, 199,1.0)",
+    "head": "6",
+    "parentOf": [],
+    "childOf": 5
+  }
+]

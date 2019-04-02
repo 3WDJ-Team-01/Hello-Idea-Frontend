@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.head {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  font-size: 16px;
+  padding: 0.5em;
+  text-align: center;
+  word-break: keep-all;
+  word-wrap: break-word;
+}

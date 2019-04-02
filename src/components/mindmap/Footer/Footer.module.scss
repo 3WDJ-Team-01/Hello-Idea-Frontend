@@ -1,0 +1,34 @@
+@import '~styles/utils.scss';
+
+.brainFooter {
+  width: 100%;
+  height: 3.5rem;
+  background-color: #2f4e73;
+  position: absolute;
+  bottom: 0;
+}
+.brainFootUl {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex-direction: row;
+  margin-bottom: 0;
+}
+
+.brainFootUl li {
+  margin-right: 5rem;
+  width: 100px;
+  height: 30px;
+  background-color: #99bddc; /* #baabcf */
+}
+
+.brainFootLink {
+  display: inline-block;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  line-height: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: black;
+}

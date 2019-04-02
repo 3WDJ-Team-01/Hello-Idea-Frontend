@@ -3,6 +3,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBIcon } from 'mdbreact';
+import {
+  DropdownMenu,
+  DropdownMenuList,
+  DropdownTrigger,
+  DropdownWrapper,
+} from 'components/base/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 
 const Header = ({ onLogout }) => (
@@ -36,59 +42,43 @@ const Header = ({ onLogout }) => (
       </div>
       <div style={{ fontSize: '1.5rem', color: 'white' }}>
         <div className={styles.dropdown}>
-          <details>
-            <summary>
+          <DropdownWrapper>
+            <DropdownTrigger>
               <MDBIcon icon="bell" />
-              <span />
-            </summary>
-            <div
-              style={{
-                width: '10rem',
-                position: 'absolute',
-              }}
-            >
-              <div
-                style={{
-                  position: 'relative',
-                  zIndex: 999,
-                  left: '-7rem',
-                  backgroundColor: 'green',
-                }}
-              >
-                <div onClick={onLogout}>logout</div>
-                <div>username_3</div>
-                <div>username_4</div>
-              </div>
-            </div>
-          </details>
+            </DropdownTrigger>
+            <DropdownMenuList>
+              <DropdownMenu>Your profasdasdasdasdile</DropdownMenu>
+              <DropdownMenu>Your repositories</DropdownMenu>
+              <DropdownMenu isDivider />
+              <DropdownMenu>Settings</DropdownMenu>
+              <DropdownMenu onClick={onLogout}>Sign out</DropdownMenu>
+            </DropdownMenuList>
+          </DropdownWrapper>
         </div>
 
         <div className={styles.dropdown}>
-          <details>
-            <summary>
+          <DropdownWrapper>
+            <DropdownTrigger>
               <MDBIcon icon="user-alt" />
-              <span />
-            </summary>
-            <div
-              style={{
-                width: '10rem',
-                position: 'absolute',
-              }}
-            >
-              <div
-                style={{
-                  position: 'relative',
-                  zIndex: 999,
-                  left: '-7rem',
-                  backgroundColor: 'green',
-                }}
-              >
-                <div onClick={onLogout}>logout</div>
-                <div>username_3</div>
-                <div>username_4</div>
-              </div>
-            </div>
-          </details>
+            </DropdownTrigger>
+            <DropdownMenuList>
+              <DropdownMenu>
+                <div className={styles.item}>Your profile</div>
+              </DropdownMenu>
+              <DropdownMenu>
+                <div className={styles.item}>Your repositories</div>
+              </DropdownMenu>
+              <DropdownMenu isDivider />
+              <DropdownMenu>
+                <div className={styles.item}>Settings</div>
+              </DropdownMenu>
+              <DropdownMenu>
+                <div className={styles.item} onClick={onLogout}>
+                  Sign out
+                </div>
+              </DropdownMenu>
+            </DropdownMenuList>
+          </DropdownWrapper>
         </div>
       </div>
     </div>

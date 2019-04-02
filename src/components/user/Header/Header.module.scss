@@ -84,12 +84,11 @@ $navHeight: 60px;
   box-sizing: border-box;
   left: $image_maxsize;
   display: flex;
-  width: 100%;
+  width: 500px;
   height: 100%;
-  margin-left: $descSpace;
   font-size: 1.1rem;
+  justify-content: space-between;
   a {
-    margin-right: 3%;
     color: black;
 
     &:hover {
@@ -101,6 +100,7 @@ $navHeight: 60px;
   a div {
     line-height: $navHeight;
     height: 100;
+
     padding: 0 15%;
   }
 }

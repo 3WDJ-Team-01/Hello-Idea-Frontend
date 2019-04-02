@@ -28,7 +28,7 @@ const Header = ({ url, user }) => {
               style={
                 !category
                   ? {
-                      borderTop: `3px solid #3498db`,
+                      borderTop: `3px solid #4285f4`,
                       borderBottom: 'none',
                       backgroundColor: 'white',
                       fontWeight: 500,
@@ -43,7 +43,7 @@ const Header = ({ url, user }) => {
               style={
                 category === 'settings'
                   ? {
-                      borderTop: `3px solid #3498db`,
+                      borderTop: `3px solid #4285f4`,
                       borderBottom: 'none',
                       backgroundColor: 'white',
                       fontWeight: 500,

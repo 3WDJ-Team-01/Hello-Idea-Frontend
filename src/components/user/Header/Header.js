@@ -36,7 +36,7 @@ const Header = ({ url, user }) => {
               to={`/${user}`}
               style={
                 !category
-                  ? { borderBottom: `3px solid red`, fontWeight: 500 }
+                  ? { borderBottom: `3px solid #3498db`, fontWeight: 500 }
                   : {}
               }
             >
@@ -47,7 +47,7 @@ const Header = ({ url, user }) => {
               style={
                 category === 'repositories'
                   ? {
-                      borderBottom: `3px solid red`,
+                      borderBottom: `3px solid #4285f4`,
                       fontWeight: 500,
                     }
                   : {}
@@ -60,7 +60,7 @@ const Header = ({ url, user }) => {
               style={
                 category === 'followers'
                   ? {
-                      borderBottom: `3px solid red`,
+                      borderBottom: `3px solid #4285f4`,
                       fontWeight: 500,
                     }
                   : {}
@@ -73,7 +73,7 @@ const Header = ({ url, user }) => {
               style={
                 category === 'followings'
                   ? {
-                      borderBottom: `3px solid red`,
+                      borderBottom: `3px solid #4285f4`,
                       fontWeight: 500,
                     }
                   : {}
