@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable no-else-return */
+import React from 'react';
 
 const Filter = () => (
   <defs>
@@ -35,7 +36,7 @@ const Canvas = ({
   onPointerMove,
   onWheel,
 
-  children
+  children,
 }) => {
   // If browser supports pointer events
   if (window.PointerEvent) {

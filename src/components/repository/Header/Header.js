@@ -5,7 +5,6 @@ import styles from './Header.module.scss';
 
 const Header = ({ url, user }) => {
   const category = url.split('/')[4];
-  console.log(category);
   return (
     <div className={styles.repoHeader}>
       <div>

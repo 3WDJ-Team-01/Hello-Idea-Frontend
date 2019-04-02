@@ -4,31 +4,43 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import {
-  setSVG,
-  createSVGPoint,
-  getLocationFromEvent,
-  setPrevLoc,
-  pointerUp,
-  pointerDown,
-  pointerMove,
-} from 'store/modules/pointer';
-import {
-  setViewBoxBaseVal,
-  setViewBoxLocation,
-  toggleContextMenu,
-} from 'store/modules/canvas';
 import { getNodes, getPaths, setNodeLocation } from 'store/modules/mindmap';
 import Canvas from 'components/mindmap/Canvas';
+import produce from 'immer';
 
 class CanvasContainer extends Component {
-  componentDidMount() {
-    const { setSVG, createSVGPoint, setViewBoxBaseVal } = this.props;
+  state = {
+    canvas: {
+      viewBox: 0,
+      display: {
+        width: 5760,
+        height: 3240,
+        zoom: 1,
+      },
+    },
+  };
 
-    setSVG(ReactDOM.findDOMNode(this));
-    createSVGPoint(ReactDOM.findDOMNode(this));
-    setViewBoxBaseVal(ReactDOM.findDOMNode(this));
+  componentDidMount() {
+    const { setViewBoxBaseVal } = this;
+    setViewBoxBaseVal(document.querySelector('#canvas'));
   }
+
+  setViewBoxBaseVal = svg => {
+    this.setState(
+      produce(draft => {
+        draft.viewBox = svg.viewBox.baseVal;
+      }),
+    );
+  };
+
+  setViewBoxLocation = distance => {
+    this.setState(
+      produce(draft => {
+        draft.viewBox.x -= distance.x;
+        draft.viewBox.y -= distance.y;
+      }),
+    );
+  };
 
   getPointFromEvent = e => {
     e.persist();
@@ -38,7 +50,6 @@ class CanvasContainer extends Component {
 
     getLocationFromEvent(e);
     const invertedSVGMatrix = svg.getScreenCTM().inverse();
-
     return currLoc.matrixTransform(invertedSVGMatrix);
   };
 
@@ -47,26 +58,17 @@ class CanvasContainer extends Component {
     const { setPrevLoc, pointerDown, toggleContextMenu } = this.props;
 
     setPrevLoc(getPointFromEvent(e));
-    pointerDown(e);
     toggleContextMenu(e);
   };
 
   handlePointerMove = e => {
-    const { getPointFromEvent } = this;
-    const {
-      pointer,
-      setViewBoxLocation,
-      pointerMove,
-      setNodeLocation,
-    } = this.props;
-
-    if (!pointer.state.isDown || e.target.contentEditable) return;
+    const { getPointFromEvent, setViewBoxLocation } = this;
+    const { pointer, pointerMove, setNodeLocation } = this.props;
 
     e.preventDefault();
     pointerMove();
 
     const pointerPosition = getPointFromEvent(e);
-
     if (pointer.target.class === 'canvas') {
       setViewBoxLocation({
         x: pointerPosition.x - pointer.prevLoc.x,
@@ -90,7 +92,8 @@ class CanvasContainer extends Component {
   };
 
   render() {
-    const { canvas, children } = this.props;
+    const { canvas } = this.state;
+    const { children } = this.props;
     const { handlePointerDown, handlePointerUp, handlePointerMove } = this;
 
     return (
@@ -110,29 +113,10 @@ class CanvasContainer extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  pointer: state.pointer,
-  canvas: state.canvas,
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
-  // pointer modules
-  setSVG: svg => dispatch(setSVG(svg)),
-  createSVGPoint: svg => dispatch(createSVGPoint(svg)),
-  getLocationFromEvent: event => dispatch(getLocationFromEvent(event)),
-  setPrevLoc: location => dispatch(setPrevLoc(location)),
-  pointerUp: location => dispatch(pointerUp(location)),
-  pointerDown: location => dispatch(pointerDown(location)),
-  pointerMove: location => dispatch(pointerMove(location)),
-
-  // canvas modules
-  setViewBoxBaseVal: svg => dispatch(setViewBoxBaseVal(svg)),
-  setViewBoxLocation: distance => dispatch(setViewBoxLocation(distance)),
-  toggleContextMenu: event => dispatch(toggleContextMenu(event)),
-
   // mindmap modules
-  getNodes: data => dispatch(getNodes(data)),
-  getPaths: path => dispatch(getPaths(path)),
   setNodeLocation: node => dispatch(setNodeLocation(node)),
 });
 

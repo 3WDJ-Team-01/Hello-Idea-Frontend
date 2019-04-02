@@ -140,9 +140,7 @@ class NodeContainer extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  pointer: state.pointer,
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
   setNodeData: node => dispatch(setNodeData(node)),

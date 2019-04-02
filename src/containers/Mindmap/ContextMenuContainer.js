@@ -212,7 +212,6 @@ class ContextMenuContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  pointer: state.pointer,
   mindmap: state.mindmap,
 });
 
