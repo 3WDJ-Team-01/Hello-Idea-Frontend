@@ -2,6 +2,7 @@
 
 .brainHeader {
   margin: 0 auto;
+  padding: 0 3%;
   height: 4rem;
   width: 100%;
   position: absolute;
@@ -9,55 +10,38 @@
   z-index: 999;
   background-color: #2f4e73;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  justify-content: space-between;
+  box-shadow: $shadow2dp;
+  > div {
+    display: flex;
+    align-items: center;
+    line-height: 1rem;
+  }
 }
-
-.brainLogo {
-  margin-left: 1%;
-  display: flex;
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
-}
-
-.brainLogo img {
-  height: 2.5rem;
-}
-
-.projectName {
-  color: white;
-  font-size: 1.5rem;
-  font-family: 'Ubuntu', sans-serif;
-  margin-left: 1%;
-}
-
-.groupName {
-  color: rgb(255, 208, 0);
-  font-size: 1.3rem;
-  font-family: 'Ubuntu', sans-serif;
-  margin-left: 1%;
+.brainLeftHeader {
+  .brainLogo {
+    img {
+      height: 2.5rem;
+    }
+  }
+  .projectName {
+    color: white;
+    font-size: 1.5rem;
+  }
+  .groupName {
+    color: rgb(255, 208, 0);
+    font-size: 1.3rem;
+  }
+  > div + div {
+    margin-left: 10px;
+  }
 }
 
 /**/
 .brainRightHeader {
-  padding-top: 1rem;
-  margin-right: 5rem;
-  margin-left: 43rem;
-  display: flex;
-}
-.brainRightHeader .brainHeadLink,
-.dropdown-toggle {
-  margin-left: 4.3rem;
-  font-weight: 600;
-  color: white;
-}
-
-.brainRightHeader .brainHeadLink:hover,
-.dropdown-toggle:hover {
-  color: #c5e6ef;
-  text-decoration: none;
-}
-.brainHeadUl {
-  display: flex;
-  flex-direction: row;
+  font-size: 2rem;
+  button {
+    margin: 0;
+    padding: 0.7rem 1.7rem;
+  }
 }

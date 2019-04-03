@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import styles from './RepositoryWrapper.module.scss';
 
 const RepositoryWrapper = ({ user, url, Overview, repository, Setting }) => {

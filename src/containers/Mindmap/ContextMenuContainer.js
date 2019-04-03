@@ -11,7 +11,6 @@ import {
   toggleNodeEditing,
   setNodeData,
 } from 'store/modules/mindmap';
-import { toggleContextMenu, toggleStyleMenu } from 'store/modules/canvas';
 import {
   getAnnularSectorPathAttribute,
   getIconPosition,
@@ -62,8 +61,8 @@ class ContextMenuContainer extends Component {
       id: mindmap.nextNodeId,
       isEditing: true,
       location: {
-        x: pointer.prevLoc.x - 100 / 2,
-        y: pointer.prevLoc.y - 40 / 2,
+        x: pointer.prevLoc.x,
+        y: pointer.prevLoc.y,
       },
       size: {
         width: 100,
@@ -103,15 +102,15 @@ class ContextMenuContainer extends Component {
       const { targetNodeId } = this.state;
 
       toggleNodeEditing(targetNodeId);
-      toggleContextMenu(e);
+      // toggleContextMenu(e);
     };
 
-    const changeContextMenuToStyle = e => {
-      const { targetNodeId } = this.state;
+    // const changeContextMenuToStyle = e => {
+    //   const { targetNodeId } = this.state;
 
-      toggleContextMenu(e);
-      toggleStyleMenu();
-    };
+    //   toggleContextMenu(e);
+    //   toggleStyleMenu();
+    // };
 
     // menu types
     // * canvas
@@ -222,10 +221,6 @@ const mapDispatchToProps = dispatch => ({
   removeNode: nodeId => dispatch(removeNode(nodeId)),
   toggleNodeEditing: id => dispatch(toggleNodeEditing(id)),
   setNodeData: node => dispatch(setNodeData(node)),
-
-  // canvas actions
-  toggleContextMenu: event => dispatch(toggleContextMenu(event)),
-  toggleStyleMenu: () => dispatch(toggleStyleMenu()),
 });
 
 export default connect(

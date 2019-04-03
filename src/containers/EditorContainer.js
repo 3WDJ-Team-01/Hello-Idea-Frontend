@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable no-shadow */
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
@@ -16,7 +17,6 @@ import NodeContainer from './Mindmap/NodeContainer';
 class App extends Component {
   state = {
     pointer: {
-      svg: null,
       target: { class: null, nodeId: null },
       state: {
         isDown: false,
@@ -25,11 +25,15 @@ class App extends Component {
       currLoc: { x: 0, y: 0 },
       prevLoc: { x: 0, y: 0 },
     },
+    canvas: {
+      svg: null,
+      viewBox: 0,
+    },
     contextMenu: null,
   };
 
   componentDidMount() {
-    const { setSVG, createSVGPoint } = this;
+    const { setSVG, createSVGPoint, setViewBoxBaseVal } = this;
     const { getNodes, getPaths } = this.props;
     getNodes(NodesData);
     getPaths(NodesData);
@@ -37,13 +41,13 @@ class App extends Component {
     const svg = document.querySelector('#canvas');
     setSVG(svg);
     createSVGPoint(svg);
+    setViewBoxBaseVal(svg);
   }
 
   preventEvent = () => {
     window.event.returnValue = false;
   };
 
-  // pointer actions
   setSVG = svg => {
     this.setState(
       produce(draft => {
@@ -60,18 +64,41 @@ class App extends Component {
     );
   };
 
-  getLocationFromEvent = event => {
+  setViewBoxBaseVal = svg => {
     this.setState(
       produce(draft => {
-        if (event.targetTouches) {
-          draft.pointer.currLoc.x = event.targetTouches[0].clientX;
-          draft.pointer.currLoc.y = event.targetTouches[0].clientY;
-        } else {
-          draft.pointer.currLoc.x = event.clientX;
-          draft.pointer.currLoc.y = event.clientY;
-        }
+        draft.canvas.viewBox = svg.viewBox.baseVal;
       }),
     );
+  };
+
+  setViewBoxLocation = distance => {
+    this.setState(
+      produce(draft => {
+        draft.canvas.viewBox.x -= distance.x;
+        draft.canvas.viewBox.y -= distance.y;
+      }),
+    );
+  };
+
+  getLocationFromEvent = event => {
+    const { pointer } = this.state;
+    const point = pointer.currLoc;
+
+    point.x = event.targetTouches
+      ? event.targetTouches[0].clientX
+      : event.clientX;
+    point.y = event.targetTouches
+      ? event.targetTouches[0].clientY
+      : event.clientY;
+
+    this.setState(
+      produce(draft => {
+        draft.pointer.currLoc = point;
+      }),
+    );
+
+    return point;
   };
 
   setPrevLoc = location => {
@@ -92,6 +119,7 @@ class App extends Component {
   };
 
   pointerDown = event => {
+    event.persist();
     this.setState(
       produce(draft => {
         draft.pointer.state.isDown = true;
@@ -115,6 +143,7 @@ class App extends Component {
 
   // context menu
   toggleContextMenu = event => {
+    event.persist();
     this.setState(
       produce(draft => {
         if (event.button === 0) draft.contextMenu = null;
@@ -130,6 +159,7 @@ class App extends Component {
       preventEvent,
       setSVG,
       createSVGPoint,
+      setViewBoxLocation,
       getLocationFromEvent,
       setPrevLoc,
       pointerUp,
@@ -137,8 +167,8 @@ class App extends Component {
       pointerMove,
       toggleContextMenu,
     } = this;
-    const { mindmap, canvas } = this.props;
-    const { pointer } = this.state;
+    const { mindmap } = this.props;
+    const { pointer, contextMenu } = this.state;
     return (
       <div
         className="App"
@@ -150,6 +180,7 @@ class App extends Component {
           pointer={pointer}
           setSVG={setSVG}
           createSVGPoint={createSVGPoint}
+          setViewBoxLocation={setViewBoxLocation}
           getLocationFromEvent={getLocationFromEvent}
           setPrevLoc={setPrevLoc}
           pointerUp={pointerUp}
@@ -164,6 +195,7 @@ class App extends Component {
                   path.startAt && (
                     <Path
                       key={i}
+                      index={i}
                       mode={path.options.mode}
                       space={18}
                       color={path.options.color}
@@ -195,13 +227,14 @@ class App extends Component {
             </g>
           </g>
         </CanvasContainer>
-        {canvas.contextMenu.mode && (
+        {contextMenu && (
           <ContextMenuContainer
             pointer={pointer}
-            mode={canvas.contextMenu.mode}
+            mode={contextMenu}
+            toggleContextMenu={toggleContextMenu}
           />
         )}
-        {/* <Aside /> */}
+        <Aside />
 
         <Footer />
       </div>
@@ -211,8 +244,6 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   mindmap: state.mindmap,
-  canvas: state.canvas,
-  node: state.node,
 });
 
 const mapDispatchToProps = dispatch => ({

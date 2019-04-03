@@ -8,7 +8,6 @@ import Wall from 'components/main/Wall';
 
 class MainContainer extends Component {
   render() {
-    const { url } = this.props;
     const { userInfo } = this.props;
     return (
       <MainWrapper>

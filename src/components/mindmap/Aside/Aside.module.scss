@@ -8,6 +8,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
+  box-shadow: $shadow2dp;
   background-color: #f2f9f8; /*99bddc  c5e6ef   baabcf */
 }
 
@@ -18,8 +19,9 @@
 .recommendBox {
   padding: 2%;
   background-color: white;
-  -webkit-box-shadow: 3px 4px 10px -1px rgba(68, 68, 68, 0.5);
-  -moz-box-shadow: 3px 4px 10px -1px rgba(68, 68, 68, 0.5);
-  box-shadow: 3px 4px 10px -1px rgba(68, 68, 68, 0.5);
-  margin-bottom: 7%;
+  box-shadow: $shadow2dp;
+}
+
+.recommendBox + .recommendBox {
+  margin-top: 7%;
 }

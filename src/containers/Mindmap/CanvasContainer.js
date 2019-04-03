@@ -2,55 +2,27 @@
 /* eslint-disable react/no-find-dom-node */
 /* eslint-disable no-shadow */
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { getNodes, getPaths, setNodeLocation } from 'store/modules/mindmap';
+import { setNodeLocation } from 'store/modules/mindmap';
 import Canvas from 'components/mindmap/Canvas';
-import produce from 'immer';
 
 class CanvasContainer extends Component {
   state = {
-    canvas: {
-      viewBox: 0,
-      display: {
-        width: 5760,
-        height: 3240,
-        zoom: 1,
-      },
+    display: {
+      width: 5760,
+      height: 3240,
+      zoom: 1,
     },
-  };
-
-  componentDidMount() {
-    const { setViewBoxBaseVal } = this;
-    setViewBoxBaseVal(document.querySelector('#canvas'));
-  }
-
-  setViewBoxBaseVal = svg => {
-    this.setState(
-      produce(draft => {
-        draft.viewBox = svg.viewBox.baseVal;
-      }),
-    );
-  };
-
-  setViewBoxLocation = distance => {
-    this.setState(
-      produce(draft => {
-        draft.viewBox.x -= distance.x;
-        draft.viewBox.y -= distance.y;
-      }),
-    );
   };
 
   getPointFromEvent = e => {
     e.persist();
 
-    const { svg, currLoc } = this.props.pointer;
+    const { svg } = this.props.pointer;
     const { getLocationFromEvent } = this.props;
 
-    getLocationFromEvent(e);
     const invertedSVGMatrix = svg.getScreenCTM().inverse();
-    return currLoc.matrixTransform(invertedSVGMatrix);
+    return getLocationFromEvent(e).matrixTransform(invertedSVGMatrix);
   };
 
   handlePointerDown = e => {
@@ -58,12 +30,20 @@ class CanvasContainer extends Component {
     const { setPrevLoc, pointerDown, toggleContextMenu } = this.props;
 
     setPrevLoc(getPointFromEvent(e));
+    pointerDown(e);
     toggleContextMenu(e);
   };
 
   handlePointerMove = e => {
-    const { getPointFromEvent, setViewBoxLocation } = this;
-    const { pointer, pointerMove, setNodeLocation } = this.props;
+    const { getPointFromEvent } = this;
+    const {
+      pointer,
+      pointerMove,
+      setNodeLocation,
+      setViewBoxLocation,
+    } = this.props;
+
+    if (!pointer.state.isDown || e.target.contentEditable) return;
 
     e.preventDefault();
     pointerMove();
@@ -92,19 +72,19 @@ class CanvasContainer extends Component {
   };
 
   render() {
-    const { canvas } = this.state;
+    const { display } = this.state;
     const { children } = this.props;
     const { handlePointerDown, handlePointerUp, handlePointerMove } = this;
 
     return (
       <Canvas
-        width={canvas.display.width}
-        height={canvas.display.height}
+        width={display.width}
+        height={display.height}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerMove={handlePointerMove}
         style={{
-          transform: `scale(${canvas.display.zoom})`,
+          transform: `scale(${display.zoom})`,
         }}
       >
         {children}

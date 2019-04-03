@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MDBIcon, MDBBtn } from 'mdbreact';
+import { MDBIcon } from 'mdbreact';
 import styles from './Header.module.scss';
 
 const Header = ({ url, user }) => {

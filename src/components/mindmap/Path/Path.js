@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 
-const Path = ({ mode, space, color, endPosition, startAt, endAt }) => {
-  let endLocation = { x: endAt.x, y: endAt.y };
+const Path = ({ mode, index, space, color, endPosition, startAt, endAt }) => {
+  const endLocation = { x: endAt.x, y: endAt.y };
 
-  if (endPosition === "right") {
+  if (endPosition === 'right') {
     endLocation.x += endAt.width / 2 + space;
-  } else if (endPosition === "bottom") {
+  } else if (endPosition === 'bottom') {
     endLocation.y += endAt.height / 2 + space;
-  } else if (endPosition === "left") {
+  } else if (endPosition === 'left') {
     endLocation.x -= endAt.width / 2 + space;
-  } else if (endPosition === "top") {
+  } else if (endPosition === 'top') {
     endLocation.y -= endAt.height / 2 + space;
   }
 
@@ -17,7 +17,7 @@ const Path = ({ mode, space, color, endPosition, startAt, endAt }) => {
     <g>
       <defs>
         <marker
-          id="Triangle"
+          id={index}
           viewBox="0 0 10 10"
           refX="0.3"
           refY="5"
@@ -25,7 +25,7 @@ const Path = ({ mode, space, color, endPosition, startAt, endAt }) => {
           markerWidth="1"
           markerHeight="1"
           orient="auto"
-          stroke={""}
+          stroke=""
           strokeOpacity="0.75"
           fill={color}
           fillOpacity="0.75"
@@ -38,9 +38,9 @@ const Path = ({ mode, space, color, endPosition, startAt, endAt }) => {
         strokeOpacity="0.75"
         strokeWidth="12"
         fill="none"
-        markerEnd="url(#Triangle)"
+        markerEnd={`url(#${index})`}
         d={
-          mode === "vertical"
+          mode === 'vertical'
             ? `
           M ${startAt.x}, ${startAt.y}
           C ${startAt.x}, ${(startAt.y + endLocation.y) / 2} 

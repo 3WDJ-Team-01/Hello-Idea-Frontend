@@ -2,33 +2,32 @@
 
 .brainFooter {
   width: 100%;
+  padding: 0 3%;
   height: 3.5rem;
   background-color: #2f4e73;
   position: absolute;
   bottom: 0;
-}
-.brainFootUl {
+  z-index: 999;
   display: flex;
-  align-items: center;
-  height: 100%;
-  flex-direction: row;
-  margin-bottom: 0;
+  justify-content: space-between;
+  color: white;
+  box-shadow: $shadow2dp;
+  > div {
+    display: flex;
+    align-items: center;
+    > div {
+      cursor: pointer;
+    }
+  }
 }
-
-.brainFootUl li {
-  margin-right: 5rem;
-  width: 100px;
-  height: 30px;
-  background-color: #99bddc; /* #baabcf */
+.brainLeftFooter {
+  button {
+    margin: 0;
+    padding: 0.7rem 1.3rem;
+  }
 }
-
-.brainFootLink {
-  display: inline-block;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  line-height: 30px;
-  text-align: center;
-  font-weight: 600;
-  color: black;
+.brainRightFooter {
+  > div + div {
+    margin-left: 10px;
+  }
 }

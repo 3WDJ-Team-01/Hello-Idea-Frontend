@@ -43,7 +43,7 @@ const Header = ({ onLogout }) => (
       <div style={{ fontSize: '1.5rem', color: 'white' }}>
         <div className={styles.dropdown}>
           <DropdownWrapper>
-            <DropdownTrigger>
+            <DropdownTrigger caret>
               <MDBIcon icon="bell" />
             </DropdownTrigger>
             <DropdownMenuList>
@@ -58,7 +58,7 @@ const Header = ({ onLogout }) => (
 
         <div className={styles.dropdown}>
           <DropdownWrapper>
-            <DropdownTrigger>
+            <DropdownTrigger caret>
               <MDBIcon icon="user-alt" />
             </DropdownTrigger>
             <DropdownMenuList>

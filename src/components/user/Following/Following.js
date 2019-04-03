@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
 import { MDBBtn } from 'mdbreact';
 import styles from './Following.module.scss';
 

@@ -18,6 +18,7 @@ const AuthWrapper = ({
 }) => {
   const handleChange = e => {
     const { name, value } = e.target;
+    console.log(e.target);
     onChangeInput({ name, value });
   };
 

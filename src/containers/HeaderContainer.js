@@ -15,7 +15,7 @@ class HeaderContainer extends Component {
   }
 
   checkUser = () => {
-    const { history, AuthActions } = this.props;
+    // const { history, AuthActions } = this.props;
     // if (localStorage.getItem('userInfo')) {
     //   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     //   AuthActions.setUserTemp({
@@ -24,7 +24,6 @@ class HeaderContainer extends Component {
     //     token: userInfo.token,
     //   });
     // }
-
     // AuthActions.userRequest().then(() => {
     //   const { logged } = this.props;
     //   if (!logged && !window.location.pathname.includes('auth')) {
