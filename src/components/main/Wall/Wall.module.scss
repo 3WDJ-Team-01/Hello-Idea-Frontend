@@ -1,5 +1,7 @@
 @import '~styles/utils.scss';
 
+$spaceImgToActivity: 1rem;
+
 .feedlist {
   margin-top: 80px;
   width: 100%;
@@ -8,27 +10,34 @@
   align-items: center;
 }
 
-.together {
-  margin-bottom: 5%;
-  display: flex;
-  flex-direction: column;
+.feed {
+  font-size: 0.9rem;
   width: 100%;
-
-  .feed {
+  padding: 2rem 0;
+  .header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    .img {
+      width: 32px;
+      height: 32px;
+      background-color: gray;
+    }
+    .activity {
+      margin: 0 $spaceImgToActivity;
+    }
+    .date {
+      color: gray;
+    }
   }
-
-  .feed img {
-    margin-right: 3%;
-    padding: 2%;
-    width: 11%;
-    height: 11%;
-    float: left;
-    background-color: #99bddc;
+  .detail {
+    background-color: white;
+    height: 4rem;
+    margin-left: calc(32px + #{$spaceImgToActivity});
+    border: 1px solid $gray;
+    border-radius: 5px;
   }
-
-  .usertime {
-    margin-right: 2%;
-    float: right;
-    color: gray;
-  }
+}
+.feed + .feed {
+  border-top: 1px solid $gray;
 }

@@ -35,14 +35,10 @@ const Item = () => (
     <div className={styles.ideaimg} />
     <div className={styles.ideahov}>
       <div className={styles.ideaopen}>
-        <Link to="/*" className={styles.hovlink}>
-          open
-        </Link>
+        <Link to="/user/repositories/repo/editor">open</Link>
       </div>
       <div className="ideamore">
-        <Link to="/*" className={styles.hovlink}>
-          more
-        </Link>
+        <Link to="/user/repositories/repo">more</Link>
       </div>
     </div>
   </div>
@@ -50,7 +46,7 @@ const Item = () => (
 
 const Repository = ({ userInfo }) => {
   return (
-    <>
+    <div className={styles.repository}>
       <Header userInfo={userInfo} />
       <List>
         <Item />
@@ -59,8 +55,14 @@ const Repository = ({ userInfo }) => {
         <Item />
         <Item />
         <Item />
+        <div className={styles.moreRepository}>
+          <Link to="/USERNAME/repositories">
+            <MDBIcon icon="folder-open" />
+            See more repositories
+          </Link>
+        </div>
       </List>
-    </>
+    </div>
   );
 };
 

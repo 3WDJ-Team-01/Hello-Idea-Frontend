@@ -11,13 +11,15 @@ class MainContainer extends Component {
     const { userInfo } = this.props;
     return (
       <MainWrapper>
-        <section>
-          <Repository user={userInfo} />
-          <Wall />
-        </section>
-        <aside>
-          <Discover />
-        </aside>
+        <Repository user={userInfo} />
+        <article>
+          <section>
+            <Wall />
+          </section>
+          <aside>
+            <Discover />
+          </aside>
+        </article>
       </MainWrapper>
     );
   }

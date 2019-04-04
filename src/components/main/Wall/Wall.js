@@ -3,21 +3,15 @@ import { Link } from 'react-router-dom';
 import styles from './Wall.module.scss';
 
 const Item = () => (
-  <div className={styles.together}>
-    <div className={styles.feed}>
-      <img src="images/user.png" alt="" />
-      <div className={styles.usertime}>15:35 PM</div>
-      <div className={styles.username}>
-        <Link to="/*">USERNAME</Link>
+  <div className={styles.feed}>
+    <div className={styles.header}>
+      <div className={styles.img} />
+      <div className={styles.activity}>
+        myspark02 created a repository myspark02/articles
       </div>
-
-      <div className={styles.userinfor}>usermsg</div>
-      <div className={styles.userhash}>
-        <Link to="/*">#ddd</Link> <Link to="/*">#fff</Link>
-        <Link to="/*">#ccc</Link>
-        <Link to="/*">...</Link>
-      </div>
+      <div className={styles.date}>2 days ago</div>
     </div>
+    <div className={styles.detail} />
   </div>
 );
 

@@ -1,17 +1,18 @@
 @import '~styles/utils.scss';
 
 .main_wrapper {
-  display: flex;
-  justify-content: space-between;
-
   height: 100%;
   width: $app_width;
   margin: 3rem auto;
+  margin-bottom: 0;
   @include media('<wide') {
     justify-content: center;
     width: 100%;
   }
-
+  article {
+    display: flex;
+    justify-content: space-between;
+  }
   section {
     width: 65%;
     @include media('<wide') {
@@ -23,7 +24,8 @@
     position: sticky;
     top: 1rem;
     width: 30%;
-    height: inherit;
+    height: 500px;
+    margin-top: 6rem;
     @include media('<wide') {
       display: none;
     }

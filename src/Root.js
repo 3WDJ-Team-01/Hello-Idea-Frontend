@@ -20,13 +20,13 @@ const Root = () => (
         <Route path="/" exact component={Main} />
         <Route path="/search/:searchTo" exact component={Search} />
         <Route path="/auth/:kind" exact component={Auth} />
-        <Route path="/:user" exact component={User} />
-        <Route path="/:user/:menu" exact component={User} />
         <Route path="/:user/new" exact component={New} />
+        <Route path="/:user/:menu" exact component={User} />
+        <Route path="/:user" exact component={User} />
         <Route
-          path="/:user/repositories/:repository"
+          path="/:user/repositories/:repository/editor"
           exact
-          component={Repository}
+          component={Editor}
         />
         <Route
           path="/:user/repositories/:repository/:menu"
@@ -34,9 +34,9 @@ const Root = () => (
           component={Repository}
         />
         <Route
-          path="/:user/repositories/:repository/editor"
+          path="/:user/repositories/:repository"
           exact
-          component={Editor}
+          component={Repository}
         />
         <Route component={NotFound} />
       </Switch>

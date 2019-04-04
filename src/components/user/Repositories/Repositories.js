@@ -38,9 +38,9 @@ const Repositories = ({
           </Link>
           <input type="text" placeholder="Find a repository..." />
         </div>
-        <Repository title="test1" />
-        <Repository title="test2" />
-        <Repository title="test3" />
+        <Repository title="test1" value={{ title: 'test1' }} />
+        <Repository title="test2" value={{ title: 'test1' }} />
+        <Repository title="test3" value={{ title: 'test1' }} />
       </div>
     </div>
   );
