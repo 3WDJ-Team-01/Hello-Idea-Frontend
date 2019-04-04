@@ -1,22 +1,7 @@
 import React from 'react';
 import { MDBBtn } from 'mdbreact';
+import User from 'components/base/Card/User';
 import styles from './Following.module.scss';
-
-const UserCard = () => (
-  <div className={styles.followerCard}>
-    <div className={styles.followerImg}>img</div>
-    <div className={styles.follower}>
-      <div className={styles.name}>userName</div>
-
-      <div className={styles.description}>
-        when an unknown printer took a galley of type and scrambled it.
-      </div>
-    </div>
-    <MDBBtn outline color="primary">
-      follow
-    </MDBBtn>
-  </div>
-);
 
 const Following = ({
   user,
@@ -28,11 +13,11 @@ const Following = ({
 }) => {
   return (
     <div className={styles.followerList}>
-      <UserCard />
-      <UserCard />
-      <UserCard />
-      <UserCard />
-      <UserCard />
+      <User />
+      <User />
+      <User />
+      <User />
+      <User />
     </div>
   );
 };

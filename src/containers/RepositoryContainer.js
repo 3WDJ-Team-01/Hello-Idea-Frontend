@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import Header from 'components/repository/Header';
 import RepositoryWrapper from 'components/repository/RepositoryWrapper';
 import Overview from 'components/repository/Overview';
@@ -10,12 +11,16 @@ class RepositoryContainer extends Component {
     return (
       <>
         <Header url={url} user={user} />
-        <RepositoryWrapper
-          user={user}
-          repository={repository}
-          Overview={Overview}
-          Setting={Setting}
-        />
+        <RepositoryWrapper>
+          <Switch>
+            <Route path="/:user/repositories/:repository/settings">
+              <Setting />
+            </Route>
+            <Route path="/:user/repositories/:repository">
+              <Overview repository={repository} />
+            </Route>
+          </Switch>
+        </RepositoryWrapper>
       </>
     );
   }

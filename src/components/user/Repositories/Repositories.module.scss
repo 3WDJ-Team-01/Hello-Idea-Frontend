@@ -4,7 +4,7 @@
 }
 
 .repoCategory {
-  width: 20%;
+  width: 300px;
   margin-right: 5%;
   > div {
     width: 100%;
@@ -42,40 +42,5 @@
     height: 100%;
     padding: 0 2rem;
     border-radius: 5px;
-  }
-}
-
-.repository {
-  display: flex;
-  flex: 1;
-  padding: 2rem;
-  border-top: 2px solid $gray;
-  .contents {
-    display: flex;
-    flex-direction: column;
-  }
-  .image {
-    width: 240px;
-    height: 180px;
-    background-color: lightgray;
-  }
-  .title {
-    font-size: 2rem;
-  }
-  .body {
-    flex: 1;
-    margin: 1rem 0;
-  }
-  .property {
-    display: flex;
-    font-size: 0.9rem;
-  }
-  .category {
-    display: flex;
-    > div {
-      margin-right: 1rem;
-    }
-  }
-  .date {
   }
 }

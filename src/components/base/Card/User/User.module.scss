@@ -1,0 +1,31 @@
+@import '~styles/utils.scss';
+
+.followerCard {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 1.5rem;
+  .follower {
+    flex: 1;
+    margin: 0 1rem;
+  }
+  .name {
+    font-weight: 500;
+  }
+  .description {
+    width: 100%;
+  }
+  button {
+    border-radius: 50px;
+  }
+  .followerImg {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: lightgray;
+  }
+}
+
+.followerCard + .followerCard {
+  border-top: 2px solid $gray;
+  padding-top: 2rem;
+}

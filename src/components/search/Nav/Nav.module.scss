@@ -1,0 +1,24 @@
+@import '~styles/utils.scss';
+
+.repoCategory {
+  width: 250px;
+  margin-right: 5%;
+  border: 1px solid $gray;
+  border-radius: 5px;
+  margin-bottom: auto;
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+  li {
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    &:hover {
+      background-color: lighten($gray, 10%);
+    }
+  }
+  li + li {
+    border-top: 1px solid $gray;
+  }
+}

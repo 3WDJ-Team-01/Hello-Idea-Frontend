@@ -40,7 +40,7 @@ const Header = ({ url, user }) => {
                   : {}
               }
             >
-              <div className={styles.MyPageOverview}>Overview</div>
+              Overview
             </Link>
             <Link
               to={`/${user}/repositories`}
@@ -53,7 +53,7 @@ const Header = ({ url, user }) => {
                   : {}
               }
             >
-              <div className={styles.MyPageRepositories}>Repositories</div>
+              Repositories
             </Link>
             <Link
               to={`/${user}/followers`}
@@ -66,7 +66,7 @@ const Header = ({ url, user }) => {
                   : {}
               }
             >
-              <div className={styles.MyPageFollowers}>Followers</div>
+              Followers
             </Link>
             <Link
               to={`/${user}/followings`}
@@ -79,7 +79,7 @@ const Header = ({ url, user }) => {
                   : {}
               }
             >
-              <div className={styles.MyPageFollowing}>Followings</div>
+              Followings
             </Link>
           </div>
         </div>

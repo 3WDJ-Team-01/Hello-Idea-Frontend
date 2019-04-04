@@ -3,7 +3,6 @@
 body {
   margin: 0;
   box-sizing: border-box;
-  font-family: 'Nanum Gothic', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -15,10 +14,4 @@ body {
 a {
   text-decoration: inherit;
   color: inherit;
-}
-
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }

@@ -6,6 +6,10 @@ import Header from '../components/base/Header';
 import * as authActions from '../store/modules/auth';
 
 class HeaderContainer extends Component {
+  state = {
+    searchTo: '',
+  };
+
   componentDidMount() {
     this.checkUser();
   }
@@ -37,11 +41,23 @@ class HeaderContainer extends Component {
     AuthActions.logoutRequest();
   };
 
+  handleSearch = e => {
+    const { searchTo } = this.state;
+    this.setState({ searchTo: e.currentTarget.value });
+  };
+
   render() {
     const { isHidden } = this.props;
-    const { handleLogout } = this;
+    const { searchTo } = this.state;
+    const { handleLogout, handleSearch } = this;
 
-    return isHidden ? null : <Header onLogout={handleLogout} />;
+    return isHidden ? null : (
+      <Header
+        searchTo={searchTo}
+        onLogout={handleLogout}
+        onChange={handleSearch}
+      />
+    );
   }
 }
 

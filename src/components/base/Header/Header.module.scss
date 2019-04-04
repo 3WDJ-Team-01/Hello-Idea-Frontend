@@ -38,16 +38,65 @@
   }
 }
 .search {
-  width: 250px;
   margin-right: 2rem;
+  display: flex;
+  flex-direction: column;
   input {
-    background-color: lighten(#2f4e73, 6%);
-    border-color: lighten(#2f4e73, 6%);
+    font-weight: 300;
+    background-color: lighten(#2f4e73, 10%);
+    border-color: lighten(#2f4e73, 10%);
     padding-top: 0;
     padding-bottom: 0;
-    line-height: 1.2rem;
+    line-height: 1rem;
+    height: 2rem;
+    width: 15rem;
+    transition: all 0.2s;
+    color: white;
     &::placeholder {
-      color: darken(white, 10%);
+      color: darken($gray, 10%);
+    }
+    &:focus {
+      width: 25rem;
+      color: black;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+  input:focus + .searchResult {
+    opacity: 1;
+    width: 25rem;
+  }
+  .searchResult {
+    transition: width 0.2s;
+    position: absolute;
+    top: calc(2.9rem);
+    width: 15rem;
+    display: flex;
+    opacity: 0;
+    z-index: 999;
+    box-shadow: $shadow2dp;
+    background-color: white;
+    > a {
+      color: black;
+      width: 100%;
+      div {
+        padding: 0.75rem;
+        display: flex;
+        align-items: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        &:hover {
+          background-color: $primary;
+          color: white;
+        }
+      }
+    }
+    i {
+      margin-right: 0.75rem;
+    }
+    span {
+      flex: 1;
     }
   }
 }

@@ -11,7 +11,7 @@ import {
 } from 'components/base/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 
-const Header = ({ onLogout }) => (
+const Header = ({ searchTo, onLogout, onChange }) => (
   <div className={styles.header_wrapper}>
     <div className={styles.header}>
       <div>
@@ -28,7 +28,19 @@ const Header = ({ onLogout }) => (
             type="email"
             className="form-control"
             placeholder="Search..."
+            value={searchTo}
+            onChange={onChange}
           />
+          <div className={styles.searchResult}>
+            {searchTo && (
+              <Link to={`/search/${searchTo}`}>
+                <div>
+                  <MDBIcon icon="search" />
+                  <span>{searchTo}</span>
+                </div>
+              </Link>
+            )}
+          </div>
         </span>
 
         <div className={styles.link}>
