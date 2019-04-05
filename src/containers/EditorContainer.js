@@ -30,6 +30,7 @@ class App extends Component {
       viewBox: 0,
     },
     contextMenu: null,
+    explore: false,
   };
 
   componentDidMount() {
@@ -154,6 +155,14 @@ class App extends Component {
     );
   };
 
+  toggleExplore = () => {
+    this.setState(
+      produce(draft => {
+        draft.explore = true;
+      }),
+    );
+  };
+
   render() {
     const {
       preventEvent,
@@ -166,9 +175,10 @@ class App extends Component {
       pointerDown,
       pointerMove,
       toggleContextMenu,
+      toggleExplore,
     } = this;
     const { mindmap } = this.props;
-    const { pointer, contextMenu } = this.state;
+    const { pointer, contextMenu, explore } = this.state;
     return (
       <div
         className="App"
@@ -232,9 +242,10 @@ class App extends Component {
             pointer={pointer}
             mode={contextMenu}
             toggleContextMenu={toggleContextMenu}
+            toggleExplore={toggleExplore}
           />
         )}
-        <Aside />
+        <Aside explore={explore} />
 
         <Footer />
       </div>

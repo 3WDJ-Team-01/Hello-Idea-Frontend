@@ -4,7 +4,7 @@ import MainContainer from '../containers/MainContainer';
 
 const Main = ({ match }) => {
   return (
-    <PageTemplate>
+    <PageTemplate bgColor="#fafafa">
       <MainContainer url={match.url} />
     </PageTemplate>
   );

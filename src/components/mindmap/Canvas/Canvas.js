@@ -41,47 +41,54 @@ const Canvas = ({
   // If browser supports pointer events
   if (window.PointerEvent) {
     return (
-      <svg
-        id="canvas"
-        className="canvas"
-        viewBox={`-${width / 2} -${height / 2} ${width} ${height}`}
-        width={width}
-        height={height}
-        style={style}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-        onPointerLeave={onPointerUp}
-        onPointerMove={onPointerMove}
-        onWheel={onWheel}
+      <div
+        id="canvasFrame"
+        style={{ width, height, overflow: 'visible', backgroundColor: 'green' }}
       >
-        <defs>
-          <Filter />
-        </defs>
-        {children}
-      </svg>
+        <svg
+          id="canvas"
+          className="canvas"
+          viewBox={`-${width / 2} -${height / 2} ${width} ${height}`}
+          width={width}
+          height={height}
+          style={style}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerLeave={onPointerUp}
+          onPointerMove={onPointerMove}
+          onWheel={onWheel}
+        >
+          <defs>
+            <Filter />
+          </defs>
+          {children}
+        </svg>
+      </div>
     );
   } else {
     return (
-      <svg
-        id="canvas"
-        viewBox={`-${width / 2} -${height / 2} ${width} ${height}`}
-        width={width}
-        height={height}
-        style={style}
-        onMouseDown={onPointerDown}
-        onMouseUp={onPointerUp}
-        onMouseLeave={onPointerUp}
-        onMouseMove={onPointerMove}
-        onTouchStart={onPointerDown}
-        onTouchEnd={onPointerUp}
-        onTouchMove={onPointerMove}
-        onWheel={onWheel}
-      >
-        <defs>
-          <Filter />
-        </defs>
-        {children}
-      </svg>
+      <div id="canvasFrame" style={{ width, height, overflow: 'visible' }}>
+        <svg
+          id="canvas"
+          viewBox={`-${width / 2} -${height / 2} ${width} ${height}`}
+          width={width}
+          height={height}
+          style={style}
+          onMouseDown={onPointerDown}
+          onMouseUp={onPointerUp}
+          onMouseLeave={onPointerUp}
+          onMouseMove={onPointerMove}
+          onTouchStart={onPointerDown}
+          onTouchEnd={onPointerUp}
+          onTouchMove={onPointerMove}
+          onWheel={onWheel}
+        >
+          <defs>
+            <Filter />
+          </defs>
+          {children}
+        </svg>
+      </div>
     );
   }
 };

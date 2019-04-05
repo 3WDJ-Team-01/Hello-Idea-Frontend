@@ -29,7 +29,7 @@ const Header = ({ url, user }) => {
                   ? {
                       borderTop: `3px solid #4285f4`,
                       borderBottom: 'none',
-                      backgroundColor: 'white',
+                      backgroundColor: '#fafafa',
                       fontWeight: 500,
                     }
                   : { border: 'none' }
@@ -44,7 +44,7 @@ const Header = ({ url, user }) => {
                   ? {
                       borderTop: `3px solid #4285f4`,
                       borderBottom: 'none',
-                      backgroundColor: 'white',
+                      backgroundColor: '#fafafa',
                       fontWeight: 500,
                     }
                   : { border: 'none' }

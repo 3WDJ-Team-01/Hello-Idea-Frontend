@@ -25,7 +25,7 @@ const Header = ({ searchTo, onLogout, onChange }) => (
 
         <span className={styles.search}>
           <input
-            type="email"
+            type="text"
             className="form-control"
             placeholder="Search..."
             value={searchTo}

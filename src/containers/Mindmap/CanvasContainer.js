@@ -9,8 +9,8 @@ import Canvas from 'components/mindmap/Canvas';
 class CanvasContainer extends Component {
   state = {
     display: {
-      width: 5760,
-      height: 3240,
+      width: 2437 * 2,
+      height: 1609 * 2,
       zoom: 1,
     },
   };

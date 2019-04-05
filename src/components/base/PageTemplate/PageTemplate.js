@@ -5,6 +5,10 @@ import HeaderContainer from 'containers/HeaderContainer';
 import styles from './PageTemplate.module.scss';
 
 class PageTemplate extends Component {
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   handleDropdown = e => {
     const dropdown = document.querySelectorAll('details');
     dropdown.forEach(dom => {
@@ -13,10 +17,14 @@ class PageTemplate extends Component {
   };
 
   render() {
-    const { children, isHidden = false } = this.props;
+    const { children, isHidden = false, bgColor = 'white' } = this.props;
     const { handleDropdown } = this;
     return (
-      <div className={styles.App} onClick={handleDropdown}>
+      <div
+        className={styles.App}
+        style={{ backgroundColor: bgColor }}
+        onClick={handleDropdown}
+      >
         <HeaderContainer isHidden={isHidden} />
         {children}
       </div>

@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./Node.module.scss";
+import React from 'react';
+import styles from './Node.module.scss';
 
 const Node = ({ head, index, location, size, color, pointer }) => {
   return (
@@ -11,7 +11,7 @@ const Node = ({ head, index, location, size, color, pointer }) => {
         ry="10"
         width={size.width}
         height={size.height}
-        filter={pointer.state.isDrag ? "" : "url(#shadow-2dp)"}
+        filter={pointer.state.isDrag ? '' : 'url(#shadow-2dp)'}
         style={{ fill: color, stroke: color, strokeWidth: 2 }}
       />
       <foreignObject
@@ -24,10 +24,25 @@ const Node = ({ head, index, location, size, color, pointer }) => {
           className={styles.wrapper}
           style={{
             width: size.width,
-            height: size.height
+            height: size.height,
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          <p className={styles.head}>{head}</p>
+          <p
+            className={styles.head}
+            style={{
+              width: '100%',
+              margin: 0,
+              fontSize: '16px',
+              padding: '0.5em',
+              textAlign: 'center',
+              wordBreak: 'keep-all',
+              wordWrap: 'break-word',
+            }}
+          >
+            {head}
+          </p>
         </div>
       </foreignObject>
 
@@ -40,8 +55,8 @@ const Node = ({ head, index, location, size, color, pointer }) => {
         ry="10"
         width={size.width}
         height={size.height}
-        filter={pointer.state.isDrag ? "" : "url(#shadow-2dp)"}
-        style={{ fill: "transparent", stroke: "transparent", strokeWidth: 2 }}
+        filter={pointer.state.isDrag ? '' : 'url(#shadow-2dp)'}
+        style={{ fill: 'transparent', stroke: 'transparent', strokeWidth: 2 }}
       />
     </g>
   );

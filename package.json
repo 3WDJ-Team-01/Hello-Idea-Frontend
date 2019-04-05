@@ -50,6 +50,7 @@
     "axios": "^0.18.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.0.0",
+    "html2canvas": "^1.0.0-alpha.12",
     "immer": "^2.1.4",
     "include-media": "^1.4.9",
     "mdbreact": "^4.11.1",

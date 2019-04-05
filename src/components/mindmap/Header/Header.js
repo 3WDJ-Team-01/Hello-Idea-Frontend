@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
@@ -15,6 +18,7 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
 } from 'mdbreact';
+import { convertToImage } from 'tools/ImgConverter';
 import styles from './Header.module.scss';
 
 const Header = ({ repository }) => {
@@ -35,24 +39,36 @@ const Header = ({ repository }) => {
       <div className={styles.brainRightHeader}>
         <MDBDropdown>
           <MDBDropdownToggle color="primary">
-            <MDBIcon icon="file-download" className="mr-3" />
-            다운로드
+            <div
+              onClick={() => {
+                convertToImage('#canvasFrame', '#PNG', '#JPEG');
+              }}
+            >
+              <MDBIcon icon="file-download" className="mr-3" />
+              다운로드
+            </div>
           </MDBDropdownToggle>
           <MDBDropdownMenu basic>
             <MDBDropdownItem header>파일 형식</MDBDropdownItem>
             <MDBDropdownItem divider />
             <MDBDropdownItem>
-              <MDBIcon far icon="file-image" className="mr-3" />
-              PNG
+              <a id="PNG" href="" download="테스트.png">
+                <MDBIcon far icon="file-image" className="mr-3" />
+                PNG
+              </a>
             </MDBDropdownItem>
             <MDBDropdownItem>
-              <MDBIcon far icon="file-image" className="mr-3" />
-              JPEG
+              <a id="JPEG" href="" download="테스트.png">
+                <MDBIcon far icon="file-image" className="mr-3" />
+                JPEG
+              </a>
             </MDBDropdownItem>
             <MDBDropdownItem divider />
             <MDBDropdownItem>
-              <MDBIcon far icon="file-pdf" className="mr-3" />
-              PDF
+              <div>
+                <MDBIcon far icon="file-pdf" className="mr-3" />
+                PDF
+              </div>
             </MDBDropdownItem>
           </MDBDropdownMenu>
         </MDBDropdown>

@@ -64,23 +64,28 @@
   }
   input:focus + .searchResult {
     opacity: 1;
+    visibility: visible;
     width: 25rem;
   }
   .searchResult {
     transition: width 0.2s;
     position: absolute;
-    top: calc(2.9rem);
+    top: 2.9rem;
     width: 15rem;
     display: flex;
     opacity: 0;
     z-index: 999;
-    box-shadow: $shadow2dp;
     background-color: white;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding-bottom: 5px;
+    visibility: hidden;
+    box-shadow: $shadow2dp;
     > a {
       color: black;
       width: 100%;
       div {
-        padding: 0.75rem;
+        padding: 0.5rem;
         display: flex;
         align-items: center;
         text-overflow: ellipsis;
