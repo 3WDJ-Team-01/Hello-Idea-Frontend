@@ -71,6 +71,7 @@ class App extends Component {
         draft.canvas.viewBox = svg.viewBox.baseVal;
       }),
     );
+    console.log(svg.viewBox.baseVal);
   };
 
   setViewBoxLocation = distance => {

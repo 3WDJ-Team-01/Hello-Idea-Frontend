@@ -105,6 +105,10 @@ class ContextMenuContainer extends Component {
       // toggleContextMenu(e);
     };
 
+    const explore = e => {
+      this.props.toggleExplore();
+    };
+
     // const changeContextMenuToStyle = e => {
     //   const { targetNodeId } = this.state;
 

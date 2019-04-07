@@ -21,7 +21,7 @@ import {
 import { convertToImage } from 'tools/ImgConverter';
 import styles from './Header.module.scss';
 
-const Header = ({ repository }) => {
+const Header = ({ repository, exportMindmap }) => {
   return (
     <div className={styles.brainHeader}>
       <div className={styles.brainLeftHeader}>
@@ -41,7 +41,7 @@ const Header = ({ repository }) => {
           <MDBDropdownToggle color="primary">
             <div
               onClick={() => {
-                convertToImage('#canvasFrame', '#PNG', '#JPEG');
+                convertToImage('#canvas', '#PNG', '#JPEG');
               }}
             >
               <MDBIcon icon="file-download" className="mr-3" />
