@@ -4,7 +4,7 @@ import EditorContainer from 'containers/EditorContainer';
 
 const Main = ({ match }) => {
   const category = match.url.split('/')[4];
-  console.log(category);
+
   return (
     <PageTemplate isHidden>
       <EditorContainer

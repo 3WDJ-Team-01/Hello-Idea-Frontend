@@ -7,7 +7,10 @@ const Item = () => (
     <div className={styles.header}>
       <div className={styles.img} />
       <div className={styles.activity}>
-        myspark02 created a repository myspark02/articles
+        <Link to="/myspark02">
+          <b>myspark02</b>
+        </Link>{' '}
+        created a repository myspark02/articles
       </div>
       <div className={styles.date}>2 days ago</div>
     </div>

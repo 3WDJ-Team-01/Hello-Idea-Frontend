@@ -3,6 +3,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import html2canvas from 'html2canvas';
 import { getNodes, getPaths } from 'store/modules/mindmap';
 import NodesData from 'data/Nodes';
 import Path from 'components/mindmap/Path';
@@ -164,6 +165,32 @@ class App extends Component {
     );
   };
 
+  exportMindmap = targetDOM => {
+    const svg = document.querySelector(targetDOM);
+    svg.viewBox.baseVal.x = -4000;
+    svg.viewBox.baseVal.y = -2000;
+    const wrapper = document.querySelector('#canvasFrame');
+
+    html2canvas(wrapper).then(canvas => {
+      const imgURI = canvas
+        .toDataURL('image/png')
+        .replace('image/png', 'image/octet-stream');
+
+      const evt = new MouseEvent('click', {
+        view: window,
+        bubbles: false,
+        cancelable: true,
+      });
+
+      const a = document.createElement('a');
+      a.setAttribute('download', 'MY_COOL_IMAGE.png');
+      a.setAttribute('href', imgURI);
+      a.setAttribute('target', '_blank');
+
+      a.dispatchEvent(evt);
+    });
+  };
+
   render() {
     const {
       preventEvent,
@@ -177,6 +204,7 @@ class App extends Component {
       pointerMove,
       toggleContextMenu,
       toggleExplore,
+      exportMindmap,
     } = this;
     const { mindmap } = this.props;
     const { pointer, contextMenu, explore } = this.state;
@@ -186,7 +214,7 @@ class App extends Component {
         onContextMenu={preventEvent}
         style={{ overflow: 'hidden', maxHeight: '100vh' }}
       >
-        <Header />
+        <Header exportMindmap={exportMindmap} />
         <CanvasContainer
           pointer={pointer}
           setSVG={setSVG}

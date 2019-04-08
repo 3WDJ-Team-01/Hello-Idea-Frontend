@@ -1,5 +1,4 @@
 import React from 'react';
-import { MDBBtn } from 'mdbreact';
 import User from 'components/base/Card/User';
 import styles from './Following.module.scss';
 

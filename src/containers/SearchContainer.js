@@ -1,6 +1,5 @@
 /* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
 import Nav from 'components/search/Nav';
 import SearchWrapper from 'components/search/SearchWrapper';
 import Results from 'components/search/Results';
@@ -20,7 +19,7 @@ class SearchContainer extends Component {
   };
 
   render() {
-    const { url, user, repository } = this.props;
+    const { url, user } = this.props;
     const { type } = this.state;
     const { handleType } = this;
 

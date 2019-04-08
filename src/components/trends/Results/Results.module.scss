@@ -1,0 +1,70 @@
+.trendsResultAll {
+  margin: 0 auto;
+  margin-top: 2%;
+  width: 60%; /* 80? */
+}
+
+/* 검색어 */
+.searchWord {
+  text-align: center;
+  margin-bottom: 3%;
+}
+
+.searchWord h4 {
+  margin-top: 1%;
+}
+
+/* 관심도 변화 */
+.changeInterest {
+  padding: 2%;
+}
+
+.changeInterest h5 {
+  margin-bottom: 2%;
+}
+.changeInterestGraph {
+  border: 1px solid black;
+  width: 100%;
+  line-height: 15;
+  text-align: center;
+}
+
+/* 성별,연령별 */
+.typeInterest {
+  padding: 2%;
+  margin-top: 2%;
+}
+
+.typeInterestGraph {
+  border: 1px solid black;
+  width: 100%;
+  line-height: 15;
+  text-align: center;
+}
+
+/**/
+.topicNsearch {
+  padding: 2%;
+  margin-top: 2%;
+}
+/* 관련 주제 */
+.trendsTopic {
+  width: 50%;
+  float: left;
+}
+
+.wordRanking {
+  margin-top: 2%;
+}
+
+.wordRanking hr {
+  width: 95%;
+}
+.wordRanking span {
+  font-weight: 600;
+}
+/* 관련 검색어 */
+.trendsSearchWord {
+  width: 50%;
+  float: right;
+}

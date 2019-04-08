@@ -7,7 +7,9 @@ const User = () => (
   <div className={styles.followerCard}>
     <div className={styles.followerImg}>img</div>
     <div className={styles.follower}>
-      <div className={styles.name}>userName</div>
+      <div className={styles.name}>
+        <Link to="/username">userName</Link>
+      </div>
 
       <div className={styles.description}>
         when an unknown printer took a galley of type and scrambled it.

@@ -11,6 +11,8 @@ import {
   Repository,
   Editor,
   Search,
+  Explore,
+  Trends,
 } from './pages';
 
 const Root = () => (
@@ -20,6 +22,9 @@ const Root = () => (
         <Route path="/" exact component={Main} />
         <Route path="/search/:searchTo" exact component={Search} />
         <Route path="/auth/:kind" exact component={Auth} />
+        <Route path="/trends" exact component={Trends} />
+        <Route path="/trends/:searchTo" exact component={Trends} />
+        <Route path="/explore" exact component={Explore} />
         <Route path="/:user/new" exact component={New} />
         <Route path="/:user/:menu" exact component={User} />
         <Route path="/:user" exact component={User} />
