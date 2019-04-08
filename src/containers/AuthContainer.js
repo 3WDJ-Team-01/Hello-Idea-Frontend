@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import produce from 'immer';
-import AuthWrapper from '../components/auth/AuthWrapper';
-import * as authActions from '../store/modules/auth';
+import AuthWrapper from 'components/auth/AuthWrapper';
+import * as authActions from 'store/modules/auth';
 
 class AuthContainer extends Component {
   state = {
@@ -32,10 +32,11 @@ class AuthContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { history, kind, logged, userInfo } = this.props;
+    console.log(`prev: ${prevProps.logged}`);
+    console.log(`current: ${logged}`);
     if (prevProps.kind !== kind) {
       this.initialize();
     }
-
     if (prevProps.logged !== logged && logged) {
       localStorage.setItem(
         'userInfo',
@@ -103,7 +104,7 @@ class AuthContainer extends Component {
   };
 
   handleRegister = () => {
-    const { AuthActions } = this.props;
+    const { AuthActions, history } = this.props;
     const { form } = this.state;
     AuthActions.registerRequest({
       user_email: form.user_email,

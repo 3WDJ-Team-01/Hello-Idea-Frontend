@@ -14,26 +14,33 @@ class HeaderContainer extends Component {
     this.checkUser();
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      nextProps.auth.state !== 'pending' && nextProps.auth.state !== 'success'
+    );
+  }
+
   componentDidUpdate(prevProps, prevState) {
+    console.log('updated');
     this.checkUser();
   }
 
   checkUser = () => {
-    // const { history, AuthActions } = this.props;
-    // if (localStorage.getItem('userInfo')) {
-    //   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    //   AuthActions.setUserTemp({
-    //     user_email: userInfo.user_email,
-    //     user_name: userInfo.username,
-    //     token: userInfo.token,
-    //   });
-    // }
-    // AuthActions.userRequest().then(() => {
-    //   const { logged } = this.props;
-    //   if (!logged && !window.location.pathname.includes('auth')) {
-    //     history.push('/auth/login');
-    //   }
-    // });
+    const { history, AuthActions } = this.props;
+    if (localStorage.getItem('userInfo')) {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      AuthActions.setUserTemp({
+        user_email: userInfo.user_email,
+        user_name: userInfo.username,
+        token: userInfo.token,
+      });
+    } else {
+      if (!window.location.pathname.includes('auth')) {
+        history.push('/auth/login');
+      }
+      return;
+    }
+    AuthActions.userRequest();
   };
 
   handleLogout = () => {
@@ -62,7 +69,7 @@ class HeaderContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  logged: state.auth.logged,
+  auth: state.auth,
 });
 
 const mapDisaptchToProps = dispatch => ({

@@ -4,33 +4,40 @@ import axios from 'axios';
 
 const INITIALIZE_INPUT = 'auth/INITIALIZE_INPUT';
 const CHANGE_INPUT = 'auth/CHANGE_INPUT';
+const REGISTER = 'auth/REGISTER';
 const REGISTER_SUCCESS = 'auth/REGISTER_SUCCESS';
 const REGISTER_FAILURE = 'auth/REGISTER_FAILURE';
 const LOGIN = 'auth/LOGIN';
 const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS';
 const LOGIN_FAILURE = 'auth/LOGIN_FAILURE';
 const INITIALIZE_ERROR = 'auth/INITIALIZE_ERROR';
+const CHECK_USER = 'auth/CHECK_USER';
 const CHECK_USER_SUCCESS = 'auth/CHECK_USER_SUCCESS';
 const CHECK_USER_FAILURE = 'auth/CHECK_USER_FAILURE';
 const SET_USER_TEMP = 'auth/SET_USER_TEMP';
+const LOGOUT = 'auth/LOGOUT';
 const LOGOUT_SUCCESS = 'auth/LOGOUT_SUCCESS';
 const LOGOUT_FAILURE = 'auth/LOGOUT_FAILURE';
 
 export const initializeInput = createAction(INITIALIZE_INPUT);
 export const changeInput = createAction(CHANGE_INPUT);
+export const register = createAction(REGISTER);
 export const registerSuccess = createAction(REGISTER_SUCCESS);
 export const registerFailure = createAction(REGISTER_FAILURE);
 export const login = createAction(LOGIN);
 export const loginSuccess = createAction(LOGIN_SUCCESS);
 export const loginFailure = createAction(LOGIN_FAILURE);
 export const initializeError = createAction(INITIALIZE_ERROR);
+export const checkUser = createAction(CHECK_USER);
 export const checkUserSuccess = createAction(CHECK_USER_SUCCESS);
 export const checkUserFailure = createAction(CHECK_USER_FAILURE);
 export const setUserTemp = createAction(SET_USER_TEMP);
+export const logout = createAction(LOGOUT);
 export const logoutSuccess = createAction(LOGOUT_SUCCESS);
 export const logoutFailure = createAction(LOGOUT_FAILURE);
 
 export const registerRequest = data => dispatch => {
+  dispatch(register());
   return axios
     .post('/api/auth/register/', {
       ...data,
@@ -56,6 +63,7 @@ export const loginRequest = data => dispatch => {
     });
 };
 export const logoutRequest = () => dispatch => {
+  dispatch(logout());
   return axios
     .post('/api/auth/logout/')
     .then(res => {
@@ -71,6 +79,7 @@ export const userRequest = () => dispatch => {
     ? JSON.parse(localStorage.getItem('userInfo')).token
     : null;
   axios.defaults.headers.common.Authorization = `token ${token}`;
+  dispatch(checkUser());
   return axios
     .get('/api/auth/user/')
     .then(res => {
@@ -78,11 +87,13 @@ export const userRequest = () => dispatch => {
     })
     .catch(err => {
       axios.defaults.headers.common.Authorization = ``;
+      localStorage.removeItem('userInfo');
       if (err.response) dispatch(checkUserFailure(err.response));
     });
 };
 
 const initialState = {
+  state: '',
   error: {
     triggered: false,
     message: '',
@@ -97,17 +108,23 @@ const initialState = {
 
 export default handleActions(
   {
+    [REGISTER]: (state, action) =>
+      produce(state, draft => {
+        draft.state = 'pending';
+      }),
     [REGISTER_SUCCESS]: (state, action) =>
       produce(state, draft => {
         draft.logged = true;
+        draft.state = 'success';
         draft.userInfo = {
-          user_email: action.payload.user.user_email,
-          user_name: action.payload.user.user_name,
+          user_email: action.payload.user_email,
+          user_name: action.payload.user_name,
           token: action.payload.token,
         };
       }),
     [REGISTER_FAILURE]: (state, action) =>
       produce(state, draft => {
+        draft.state = 'failure';
         switch (action.payload.status) {
           case 400:
             draft.error = {
@@ -125,10 +142,14 @@ export default handleActions(
             break;
         }
       }),
-    [LOGIN]: state => produce(state, draft => {}),
+    [LOGIN]: (state, action) =>
+      produce(state, draft => {
+        draft.state = 'pending';
+      }),
     [LOGIN_SUCCESS]: (state, action) =>
       produce(state, draft => {
         draft.logged = true;
+        draft.state = 'success';
         draft.userInfo = {
           user_email: action.payload.user.user_email,
           user_name: action.payload.user.user_name,
@@ -137,6 +158,7 @@ export default handleActions(
       }),
     [LOGIN_FAILURE]: (state, action) =>
       produce(state, draft => {
+        draft.state = 'failure';
         switch (action.payload.status) {
           case 400:
             draft.error = {
@@ -161,13 +183,19 @@ export default handleActions(
           message: '',
         };
       }),
+    [CHECK_USER]: (state, action) =>
+      produce(state, draft => {
+        draft.state = 'pending';
+      }),
     [CHECK_USER_SUCCESS]: state =>
       produce(state, draft => {
         draft.logged = true;
+        draft.state = 'success';
       }),
     [CHECK_USER_FAILURE]: state =>
       produce(state, draft => {
         draft.logged = false;
+        draft.state = 'failure';
         draft.userInfo = {
           user_email: null,
           user_name: '',
@@ -183,6 +211,10 @@ export default handleActions(
           token: action.payload.token,
         };
       }),
+    [LOGOUT]: (state, action) =>
+      produce(state, draft => {
+        draft.state = 'pending';
+      }),
     [LOGOUT_SUCCESS]: state =>
       produce(state, draft => {
         draft.logged = false;
@@ -191,6 +223,7 @@ export default handleActions(
           user_name: '',
           token: null,
         };
+        draft.state = 'success';
       }),
     [LOGOUT_FAILURE]: state =>
       produce(state, draft => {
@@ -198,6 +231,7 @@ export default handleActions(
           triggered: true,
           message: 'LOGOUT ERROR, PLEASE TRY AGAIN',
         };
+        draft.state = 'failure';
       }),
   },
   initialState,

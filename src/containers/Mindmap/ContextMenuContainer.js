@@ -4,6 +4,8 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { ChromePicker } from 'react-color';
+import produce from 'immer';
 import {
   addNode,
   addPath,
@@ -11,13 +13,11 @@ import {
   toggleNodeEditing,
   setNodeData,
 } from 'store/modules/mindmap';
-import {
-  getAnnularSectorPathAttribute,
-  getIconPosition,
-} from 'tools/ContextMenu';
+
 import MenuWrapper from 'components/mindmap/ContextMenu/MenuWrapper';
 import MenuItem from 'components/mindmap/ContextMenu/MenuItem';
 import MenuLabel from 'components/mindmap/ContextMenu/MenuLabel';
+import SVG from 'components/mindmap/ContextMenu/SVG';
 import ContextMenuData from 'data/ContextMenu';
 
 class ContextMenuContainer extends Component {
@@ -29,6 +29,8 @@ class ContextMenuContainer extends Component {
     this.state = {
       currentMenu: '',
       targetNodeId: pointer.target.nodeId,
+      isColorPicker: false,
+      color: '#fff',
     };
   }
 
@@ -46,6 +48,19 @@ class ContextMenuContainer extends Component {
     this.setState({ currentMenu: '' });
   };
 
+  handleChangeComplete = (color, event) => {
+    const { setNodeData } = this.props;
+    const { targetNodeId } = this.state;
+
+    this.setState(
+      produce(draft => {
+        draft.color = color.hex;
+      }),
+    );
+
+    setNodeData({ id: targetNodeId, color: color.hex });
+  };
+
   handleMenuClick = (mode, type) => {
     const { pointer, mindmap } = this.props;
     const {
@@ -55,6 +70,7 @@ class ContextMenuContainer extends Component {
       toggleContextMenu,
       toggleStyleMenu,
       toggleNodeEditing,
+      toggleExplore,
     } = this.props;
 
     const newNode = {
@@ -74,11 +90,20 @@ class ContextMenuContainer extends Component {
       childOf: null,
     };
 
+    const explore = e => {
+      toggleExplore();
+      toggleContextMenu(e);
+    };
+
+    /* From canvas */
+
     const addFromCanvas = e => {
       addNode(newNode);
       toggleContextMenu(e);
       addPath({ start: newNode, end: newNode });
     };
+
+    /* From nodes */
 
     const addFromNode = e => {
       const { nodes } = this.props.mindmap;
@@ -102,24 +127,25 @@ class ContextMenuContainer extends Component {
       const { targetNodeId } = this.state;
 
       toggleNodeEditing(targetNodeId);
-      // toggleContextMenu(e);
+      toggleContextMenu(e);
     };
 
-    const explore = e => {
-      this.props.toggleExplore();
+    const changeColor = e => {
+      const { targetNodeId } = this.state;
+      const { mindmap } = this.props;
+
+      this.setState(
+        produce(draft => {
+          draft.color = mindmap.nodes[targetNodeId].color;
+          draft.isColorPicker = true;
+        }),
+      );
     };
-
-    // const changeContextMenuToStyle = e => {
-    //   const { targetNodeId } = this.state;
-
-    //   toggleContextMenu(e);
-    //   toggleStyleMenu();
-    // };
 
     // menu types
     // * canvas
     //   - ADD_NODE_FROM_CANVAS: add new idea from canvas
-    //   - SEARCH_IDEAS: explore ideas
+    //   - SEARCH: explore ideas
     //
     // * node
     //   - REMOVE: add new idea
@@ -132,6 +158,8 @@ class ContextMenuContainer extends Component {
       switch (type) {
         case 'ADD_NODE_FROM_CANVAS':
           return addFromCanvas;
+        case 'SEARCH':
+          return explore;
         default:
           return null;
       }
@@ -143,6 +171,10 @@ class ContextMenuContainer extends Component {
           return editNode;
         case 'REMOVE':
           return remove;
+        case 'SEARCH_IDEAS':
+          return explore;
+        case 'STYLE':
+          return changeColor;
         default:
           return null;
       }
@@ -151,8 +183,13 @@ class ContextMenuContainer extends Component {
 
   render() {
     const { mode, pointer } = this.props;
-    const { currentMenu } = this.state;
-    const { handleMenuClick, handleMouseOver, handleMouseOut } = this;
+    const { currentMenu, isColorPicker, color } = this.state;
+    const {
+      handleMenuClick,
+      handleMouseOver,
+      handleMouseOut,
+      handleChangeComplete,
+    } = this;
     const { list, options } = ContextMenuData[`${mode}`];
     const {
       wrapperSize,
@@ -174,41 +211,49 @@ class ContextMenuContainer extends Component {
           innerRadius={innerRadius}
           outerRadius={outerRadius}
         >
-          <g>
-            {list.map((item, i) => (
-              <MenuItem
-                key={i}
-                menu={item}
-                options={options}
-                iconSize={iconSize}
-                pathAttribute={getAnnularSectorPathAttribute({
-                  centerX: wrapperSize / 2,
-                  centerY: wrapperSize / 2,
-                  startDegrees: menuDegrees * i + menuSpaceDegrees,
-                  endDegrees: menuDegrees * (i + 1) - menuSpaceDegrees,
-                  innerRadius: innerRadius,
-                  outerRadius: outerRadius,
-                })}
-                iconPosition={getIconPosition(
-                  menuDegrees * i + menuDegrees / 2,
-                  innerRadius,
-                  outerRadius,
-                  wrapperSize,
-                  iconSize,
-                )}
-                handleMenuClick={handleMenuClick(mode, item.type)}
-                handleMouseOver={handleMouseOver}
-                handleMouseOut={handleMouseOut}
-              />
-            ))}
-          </g>
+          {isColorPicker ? (
+            <ChromePicker
+              color={color}
+              onChangeComplete={handleChangeComplete}
+            />
+          ) : (
+            <SVG
+              location={pointer.currLoc}
+              wrapperSize={wrapperSize}
+              bgColor={bgColor}
+              innerRadius={innerRadius}
+              outerRadius={outerRadius}
+            >
+              <g>
+                {list.map((item, i) => (
+                  <MenuItem
+                    key={i}
+                    index={i}
+                    menu={item}
+                    options={options}
+                    iconSize={iconSize}
+                    wrapperSize={wrapperSize}
+                    menuDegrees={menuDegrees}
+                    menuSpaceDegrees={menuSpaceDegrees}
+                    innerRadius={innerRadius}
+                    outerRadius={outerRadius}
+                    handleMenuClick={handleMenuClick(mode, item.type)}
+                    handleMouseOver={handleMouseOver}
+                    handleMouseOut={handleMouseOut}
+                  />
+                ))}
+              </g>
+            </SVG>
+          )}
         </MenuWrapper>
-        <MenuLabel
-          wrapperSize={wrapperSize}
-          location={pointer.currLoc}
-          options={options}
-          label={currentMenu}
-        />
+        {isColorPicker ? null : (
+          <MenuLabel
+            wrapperSize={wrapperSize}
+            location={pointer.currLoc}
+            options={options}
+            label={currentMenu}
+          />
+        )}
       </div>
     );
   }

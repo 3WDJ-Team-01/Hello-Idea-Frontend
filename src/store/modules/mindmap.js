@@ -44,6 +44,7 @@ export default function mindmap(state = initialState, action) {
       });
     case GET_PATHS:
       return produce(state, draft => {
+        draft.paths = [];
         for (let i = action.data.length - 1; i > -1; i--) {
           const indexOfChild = action.data[i].childOf;
 
@@ -229,12 +230,12 @@ export default function mindmap(state = initialState, action) {
         const index = draft.nodes.findIndex(node => node.id === id);
         draft.nodes[index] = {
           ...state.nodes[index],
-          isEditing: isEditing,
-          location: location,
-          size: size,
-          color: color,
-          head: head,
+          ...action.node,
         };
+        state.paths.map((path, i) => {
+          if (path.startAt && path.startAt.nodeId === id)
+            draft.paths[i].options.color = color;
+        });
       });
 
     case SET_NODE_LOCATION:

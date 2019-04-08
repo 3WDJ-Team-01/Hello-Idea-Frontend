@@ -46,6 +46,7 @@ class App extends Component {
     setViewBoxBaseVal(svg);
   }
 
+  /* Canvas initial Actions */
   preventEvent = () => {
     window.event.returnValue = false;
   };
@@ -72,9 +73,9 @@ class App extends Component {
         draft.canvas.viewBox = svg.viewBox.baseVal;
       }),
     );
-    console.log(svg.viewBox.baseVal);
   };
 
+  /* Pointer Actions */
   setViewBoxLocation = distance => {
     this.setState(
       produce(draft => {
@@ -126,6 +127,7 @@ class App extends Component {
     this.setState(
       produce(draft => {
         draft.pointer.state.isDown = true;
+        draft.explore = false;
         draft.pointer.target.class =
           event.target.className.baseVal && event.target.className.baseVal;
         draft.pointer.target.nodeId =
@@ -144,7 +146,7 @@ class App extends Component {
     );
   };
 
-  // context menu
+  /* Toggle Actions */
   toggleContextMenu = event => {
     event.persist();
     this.setState(
@@ -165,6 +167,7 @@ class App extends Component {
     );
   };
 
+  /* Export Mindmap PNG Image   */
   exportMindmap = targetDOM => {
     const svg = document.querySelector(targetDOM);
     svg.viewBox.baseVal.x = -4000;
@@ -274,7 +277,7 @@ class App extends Component {
             toggleExplore={toggleExplore}
           />
         )}
-        <Aside explore={explore} />
+        {explore && <Aside explore={explore} />}
 
         <Footer />
       </div>
