@@ -3,14 +3,38 @@ import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Repository.module.scss';
 
-const Header = ({ userInfo }) => (
+const Repository = ({ userInfo, groups }) => {
+  return (
+    <div className={styles.repository}>
+      <Header userInfo={userInfo} groups={groups} />
+      <List>
+        <Item />
+        <Item />
+        <Item />
+        <Item />
+        <Item />
+        <Item />
+        <div className={styles.moreRepository}>
+          <Link to="/USERNAME/repositories">
+            <MDBIcon icon="folder-open" />
+            See more repositories
+          </Link>
+        </div>
+      </List>
+    </div>
+  );
+};
+
+const Header = ({ userInfo, groups }) => (
   <div className={styles.header}>
     <div>
       <select className="browser-default custom-select">
-        <option value="Username">Username</option>
-        <option value="Groupname_1">Groupname_1</option>
-        <option value="Groupname_2">Groupname_2</option>
-        <option value="Groupname_3">Groupname_3</option>
+        {<option value={userInfo.user_id}>{userInfo.user_name}</option>}
+        {groups.map(group => (
+          <option key={group.group_id} value={group.group_id}>
+            {group.group_name}
+          </option>
+        ))}
       </select>
       <span>/</span>
       <input type="text" className="form-control" placeholder="저장소 이름" />
@@ -43,27 +67,5 @@ const Item = () => (
     </div>
   </div>
 );
-
-const Repository = ({ userInfo }) => {
-  return (
-    <div className={styles.repository}>
-      <Header userInfo={userInfo} />
-      <List>
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <div className={styles.moreRepository}>
-          <Link to="/USERNAME/repositories">
-            <MDBIcon icon="folder-open" />
-            See more repositories
-          </Link>
-        </div>
-      </List>
-    </div>
-  );
-};
 
 export default Repository;

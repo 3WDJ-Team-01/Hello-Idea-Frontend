@@ -10,10 +10,10 @@ $navHeight: 60px;
   width: 100%;
   height: $backIMGHeight;
   position: absolute;
-  z-index: -1;
+  transition: background-color 100ms linear 0s;
+  opacity: 0.5;
 }
 .userHeader {
-  overflow: visible;
   width: $app_width;
   height: $backIMGHeight;
   display: flex;
@@ -28,15 +28,15 @@ $navHeight: 60px;
 .userProfileImg {
   position: relative;
   z-index: 990;
-  max-width: $image_maxsize;
-  max-height: $image_maxsize;
   top: $image_maxsize - $backIMGHeight;
-  > div {
-    text-align: center;
-    border-radius: 50%;
-    background-color: lightblue;
-    width: 200px;
-    height: 200px;
+  width: 200px;
+  height: 200px;
+  .userImage {
+    border-radius: 1rem;
+    box-shadow: $shadow2dp;
+    background-color: $gray;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -44,6 +44,7 @@ $navHeight: 60px;
   flex: 1;
   margin: 0 $descSpace;
   padding-top: $image_maxsize - $backIMGHeight;
+  z-index: 10;
 }
 .userProfileName {
   margin-bottom: 0.5rem;
@@ -72,12 +73,29 @@ $navHeight: 60px;
     display: flex;
     margin: 0 auto;
     width: $app_width;
-    padding-left: $descSpace;
+    height: 100%;
   }
 }
 .profile {
   width: $image_maxsize;
   height: 100%;
+  display: flex;
+  align-items: center;
+  transition: all 500ms;
+  .userProfileImg {
+    position: inherit;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    .userImage {
+      border-radius: 3px;
+      box-shadow: none;
+      border: 1px solid $gray;
+    }
+  }
+  .name {
+    font-weight: 500;
+  }
 }
 .userNav {
   left: $image_maxsize;
@@ -85,6 +103,7 @@ $navHeight: 60px;
   width: 500px;
   height: 100%;
   font-size: 1.1rem;
+  padding-left: $descSpace;
   a {
     color: black;
 

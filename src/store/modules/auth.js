@@ -67,6 +67,7 @@ export const logoutRequest = () => dispatch => {
   return axios
     .post('/api/auth/logout/')
     .then(res => {
+      axios.defaults.headers.common.Authorization = ``;
       localStorage.removeItem('userInfo');
       dispatch(logoutSuccess(res.data));
     })
@@ -100,7 +101,7 @@ const initialState = {
   },
   logged: false,
   userInfo: {
-    user_email: null,
+    user_id: null,
     user_name: '',
     token: null,
   },
@@ -151,7 +152,7 @@ export default handleActions(
         draft.logged = true;
         draft.state = 'success';
         draft.userInfo = {
-          user_email: action.payload.user.user_email,
+          user_id: action.payload.user.user_id,
           user_name: action.payload.user.user_name,
           token: action.payload.token,
         };
@@ -197,7 +198,7 @@ export default handleActions(
         draft.logged = false;
         draft.state = 'failure';
         draft.userInfo = {
-          user_email: null,
+          user_id: null,
           user_name: '',
           token: null,
         };
@@ -206,7 +207,7 @@ export default handleActions(
       produce(state, draft => {
         draft.logged = true;
         draft.userInfo = {
-          user_email: action.payload.user_email,
+          user_id: action.payload.user_id,
           user_name: action.payload.user_name,
           token: action.payload.token,
         };
@@ -219,7 +220,7 @@ export default handleActions(
       produce(state, draft => {
         draft.logged = false;
         draft.userInfo = {
-          user_email: null,
+          user_id: null,
           user_name: '',
           token: null,
         };

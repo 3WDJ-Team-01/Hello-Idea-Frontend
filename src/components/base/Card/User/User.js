@@ -8,7 +8,7 @@ const User = () => (
     <div className={styles.followerImg}>img</div>
     <div className={styles.follower}>
       <div className={styles.name}>
-        <Link to="/username">userName</Link>
+        <Link to="/user/username">userName</Link>
       </div>
 
       <div className={styles.description}>

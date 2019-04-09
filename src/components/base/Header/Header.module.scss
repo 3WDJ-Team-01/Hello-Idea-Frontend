@@ -60,6 +60,8 @@
       color: black;
       border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
+      border: none;
+      box-shadow: $shadow6dp;
     }
   }
   input:focus + .searchResult {

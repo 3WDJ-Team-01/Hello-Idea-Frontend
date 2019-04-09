@@ -9,8 +9,15 @@ const ExploreWrapper = ({ news, children }) => {
         <div className={styles.newsList}>
           {news[0] && (
             <div className={styles.newsSide}>
-              <a href={`${news[1].img_href}`}>
-                <img src={`${news[0].img_src.split('?')[0]}`} />
+              <a
+                href={news[0].img_href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={news[0].img_src.split('?')[0]}
+                  alt={news[0].Comment}
+                />
                 <div className={styles.label}>
                   <span>{news[0].Comment}</span>
                 </div>
@@ -19,8 +26,15 @@ const ExploreWrapper = ({ news, children }) => {
           )}
           {news[1] && (
             <div className={styles.newsMain}>
-              <a href={`${news[1].img_href}`}>
-                <img src={news[1] && `${news[1].img_src.split('?')[0]}`} />
+              <a
+                href={news[1].img_href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={news[1].img_src.split('?')[0]}
+                  alt={news[1].Comment}
+                />
                 <div className={styles.label}>
                   <span>{news[1].Comment}</span>
                 </div>
@@ -29,8 +43,15 @@ const ExploreWrapper = ({ news, children }) => {
           )}
           {news[2] && (
             <div className={styles.newsSide}>
-              <a href={`${news[1].img_href}`}>
-                <img src={news[2] && `${news[2].img_src.split('?')[0]}`} />
+              <a
+                href={news[2].img_href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={news[2].img_src.split('?')[0]}
+                  alt={news[2].Comment}
+                />
                 <div className={styles.label}>
                   <span>{news[2].Comment}</span>
                 </div>

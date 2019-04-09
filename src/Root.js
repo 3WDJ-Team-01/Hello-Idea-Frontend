@@ -25,21 +25,21 @@ const Root = () => (
         <Route path="/trends" exact component={Trends} />
         <Route path="/trends/:searchTo" exact component={Trends} />
         <Route path="/explore" exact component={Explore} />
-        <Route path="/:user/new" exact component={New} />
-        <Route path="/:user/:menu" exact component={User} />
-        <Route path="/:user" exact component={User} />
+        <Route path="/user/:user/new" exact component={New} />
+        <Route path="/user/:user/:menu" exact component={User} />
+        <Route path="/user/:user" exact component={User} />
         <Route
-          path="/:user/repositories/:repository/editor"
+          path="/user/:user/repositories/:repository/editor"
           exact
           component={Editor}
         />
         <Route
-          path="/:user/repositories/:repository/:menu"
+          path="/user/:user/repositories/:repository/:menu"
           exact
           component={Repository}
         />
         <Route
-          path="/:user/repositories/:repository"
+          path="/user/:user/repositories/:repository"
           exact
           component={Repository}
         />

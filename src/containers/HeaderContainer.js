@@ -16,13 +16,13 @@ class HeaderContainer extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      nextProps.auth.state !== 'pending' && nextProps.auth.state !== 'success'
+      (nextProps.state !== 'pending' && nextProps.state !== 'success') ||
+      nextState.searchTo !== this.state.searchTo
     );
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('updated');
-    this.checkUser();
+    if (this.state.searchTo === '') this.checkUser();
   }
 
   checkUser = () => {
@@ -30,8 +30,8 @@ class HeaderContainer extends Component {
     if (localStorage.getItem('userInfo')) {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       AuthActions.setUserTemp({
-        user_email: userInfo.user_email,
-        user_name: userInfo.username,
+        user_id: userInfo.user_id,
+        user_name: userInfo.user_name,
         token: userInfo.token,
       });
     } else {
@@ -49,7 +49,6 @@ class HeaderContainer extends Component {
   };
 
   handleSearch = e => {
-    const { searchTo } = this.state;
     this.setState({ searchTo: e.currentTarget.value });
   };
 
@@ -69,7 +68,10 @@ class HeaderContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth,
+  state: state.auth.state,
+  error: state.auth.error,
+  logged: state.auth.logged,
+  userInfo: state.auth.userInfo,
 });
 
 const mapDisaptchToProps = dispatch => ({

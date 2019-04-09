@@ -32,8 +32,6 @@ class AuthContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { history, kind, logged, userInfo } = this.props;
-    console.log(`prev: ${prevProps.logged}`);
-    console.log(`current: ${logged}`);
     if (prevProps.kind !== kind) {
       this.initialize();
     }
@@ -41,7 +39,7 @@ class AuthContainer extends Component {
       localStorage.setItem(
         'userInfo',
         JSON.stringify({
-          user_email: userInfo.user_email,
+          user_id: userInfo.user_id,
           user_name: userInfo.user_name,
           token: userInfo.token,
         }),
