@@ -11,7 +11,7 @@ import {
 } from 'components/base/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 
-const Header = ({ searchTo, onLogout, onChange }) => (
+const Header = ({ searchTo, onLogout, onChange, userInfo }) => (
   <div className={styles.header_wrapper}>
     <div className={styles.header}>
       <div>
@@ -74,14 +74,14 @@ const Header = ({ searchTo, onLogout, onChange }) => (
               <MDBIcon icon="user-alt" />
             </DropdownTrigger>
             <DropdownMenuList>
-              <DropdownMenu>
+              <DropdownMenu path={`/user/${userInfo.user_id}`}>
                 <div className={styles.item}>Your profile</div>
               </DropdownMenu>
-              <DropdownMenu>
+              <DropdownMenu path={`/user/${userInfo.user_id}/repositories`}>
                 <div className={styles.item}>Your repositories</div>
               </DropdownMenu>
               <DropdownMenu isDivider />
-              <DropdownMenu>
+              <DropdownMenu path={`/user/${userInfo.user_id}/modify`}>
                 <div className={styles.item}>Settings</div>
               </DropdownMenu>
               <DropdownMenu>

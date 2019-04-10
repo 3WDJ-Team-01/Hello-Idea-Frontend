@@ -8,22 +8,20 @@ const Header = ({ url, menu, user, shownProfile, modify }) => {
     <>
       <div
         className={styles.backgroundImg}
-        style={{ backgroundColor: modify.bgColor }}
+        style={{ backgroundColor: 'gray' }}
       />
       <div className={styles.userHeader}>
         <div className={styles.userProfileImg}>
-          {modify.imgSrc ? (
-            <img
-              className={styles.userImage}
-              src={modify.imgSrc}
-              alt="userprofile"
-            />
+          {modify ? (
+            <img className={styles.userImage} src="" alt="userprofile" />
           ) : (
             <div className={styles.userImage} />
           )}
         </div>
         <div className={styles.userDescWrapper}>
-          <div className={styles.userProfileName}>UserName</div>
+          <div className={styles.userProfileName}>
+            <Link to="*/">UserName</Link>
+          </div>
           <div className={styles.userDescription}>userDescription</div>
         </div>
         <Link to={`/user/${user}/modify`}>
@@ -43,12 +41,8 @@ const Header = ({ url, menu, user, shownProfile, modify }) => {
             style={shownProfile ? { opacity: 1 } : { opacity: 0 }}
           >
             <div className={styles.userProfileImg}>
-              {modify.imgSrc ? (
-                <img
-                  className={styles.userImage}
-                  src={modify.imgSrc}
-                  alt="userprofile"
-                />
+              {modify ? (
+                <img className={styles.userImage} src="" alt="userprofile" />
               ) : (
                 <div className={styles.userImage} />
               )}

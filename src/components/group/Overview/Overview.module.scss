@@ -1,0 +1,50 @@
+@import '~styles/utils.scss';
+
+.section {
+  span {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  > div {
+    margin-top: 2%;
+  }
+}
+.section + .section {
+  margin-top: 5%;
+}
+.myPageGraph {
+  display: flex;
+  justify-content: space-around;
+  height: 300px;
+
+  .graph {
+    width: 40%;
+    max-height: 30rem;
+    height: 100%;
+    background-color: lightgray;
+  }
+}
+.activity {
+  padding-left: 5%;
+  width: 100%;
+}
+.activityDate {
+  display: flex;
+  padding-left: 4%;
+}
+.verticlLine {
+  width: 2px;
+  height: 400px;
+  background-color: $gray;
+}
+.activityList {
+  width: 100%;
+}
+.activityGroup {
+  padding: 2% 5%;
+  border-bottom: 2px solid $gray;
+}
+.activities {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}

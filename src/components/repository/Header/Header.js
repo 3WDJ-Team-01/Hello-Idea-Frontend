@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { MDBIcon } from 'mdbreact';
 import styles from './Header.module.scss';
 
-const Header = ({ url, user }) => {
-  const category = url.split('/')[4];
+const Header = ({ url, user, menu }) => {
   return (
     <div className={styles.repoHeader}>
       <div>
@@ -25,11 +24,11 @@ const Header = ({ url, user }) => {
             <Link
               to={`/${user}/repositories/test1`}
               style={
-                !category
+                !menu
                   ? {
                       borderTop: `3px solid #4285f4`,
                       borderBottom: 'none',
-                      backgroundColor: '#fafafa',
+                      backgroundColor: 'white',
                       fontWeight: 500,
                     }
                   : { border: 'none' }
@@ -40,11 +39,11 @@ const Header = ({ url, user }) => {
             <Link
               to={`/${user}/repositories/test1/settings`}
               style={
-                category === 'settings'
+                menu === 'settings'
                   ? {
                       borderTop: `3px solid #4285f4`,
                       borderBottom: 'none',
-                      backgroundColor: '#fafafa',
+                      backgroundColor: 'white',
                       fontWeight: 500,
                     }
                   : { border: 'none' }

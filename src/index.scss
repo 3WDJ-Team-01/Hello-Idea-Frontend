@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
 
 body {
-  margin: 0;
+  all: unset;
+  min-width: 100vw;
+  min-height: 100vh;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

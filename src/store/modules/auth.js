@@ -52,6 +52,7 @@ export const registerRequest = data => dispatch => {
     });
 };
 export const loginRequest = data => dispatch => {
+  axios.defaults.headers.common.Authorization = '';
   dispatch(login());
   return axios
     .post('/api/auth/login/', data)
@@ -67,7 +68,7 @@ export const logoutRequest = () => dispatch => {
   return axios
     .post('/api/auth/logout/')
     .then(res => {
-      axios.defaults.headers.common.Authorization = ``;
+      axios.defaults.headers.common.Authorization = '';
       localStorage.removeItem('userInfo');
       dispatch(logoutSuccess(res.data));
     })
@@ -87,7 +88,7 @@ export const userRequest = () => dispatch => {
       dispatch(checkUserSuccess(res.data));
     })
     .catch(err => {
-      axios.defaults.headers.common.Authorization = ``;
+      axios.defaults.headers.common.Authorization = '';
       localStorage.removeItem('userInfo');
       if (err.response) dispatch(checkUserFailure(err.response));
     });

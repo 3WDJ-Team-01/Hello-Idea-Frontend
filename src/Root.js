@@ -6,6 +6,7 @@ import {
   Main,
   Auth,
   User,
+  Group,
   NotFound,
   New,
   Repository,
@@ -43,6 +44,7 @@ const Root = () => (
           exact
           component={Repository}
         />
+        <Route path="/group/:group" exact component={Group} />
         <Route component={NotFound} />
       </Switch>
     </BrowserRouter>

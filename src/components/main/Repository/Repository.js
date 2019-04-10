@@ -8,14 +8,14 @@ const Repository = ({ userInfo, groups }) => {
     <div className={styles.repository}>
       <Header userInfo={userInfo} groups={groups} />
       <List>
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
+        <Item userInfo={userInfo} />
+        <Item userInfo={userInfo} />
+        <Item userInfo={userInfo} />
+        <Item userInfo={userInfo} />
+        <Item userInfo={userInfo} />
+        <Item userInfo={userInfo} />
         <div className={styles.moreRepository}>
-          <Link to="/USERNAME/repositories">
+          <Link to={`/user/${userInfo.user_id}/repositories`}>
             <MDBIcon icon="folder-open" />
             See more repositories
           </Link>
@@ -39,7 +39,7 @@ const Header = ({ userInfo, groups }) => (
       <span>/</span>
       <input type="text" className="form-control" placeholder="저장소 이름" />
     </div>
-    <Link to={`${userInfo}/new`}>
+    <Link to={`/user/${userInfo.user_id}/new`}>
       <MDBBtn color="primary">
         <MDBIcon icon="edit" className="mr-1" />
         NEW
@@ -54,15 +54,17 @@ const List = ({ children }) => (
   </div>
 );
 
-const Item = () => (
+const Item = ({ userInfo }) => (
   <div className={styles.ideabox}>
     <div className={styles.ideaimg} />
     <div className={styles.ideahov}>
       <div className={styles.ideaopen}>
-        <Link to="/user/repositories/repo/editor">open</Link>
+        <Link to={`/user/${userInfo.user_id}/repositories/repo/editor`}>
+          open
+        </Link>
       </div>
       <div className="ideamore">
-        <Link to="/user/repositories/repo">more</Link>
+        <Link to={`/user/${userInfo.user_id}/repositories/repo`}>more</Link>
       </div>
     </div>
   </div>

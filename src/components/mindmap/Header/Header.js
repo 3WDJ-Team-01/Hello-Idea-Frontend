@@ -13,7 +13,7 @@ const Header = ({ repository, exportMindmap }) => {
     <div className={styles.brainHeader}>
       <div className={styles.brainLeftHeader}>
         <div className={styles.brainLogo}>
-          <Link to="/*">
+          <Link to="/">
             <img
               src="https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/global/logo.png"
               alt="logo"

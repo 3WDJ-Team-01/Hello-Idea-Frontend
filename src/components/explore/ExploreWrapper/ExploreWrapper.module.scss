@@ -17,7 +17,7 @@ $height: 20rem;
 
 .newsList {
   display: flex;
-  width: $app_width;
+  max-width: $app_width;
   height: 20rem;
   justify-content: space-between;
 
@@ -76,6 +76,6 @@ $height: 20rem;
 }
 
 .listWrapper {
-  width: $app_width;
+  max-width: $app_width;
   margin: 3rem auto;
 }

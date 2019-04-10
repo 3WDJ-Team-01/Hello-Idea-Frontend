@@ -6,21 +6,25 @@ import Overview from 'components/repository/Overview';
 import Setting from 'components/repository/Setting';
 
 class RepositoryContainer extends Component {
+  renderMenu = menu => {
+    const { repository } = this.props;
+
+    switch (menu) {
+      case 'settings':
+        return <Setting />;
+      default:
+        return <Overview repository={repository} />;
+    }
+  };
+
   render() {
-    const { url, user, repository } = this.props;
+    const { renderMenu } = this;
+    const { url, user, menu } = this.props;
+
     return (
       <>
-        <Header url={url} user={user} />
-        <RepositoryWrapper>
-          <Switch>
-            <Route path="/:user/repositories/:repository/settings">
-              <Setting />
-            </Route>
-            <Route path="/:user/repositories/:repository">
-              <Overview repository={repository} />
-            </Route>
-          </Switch>
-        </RepositoryWrapper>
+        <Header url={url} user={user} menu={menu} />
+        <RepositoryWrapper>{renderMenu(menu)}</RepositoryWrapper>
       </>
     );
   }

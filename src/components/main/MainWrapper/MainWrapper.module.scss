@@ -2,22 +2,16 @@
 
 .main_wrapper {
   height: 100%;
-  width: $app_width;
+  max-width: $app_width;
   margin: 3rem auto;
   margin-bottom: 0;
-  @include media('<wide') {
-    justify-content: center;
-    width: 100%;
-  }
+
   article {
     display: flex;
     justify-content: space-between;
   }
   section {
     width: 65%;
-    @include media('<wide') {
-      width: 90%;
-    }
   }
   aside {
     display: block;
@@ -26,8 +20,5 @@
     width: 30%;
     height: 500px;
     margin-top: 6rem;
-    @include media('<wide') {
-      display: none;
-    }
   }
 }

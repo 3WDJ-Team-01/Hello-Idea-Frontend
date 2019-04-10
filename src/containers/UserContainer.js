@@ -151,7 +151,6 @@ class UserContainer extends Component {
       handleClose,
     } = this;
     const { cropper, modify, displayColorPicker } = this.state;
-    console.log(cropper);
     switch (menu) {
       case 'repositories':
         return <Repositories />;
@@ -181,13 +180,13 @@ class UserContainer extends Component {
 
   render() {
     const { renderMenu } = this;
-    const { user, menu, url } = this.props;
+    const { user, menu } = this.props;
     const { shownProfile, modify } = this.state;
-    console.log('updated');
+
     return (
       <>
         <Header
-          url={url}
+          menu={menu}
           user={user}
           shownProfile={shownProfile}
           modify={modify}

@@ -14,7 +14,7 @@ $navHeight: 60px;
   opacity: 0.5;
 }
 .userHeader {
-  max-width: $app_width;
+  width: $app_width;
   height: $backIMGHeight;
   display: flex;
   margin: 0 auto;
@@ -48,11 +48,13 @@ $navHeight: 60px;
 }
 .userProfileName {
   margin-bottom: 0.5rem;
-  font-size: 2rem;
-  color: black;
-  &:hover {
-    text-decoration: none;
+  a {
+    font-size: 2rem;
     color: black;
+    &:hover {
+      text-decoration: none;
+      color: black;
+    }
   }
 }
 .userDescription {
@@ -70,7 +72,7 @@ $navHeight: 60px;
   > div {
     display: flex;
     margin: 0 auto;
-    max-width: $app_width;
+    width: $app_width;
     height: 100%;
   }
 }

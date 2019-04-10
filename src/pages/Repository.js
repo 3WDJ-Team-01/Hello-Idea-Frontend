@@ -7,6 +7,7 @@ const Main = ({ match }) => {
     <PageTemplate>
       <RepositoryContainer
         user={match.params.user}
+        menu={match.params.menu}
         url={match.url}
         repository={match.params.repository}
       />

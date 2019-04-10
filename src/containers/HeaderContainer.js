@@ -53,7 +53,7 @@ class HeaderContainer extends Component {
   };
 
   render() {
-    const { isHidden } = this.props;
+    const { isHidden, userInfo } = this.props;
     const { searchTo } = this.state;
     const { handleLogout, handleSearch } = this;
 
@@ -62,6 +62,7 @@ class HeaderContainer extends Component {
         searchTo={searchTo}
         onLogout={handleLogout}
         onChange={handleSearch}
+        userInfo={userInfo}
       />
     );
   }
