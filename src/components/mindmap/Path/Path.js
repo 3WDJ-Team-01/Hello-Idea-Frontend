@@ -36,7 +36,7 @@ const Path = ({ mode, index, space, color, endPosition, startAt, endAt }) => {
       <path
         stroke={color}
         strokeOpacity="0.75"
-        strokeWidth="12"
+        strokeWidth="7"
         fill="none"
         markerEnd={`url(#${index})`}
         d={

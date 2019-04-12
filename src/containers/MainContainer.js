@@ -12,24 +12,30 @@ import * as recommendActions from '../store/modules/recommend';
 class MainContainer extends Component {
   componentDidMount() {
     const { UserActions, RecommendActions } = this.props;
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    UserActions.targetGroupsRequest(userInfo.user_id);
-    RecommendActions.withTendencyRequest(userInfo.user_id);
+    if (localStorage.getItem('userInfo')) {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      UserActions.targetGroupsRequest(userInfo.user_id);
+      RecommendActions.withTendencyRequest(userInfo.user_id);
+    }
   }
 
   render() {
     const { userInfo, groups, tendencyRepo } = this.props;
     return (
       <MainWrapper>
-        <Repository userInfo={userInfo} groups={groups} />
-        <article>
-          <section>
-            <Wall />
-          </section>
-          <aside>
-            <Discover tendencyRepo={tendencyRepo} />
-          </aside>
-        </article>
+        {userInfo.user_id && (
+          <>
+            <Repository userInfo={userInfo} groups={groups} />
+            <article>
+              <section>
+                <Wall />
+              </section>
+              <aside>
+                <Discover tendencyRepo={tendencyRepo} />
+              </aside>
+            </article>
+          </>
+        )}
       </MainWrapper>
     );
   }

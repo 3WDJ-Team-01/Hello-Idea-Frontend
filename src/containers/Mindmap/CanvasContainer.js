@@ -73,13 +73,11 @@ class CanvasContainer extends Component {
 
   render() {
     const { display } = this.state;
-    const { children } = this.props;
+    const { cavasPins, children } = this.props;
     const { handlePointerDown, handlePointerUp, handlePointerMove } = this;
-
     return (
       <Canvas
-        width={display.width}
-        height={display.height}
+        cavasPins={cavasPins}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerMove={handlePointerMove}
@@ -93,7 +91,9 @@ class CanvasContainer extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  cavasPins: state.mindmap.cavasPins,
+});
 
 const mapDispatchToProps = dispatch => ({
   // mindmap modules

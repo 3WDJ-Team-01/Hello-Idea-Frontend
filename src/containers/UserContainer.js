@@ -46,11 +46,7 @@ class UserContainer extends Component {
     });
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('scroll', () => {
-      console.log(window.scrollY);
-    });
-  }
+  componentWillUnmount() {}
 
   /* IMAGE CROPPER ACTIONS */
 
@@ -63,7 +59,6 @@ class UserContainer extends Component {
   };
 
   onCropComplete = (croppedArea, croppedAreaPixels) => {
-    console.log(croppedArea, croppedAreaPixels);
     this.setState(
       produce(draft => {
         draft.cropper.croppedAreaPixels = croppedAreaPixels;
@@ -82,7 +77,6 @@ class UserContainer extends Component {
   showCroppedImage = async () => {
     const { imgSrc, croppedAreaPixels } = this.state.cropper;
     const croppedImage = await getCroppedImg(imgSrc, croppedAreaPixels);
-    console.log(croppedImage);
     this.setState(
       produce(draft => {
         draft.modify.imgSrc = croppedImage;

@@ -84,7 +84,7 @@ class ContextMenuContainer extends Component {
         width: 100,
         height: 40,
       },
-      color: 'rgba(236, 240, 241,1.0)',
+      color: '#ECF0F1',
       head: '',
       parentOf: [],
       childOf: null,

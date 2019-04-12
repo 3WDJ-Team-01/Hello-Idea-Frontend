@@ -15,14 +15,16 @@ class HeaderContainer extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    const { searchTo } = this.state;
     return (
       (nextProps.state !== 'pending' && nextProps.state !== 'success') ||
-      nextState.searchTo !== this.state.searchTo
+      nextState.searchTo !== searchTo
     );
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.searchTo === '') this.checkUser();
+    const { searchTo } = this.state;
+    if (searchTo === '') this.checkUser();
   }
 
   checkUser = () => {

@@ -84,7 +84,7 @@ const Header = ({ searchTo, onLogout, onChange, userInfo }) => (
               <DropdownMenu path={`/user/${userInfo.user_id}/modify`}>
                 <div className={styles.item}>Settings</div>
               </DropdownMenu>
-              <DropdownMenu>
+              <DropdownMenu path="/auth/login">
                 <div className={styles.item} onClick={onLogout}>
                   Sign out
                 </div>

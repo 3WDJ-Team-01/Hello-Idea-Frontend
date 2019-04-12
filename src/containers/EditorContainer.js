@@ -169,10 +169,12 @@ class App extends Component {
 
   /* Export Mindmap PNG Image   */
   exportMindmap = targetDOM => {
+    const { cavasPins } = this.props;
     const svg = document.querySelector(targetDOM);
-    svg.viewBox.baseVal.x = -4000;
-    svg.viewBox.baseVal.y = -2000;
     const wrapper = document.querySelector('#canvasFrame');
+
+    svg.viewBox.baseVal.x = cavasPins.leftTop.x - 100;
+    svg.viewBox.baseVal.y = cavasPins.leftTop.y - 100;
 
     html2canvas(wrapper).then(canvas => {
       const imgURI = canvas
@@ -209,7 +211,7 @@ class App extends Component {
       toggleExplore,
       exportMindmap,
     } = this;
-    const { mindmap } = this.props;
+    const { paths, nodes } = this.props;
     const { pointer, contextMenu, explore } = this.state;
     return (
       <div
@@ -232,7 +234,7 @@ class App extends Component {
         >
           <g id="mindmap">
             <g id="paths">
-              {mindmap.paths.map(
+              {paths.map(
                 (path, i) =>
                   path.startAt && (
                     <Path
@@ -249,7 +251,7 @@ class App extends Component {
               )}
             </g>
             <g id="nodes">
-              {mindmap.nodes.map((item, i) =>
+              {nodes.map((item, i) =>
                 item.isEditing ? (
                   <NodeContainer
                     key={i}
@@ -286,7 +288,9 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-  mindmap: state.mindmap,
+  cavasPins: state.mindmap.cavasPins,
+  paths: state.mindmap.paths,
+  nodes: state.mindmap.nodes,
 });
 
 const mapDispatchToProps = dispatch => ({

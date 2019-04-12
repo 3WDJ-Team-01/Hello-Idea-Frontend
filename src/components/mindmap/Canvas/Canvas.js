@@ -28,27 +28,26 @@ const Filter = () => (
 );
 
 const Canvas = ({
-  width,
-  height,
+  cavasPins,
   style,
   onPointerDown,
   onPointerUp,
   onPointerMove,
   onWheel,
-
   children,
 }) => {
+  const width = cavasPins.rightBottom.x - cavasPins.leftTop.x + 100;
+  const height = cavasPins.rightBottom.y - cavasPins.leftTop.y + 100;
+
   // If browser supports pointer events
   if (window.PointerEvent) {
     return (
-      <div
-        id="canvasFrame"
-        style={{ width, height, overflow: 'visible', backgroundColor: 'green' }}
-      >
+      <div id="canvasFrame" style={{ width, height, overflow: 'visible' }}>
         <svg
           id="canvas"
           className="canvas"
-          viewBox={`-${width / 2} -${height / 2} ${width} ${height}`}
+          viewBox={`${cavasPins.leftTop.x} ${cavasPins.leftTop.y}
+          ${width} ${height}`}
           width={width}
           height={height}
           style={style}
