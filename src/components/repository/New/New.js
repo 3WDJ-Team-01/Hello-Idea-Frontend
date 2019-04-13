@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
@@ -5,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { MDBBtn } from 'mdbreact';
 import styles from './New.module.scss';
 
-const New = ({ name, desc, handleChange }) => {
+const New = ({ groups, userInfo, name, desc, handleChange, handleSubmit }) => {
   return (
     <div className={styles.new}>
       <div className={styles.title}>Create a new repository</div>
@@ -15,11 +16,17 @@ const New = ({ name, desc, handleChange }) => {
           <div className={styles.label}>
             <b>Owner</b>
           </div>
-          <select className="browser-default custom-select">
-            <option value="Username">Username</option>
-            <option value="Groupname_1">Groupname_1</option>
-            <option value="Groupname_2">Groupname_2</option>
-            <option value="Groupname_3">Groupname_3</option>
+          <select
+            name="author_id"
+            className="browser-default custom-select"
+            onChange={handleChange}
+          >
+            <option value={userInfo.user_id}>{userInfo.user_name}</option>
+            {groups.map((group, i) => (
+              <option key={i} value={`G${group.group_id}`}>
+                {group.group_name}
+              </option>
+            ))}
           </select>
         </div>
         <span>/</span>
@@ -56,9 +63,9 @@ const New = ({ name, desc, handleChange }) => {
       <hr />
       <div className={styles.article}>
         {name ? (
-          <Link to="/user/repositories/repo/editor">
-            <MDBBtn color="primary">Create repository</MDBBtn>
-          </Link>
+          <MDBBtn onClick={handleSubmit} color="primary">
+            Create repository
+          </MDBBtn>
         ) : (
           <MDBBtn disabled color="primary">
             Create repository

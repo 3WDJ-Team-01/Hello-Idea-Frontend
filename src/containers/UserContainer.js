@@ -46,7 +46,24 @@ class UserContainer extends Component {
     });
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    window.removeEventListener('scroll', () => {
+      const { shownProfile } = this.state;
+      if (!shownProfile && window.scrollY > 240) {
+        this.setState(
+          produce(draft => {
+            draft.shownProfile = true;
+          }),
+        );
+      } else if (shownProfile && window.scrollY < 300) {
+        this.setState(
+          produce(draft => {
+            draft.shownProfile = false;
+          }),
+        );
+      }
+    });
+  }
 
   /* IMAGE CROPPER ACTIONS */
 

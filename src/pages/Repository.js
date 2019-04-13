@@ -2,14 +2,15 @@ import React from 'react';
 import PageTemplate from 'components/base/PageTemplate';
 import RepositoryContainer from 'containers/RepositoryContainer';
 
-const Main = ({ match }) => {
+const Main = ({ match, history }) => {
   return (
     <PageTemplate>
       <RepositoryContainer
-        user={match.params.user}
+        userId={match.params.user}
         menu={match.params.menu}
         url={match.url}
-        repository={match.params.repository}
+        repositoryId={match.params.repository}
+        history={history}
       />
     </PageTemplate>
   );

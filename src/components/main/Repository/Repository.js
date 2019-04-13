@@ -1,19 +1,17 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Repository.module.scss';
 
-const Repository = ({ userInfo, groups }) => {
+const Repository = ({ userInfo, groups, repositories }) => {
   return (
     <div className={styles.repository}>
       <Header userInfo={userInfo} groups={groups} />
       <List>
-        <Item userInfo={userInfo} />
-        <Item userInfo={userInfo} />
-        <Item userInfo={userInfo} />
-        <Item userInfo={userInfo} />
-        <Item userInfo={userInfo} />
-        <Item userInfo={userInfo} />
+        {repositories.map((repository, i) => (
+          <Item key={i} userInfo={userInfo} repository={repository} />
+        ))}
         <div className={styles.moreRepository}>
           <Link to={`/user/${userInfo.user_id}/repositories`}>
             <MDBIcon icon="folder-open" />
@@ -54,17 +52,29 @@ const List = ({ children }) => (
   </div>
 );
 
-const Item = ({ userInfo }) => (
+const Item = ({ userInfo, repository }) => (
   <div className={styles.ideabox}>
     <div className={styles.ideaimg} />
     <div className={styles.ideahov}>
-      <div className={styles.ideaopen}>
-        <Link to={`/user/${userInfo.user_id}/repositories/repo/editor`}>
-          open
-        </Link>
-      </div>
-      <div className="ideamore">
-        <Link to={`/user/${userInfo.user_id}/repositories/repo`}>more</Link>
+      <div className={styles.idealabel}>
+        <div className={styles.title}>{repository.project_topic}</div>
+        <div className={styles.options}>
+          <Link
+            className={styles.box}
+            to={`/user/${userInfo.user_id}/repositories/${
+              repository.project_id
+            }/editor`}
+          >
+            open
+          </Link>
+          <Link
+            to={`/user/${userInfo.user_id}/repositories/${
+              repository.project_id
+            }`}
+          >
+            more+
+          </Link>
+        </div>
       </div>
     </div>
   </div>

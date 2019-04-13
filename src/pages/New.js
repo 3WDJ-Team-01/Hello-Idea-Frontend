@@ -2,10 +2,14 @@ import React from 'react';
 import PageTemplate from 'components/base/PageTemplate';
 import NewContainer from 'containers/NewContainer';
 
-const Main = ({ match }) => {
+const Main = ({ match, history }) => {
   return (
     <PageTemplate>
-      <NewContainer user={match.params.user} url={match.url} />
+      <NewContainer
+        user={match.params.user}
+        url={match.url}
+        history={history}
+      />
     </PageTemplate>
   );
 };

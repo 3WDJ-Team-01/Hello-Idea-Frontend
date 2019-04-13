@@ -45,7 +45,9 @@ export const registerRequest = data => dispatch => {
       user_bgimg: 'test',
     })
     .then(res => {
-      dispatch(registerSuccess(res.data));
+      axios
+        .post('/api/person_tendency/create/', { user_id: res.data.user_id })
+        .then(() => dispatch(registerSuccess(res.data)));
     })
     .catch(err => {
       if (err.response) dispatch(registerFailure(err.response));
@@ -119,7 +121,7 @@ export default handleActions(
         draft.logged = true;
         draft.state = 'success';
         draft.userInfo = {
-          user_email: action.payload.user_email,
+          user_id: action.payload.id,
           user_name: action.payload.user_name,
           token: action.payload.token,
         };

@@ -21,6 +21,9 @@
       background-color: lighten($gray, 0%) !important;
     }
   }
+  .input + .input {
+    margin-top: 1rem;
+  }
   > div {
     font-weight: 500;
   }

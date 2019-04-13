@@ -46,7 +46,7 @@ export const targetGroupsRequest = user_id => dispatch => {
       if (err.response) dispatch(targetGroupsFailure(err.response));
     });
 };
-export const repositoriesRequest = ({ user_id, group_id }) => dispatch => {
+export const repositoriesRequest = (user_id, group_id) => dispatch => {
   dispatch(repositories());
   return axios
     .post('/api/main/project/', { user_id, group_id })
@@ -62,13 +62,13 @@ const initialState = {
   state: '',
   info: {},
   groups: [
-    {
-      group_id: 0,
-      group_name: '',
-      group_intro: '',
-      group_bgimg: '',
-      group_img: '',
-    },
+    // {
+    //   group_id: 0,
+    //   group_name: '',
+    //   group_intro: '',
+    //   group_bgimg: '',
+    //   group_img: '',
+    // },
   ],
   repositories: {
     all: [],
@@ -117,7 +117,8 @@ export default handleActions(
       produce(state, draft => {
         const all = [];
         for (const category in action.payload) {
-          all.push(action.payload[category]);
+          for (const repository in action.payload[category])
+            all.push(action.payload[category][repository]);
         }
         draft.state = 'success';
         draft.repositories = {

@@ -15,17 +15,22 @@ class MainContainer extends Component {
     if (localStorage.getItem('userInfo')) {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       UserActions.targetGroupsRequest(userInfo.user_id);
+      UserActions.repositoriesRequest(userInfo.user_id, 0);
       RecommendActions.withTendencyRequest(userInfo.user_id);
     }
   }
 
   render() {
-    const { userInfo, groups, tendencyRepo } = this.props;
+    const { userInfo, groups, repositories, tendencyRepo } = this.props;
     return (
       <MainWrapper>
         {userInfo.user_id && (
           <>
-            <Repository userInfo={userInfo} groups={groups} />
+            <Repository
+              userInfo={userInfo}
+              groups={groups}
+              repositories={repositories.all}
+            />
             <article>
               <section>
                 <Wall />

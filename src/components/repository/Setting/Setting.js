@@ -5,35 +5,39 @@ import { MDBBtn } from 'mdbreact';
 import styles from './Setting.module.scss';
 
 const Setting = ({
-  user,
-  url,
-  Overview,
-  Repositories,
-  Followers,
-  children,
+  name,
+  description,
+  handleChange,
+  handleSubmit,
+  handleRemove,
 }) => {
   return (
     <div className={styles.modify}>
       <div className={styles.section}>
-        <div className={styles.title}>Repository name</div>
+        <div className={styles.title}>Repository Info</div>
         <hr />
-        <div>
+        <div className={styles.input}>
           <label>
-            <div>Changed name</div>
-            <input type="text" />
+            <div>Change name</div>
+            <input
+              name="name"
+              type="text"
+              value={name}
+              onChange={handleChange}
+            />
           </label>
-          <MDBBtn>Rename</MDBBtn>
         </div>
-      </div>
-      <div className={styles.section}>
-        <div className={styles.title}>Repository description</div>
-        <hr />
-        <div>
+        <div className={styles.input}>
           <label>
-            <div>Changed description</div>
-            <textarea type="text" />
+            <div>Change description</div>
+            <textarea
+              name="description"
+              type="text"
+              value={description}
+              onChange={handleChange}
+            />
           </label>
-          <MDBBtn>save</MDBBtn>
+          <MDBBtn onClick={handleSubmit}>save</MDBBtn>
         </div>
       </div>
       <div className={styles.section}>
@@ -41,7 +45,9 @@ const Setting = ({
           Delete repository
         </div>
         <hr />
-        <MDBBtn className={styles.caution}>Delete Your repository</MDBBtn>
+        <MDBBtn onClick={handleRemove} className={styles.caution}>
+          Delete Your repository
+        </MDBBtn>
       </div>
     </div>
   );

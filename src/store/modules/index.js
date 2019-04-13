@@ -4,6 +4,7 @@ import user from './user';
 import mindmap from './mindmap';
 import explore from './explore';
 import recommend from './recommend';
+import repository from './repository';
 
 export default combineReducers({
   auth,
@@ -11,4 +12,5 @@ export default combineReducers({
   mindmap,
   explore,
   recommend,
+  repository,
 });

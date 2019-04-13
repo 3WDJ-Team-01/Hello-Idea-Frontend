@@ -3,7 +3,15 @@ import { Link } from 'react-router-dom';
 import { MDBIcon } from 'mdbreact';
 import styles from './Header.module.scss';
 
-const Header = ({ url, user, menu }) => {
+const Header = ({
+  url,
+  menu,
+  repositoryId,
+  author,
+  repositoryInfo,
+  repositoryCategory,
+  similarRepository,
+}) => {
   return (
     <div className={styles.repoHeader}>
       <div>
@@ -12,17 +20,25 @@ const Header = ({ url, user, menu }) => {
             <MDBIcon icon="folder-open" />
           </span>
           <span>
-            <Link to="*/">UserName</Link>
+            <Link to={`/user/${repositoryInfo.user_id}`}>{author}</Link>
           </span>
           <span>/</span>
           <span>
-            <Link to="*/">test1</Link>
+            <Link
+              to={`/user/${
+                repositoryInfo.user_id
+              }/repositories/${repositoryId}`}
+            >
+              {repositoryInfo.project_topic}
+            </Link>
           </span>
         </div>
         <div className={styles.userNavWrapper}>
           <div className={styles.userNav}>
             <Link
-              to={`/${user}/repositories/test1`}
+              to={`/user/${
+                repositoryInfo.user_id
+              }/repositories/${repositoryId}`}
               style={
                 !menu
                   ? {
@@ -37,7 +53,9 @@ const Header = ({ url, user, menu }) => {
               <div className={styles.MyPageOverview}>Overview</div>
             </Link>
             <Link
-              to={`/${user}/repositories/test1/settings`}
+              to={`/user/${
+                repositoryInfo.user_id
+              }/repositories/${repositoryId}/settings`}
               style={
                 menu === 'settings'
                   ? {
