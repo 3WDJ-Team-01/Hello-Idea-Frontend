@@ -57,15 +57,16 @@ export const createRequest = ({
       project_intro,
     })
     .then(res => {
+      axios.post('/api/project_category/create/', {
+        project_id: res.data.project_id,
+        project_topic,
+      });
       axios
-        .post('/api/project_category/create/', {
-          project_id: res.data.project_id,
+        .post('/api/person_tendency/update/', {
+          user_id,
           project_topic,
         })
-        .then(() => dispatch(createSuccess(res.data)))
-        .catch(err => {
-          if (err.response) dispatch(createFailure(err.response));
-        });
+        .then(() => dispatch(createSuccess(res.data)));
     })
     .catch(err => {
       if (err.response) dispatch(createFailure(err.response));
