@@ -6,8 +6,8 @@ import MainWrapper from 'components/main/MainWrapper';
 import Discover from 'components/main/Discover';
 import Repository from 'components/main/Repository';
 import Wall from 'components/main/Wall';
-import * as userActions from '../store/modules/user';
-import * as recommendActions from '../store/modules/recommend';
+import * as userActions from 'store/modules/user';
+import * as recommendActions from 'store/modules/recommend';
 
 class MainContainer extends Component {
   componentDidMount() {

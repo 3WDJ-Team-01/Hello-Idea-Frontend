@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "./Editor.module.scss";
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import React from 'react';
+import styles from './Editor.module.scss';
 
 const Editor = React.forwardRef(
   (
@@ -12,9 +13,9 @@ const Editor = React.forwardRef(
       handleInput,
       handleTextContent,
       handleBlur,
-      handleKeyPress
+      handleKeyPress,
     },
-    ref
+    ref,
   ) => (
     <foreignObject
       x={location.x - size.width / 2}
@@ -27,20 +28,20 @@ const Editor = React.forwardRef(
         style={{
           minWidth: size.width,
           minHeight: size.height,
-          border: `2px solid ${color}`
+          border: `2px solid ${color}`,
         }}
       >
         <div
           ref={ref}
           className={styles.input}
-          contentEditable={true}
-          suppressContentEditableWarning={true}
+          contentEditable
+          suppressContentEditableWarning
           onInput={handleTextContent}
           onBlur={handleBlur}
           onKeyDown={handleKeyPress}
         />
       </div>
     </foreignObject>
-  )
+  ),
 );
 export default Editor;

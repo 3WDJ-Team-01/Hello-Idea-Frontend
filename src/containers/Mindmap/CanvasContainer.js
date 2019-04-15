@@ -3,7 +3,8 @@
 /* eslint-disable no-shadow */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setNodeLocation } from 'store/modules/mindmap';
+import { bindActionCreators } from 'redux';
+import * as mindmapActions from 'store/modules/mindmap';
 import Canvas from 'components/mindmap/Canvas';
 
 class CanvasContainer extends Component {
@@ -38,8 +39,9 @@ class CanvasContainer extends Component {
     const { getPointFromEvent } = this;
     const {
       pointer,
+      nodes,
       pointerMove,
-      setNodeLocation,
+      MindmapActions,
       setViewBoxLocation,
     } = this.props;
 
@@ -55,7 +57,7 @@ class CanvasContainer extends Component {
         y: pointerPosition.y - pointer.prevLoc.y,
       });
     } else if (pointer.target.class === 'node') {
-      setNodeLocation({
+      MindmapActions.setNodeLocation({
         id: pointer.target.nodeId,
         location: {
           x: pointerPosition.x,
@@ -66,8 +68,22 @@ class CanvasContainer extends Component {
   };
 
   handlePointerUp = e => {
-    const { pointerUp } = this.props;
+    const { getPointFromEvent } = this;
+    const { pointer, nodes, pointerUp, MindmapActions } = this.props;
 
+    const pointerPosition = getPointFromEvent(e);
+    if (pointer.state.isDrag && pointer.target.class === 'node') {
+      const index = nodes.findIndex(node => node.id === pointer.target.nodeId);
+
+      MindmapActions.updateIdeaRequest({
+        id: nodes[index].id,
+        location: {
+          x: pointerPosition.x,
+          y: pointerPosition.y,
+        },
+        size: nodes[index].size,
+      });
+    }
     pointerUp();
   };
 
@@ -93,11 +109,12 @@ class CanvasContainer extends Component {
 
 const mapStateToProps = state => ({
   cavasPins: state.mindmap.cavasPins,
+  nodes: state.mindmap.nodes,
 });
 
 const mapDispatchToProps = dispatch => ({
   // mindmap modules
-  setNodeLocation: node => dispatch(setNodeLocation(node)),
+  MindmapActions: bindActionCreators(mindmapActions, dispatch),
 });
 
 export default connect(

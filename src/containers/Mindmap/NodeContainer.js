@@ -5,7 +5,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import produce from 'immer';
-import { setNodeData, setNodeLocation } from 'store/modules/mindmap';
+import { bindActionCreators } from 'redux';
+import * as mindmapActions from 'store/modules/mindmap';
 import Node from 'components/mindmap/Node/SVG';
 import NodeEditor from 'components/mindmap/Node/Editor';
 
@@ -63,6 +64,7 @@ class NodeContainer extends Component {
   }
 
   handleTextContent = e => {
+    e.persist();
     // wrapper-width (356px)
     // default size: w100px, h40px
 
@@ -87,22 +89,31 @@ class NodeContainer extends Component {
     );
   };
 
-  handleBlur = () => {
-    const { setNodeData, setNodeLocation } = this.props;
+  handleBlur = e => {
+    const { MindmapActions } = this.props;
     const { node } = this.state;
-    setNodeData({ ...node, isEditing: false });
-    setNodeLocation(node);
+    MindmapActions.setNodeData({
+      ...node,
+      head: e.target.textContent,
+      isEditing: false,
+      location: {
+        x: node.location.x - e.target.clientWidth / 2 - 60,
+        y: node.location.y - e.target.clientHeight / 2 - 40,
+      },
+      size: { width: e.target.clientWidth + 10, height: e.target.clientHeight },
+    });
+    MindmapActions.setNodeLocation(node);
   };
 
   handleKeyPress = e => {
-    const { setNodeData, setNodeLocation } = this.props;
+    const { MindmapActions } = this.props;
     const { node, temp } = this.state;
     if (e.key === 'Enter') {
-      setNodeData({ ...node, isEditing: false });
-      setNodeLocation(node);
+      MindmapActions.setNodeData({ ...node, isEditing: false });
+      MindmapActions.setNodeLocation(node);
     } else if (e.key === 'Escape') {
-      setNodeData({ ...temp, isEditing: false });
-      setNodeLocation(node);
+      MindmapActions.setNodeData({ ...temp, isEditing: false });
+      MindmapActions.setNodeLocation(node);
     }
   };
 
@@ -143,8 +154,7 @@ class NodeContainer extends Component {
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
-  setNodeData: node => dispatch(setNodeData(node)),
-  setNodeLocation: node => dispatch(setNodeLocation(node)),
+  MindmapActions: bindActionCreators(mindmapActions, dispatch),
 });
 
 export default connect(

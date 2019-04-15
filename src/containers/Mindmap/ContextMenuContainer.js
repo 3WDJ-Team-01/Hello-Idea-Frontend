@@ -4,15 +4,17 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as mindmapActions from 'store/modules/mindmap';
 import { ChromePicker } from 'react-color';
 import produce from 'immer';
-import {
-  addNode,
-  addPath,
-  removeNode,
-  toggleNodeEditing,
-  setNodeData,
-} from 'store/modules/mindmap';
+// import {
+//   addNode,
+//   addPath,
+//   removeNode,
+//   toggleNodeEditing,
+//   setNodeData,
+// } from 'store/modules/mindmap';
 
 import MenuWrapper from 'components/mindmap/ContextMenu/MenuWrapper';
 import MenuItem from 'components/mindmap/ContextMenu/MenuItem';
@@ -49,33 +51,37 @@ class ContextMenuContainer extends Component {
   };
 
   handleChangeComplete = (color, event) => {
-    const { setNodeData } = this.props;
+    const { MindmapActions, nodes } = this.props;
     const { targetNodeId } = this.state;
+    const index = nodes.findIndex(node => node.id === targetNodeId);
 
     this.setState(
       produce(draft => {
         draft.color = color.hex;
       }),
     );
-
-    setNodeData({ id: targetNodeId, color: color.hex });
+    MindmapActions.updateIdeaRequest({
+      ...nodes[index],
+      color: color.hex,
+    });
   };
 
   handleMenuClick = (mode, type) => {
-    const { pointer, mindmap } = this.props;
+    const { pointer, mindmap, userId, repositoryId } = this.props;
     const {
-      addNode,
-      addPath,
-      removeNode,
       toggleContextMenu,
       toggleStyleMenu,
-      toggleNodeEditing,
       toggleExplore,
+      MindmapActions,
     } = this.props;
 
     const newNode = {
-      id: mindmap.nextNodeId,
+      project_id: repositoryId,
+      user_id: userId,
+      childOf: 0,
+      isForked: 0,
       isEditing: true,
+      color: '#ECF0F1',
       location: {
         x: pointer.prevLoc.x,
         y: pointer.prevLoc.y,
@@ -84,10 +90,8 @@ class ContextMenuContainer extends Component {
         width: 100,
         height: 40,
       },
-      color: '#ECF0F1',
       head: '',
       parentOf: [],
-      childOf: null,
     };
 
     const explore = e => {
@@ -98,9 +102,8 @@ class ContextMenuContainer extends Component {
     /* From canvas */
 
     const addFromCanvas = e => {
-      addNode(newNode);
+      MindmapActions.createIdeaRequest(newNode);
       toggleContextMenu(e);
-      addPath({ start: newNode, end: newNode });
     };
 
     /* From nodes */
@@ -111,32 +114,33 @@ class ContextMenuContainer extends Component {
       const targetNode =
         nodes[nodes.findIndex(node => node.id === targetNodeId)];
 
-      addNode({ ...newNode, childOf: targetNodeId });
-      addPath({ start: targetNode, end: newNode });
+      //addNode({ ...newNode, childOf: targetNodeId });
+      //addPath({ start: targetNode, end: newNode });
       toggleContextMenu(e);
     };
 
     const remove = e => {
       const { targetNodeId } = this.state;
-
-      removeNode(targetNodeId);
+      MindmapActions.removeIdeaRequest(targetNodeId);
       toggleContextMenu(e);
     };
 
     const editNode = e => {
       const { targetNodeId } = this.state;
 
-      toggleNodeEditing(targetNodeId);
+      MindmapActions.toggleNodeEditing(targetNodeId);
       toggleContextMenu(e);
     };
 
     const changeColor = e => {
       const { targetNodeId } = this.state;
-      const { mindmap } = this.props;
+      const { nodes } = this.props;
+
+      const index = nodes.findIndex(node => node.id === targetNodeId);
 
       this.setState(
         produce(draft => {
-          draft.color = mindmap.nodes[targetNodeId].color;
+          draft.color = nodes[index].color;
           draft.isColorPicker = true;
         }),
       );
@@ -260,16 +264,11 @@ class ContextMenuContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  mindmap: state.mindmap,
+  nodes: state.mindmap.nodes,
 });
 
 const mapDispatchToProps = dispatch => ({
-  // mindmap actions
-  addNode: node => dispatch(addNode(node)),
-  addPath: path => dispatch(addPath(path)),
-  removeNode: nodeId => dispatch(removeNode(nodeId)),
-  toggleNodeEditing: id => dispatch(toggleNodeEditing(id)),
-  setNodeData: node => dispatch(setNodeData(node)),
+  MindmapActions: bindActionCreators(mindmapActions, dispatch),
 });
 
 export default connect(

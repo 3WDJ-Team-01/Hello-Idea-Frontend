@@ -8,9 +8,9 @@ const Main = ({ match }) => {
   return (
     <PageTemplate isHidden>
       <EditorContainer
-        user={match.params.user}
+        userId={match.params.user}
         url={match.url}
-        repository={match.params.repository}
+        repositoryId={match.params.repository}
       />
     </PageTemplate>
   );

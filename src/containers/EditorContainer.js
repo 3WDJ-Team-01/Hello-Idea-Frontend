@@ -3,14 +3,14 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as mindmapActions from 'store/modules/mindmap';
 import html2canvas from 'html2canvas';
-import { getNodes, getPaths } from 'store/modules/mindmap';
-import NodesData from 'data/Nodes';
+import produce from 'immer';
 import Path from 'components/mindmap/Path';
 import Header from 'components/mindmap/Header';
 import Aside from 'components/mindmap/Aside';
 import Footer from 'components/mindmap/Footer';
-import produce from 'immer';
 import CanvasContainer from './Mindmap/CanvasContainer';
 import ContextMenuContainer from './Mindmap/ContextMenuContainer';
 import NodeContainer from './Mindmap/NodeContainer';
@@ -36,10 +36,11 @@ class App extends Component {
 
   componentDidMount() {
     const { setSVG, createSVGPoint, setViewBoxBaseVal } = this;
-    const { getNodes, getPaths } = this.props;
-    getNodes(NodesData);
-    getPaths(NodesData);
-
+    const { MindmapActions, repositoryId } = this.props;
+    MindmapActions.loadIdeasRequest(repositoryId).then(() => {
+      const { nodes, MindmapActions } = this.props;
+      MindmapActions.getPaths(nodes);
+    });
     const svg = document.querySelector('#canvas');
     setSVG(svg);
     createSVGPoint(svg);
@@ -211,8 +212,9 @@ class App extends Component {
       toggleExplore,
       exportMindmap,
     } = this;
-    const { paths, nodes } = this.props;
+    const { paths, nodes, userId, repositoryId } = this.props;
     const { pointer, contextMenu, explore } = this.state;
+    console.log(nodes);
     return (
       <div
         className="App"
@@ -275,6 +277,8 @@ class App extends Component {
           <ContextMenuContainer
             pointer={pointer}
             mode={contextMenu}
+            userId={userId}
+            repositoryId={repositoryId}
             toggleContextMenu={toggleContextMenu}
             toggleExplore={toggleExplore}
           />
@@ -294,8 +298,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getNodes: data => dispatch(getNodes(data)),
-  getPaths: path => dispatch(getPaths(path)),
+  MindmapActions: bindActionCreators(mindmapActions, dispatch),
 });
 
 export default connect(

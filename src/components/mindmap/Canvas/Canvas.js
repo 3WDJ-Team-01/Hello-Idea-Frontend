@@ -36,8 +36,14 @@ const Canvas = ({
   onWheel,
   children,
 }) => {
-  const width = cavasPins.rightBottom.x - cavasPins.leftTop.x + 100;
-  const height = cavasPins.rightBottom.y - cavasPins.leftTop.y + 100;
+  const width =
+    cavasPins.rightBottom.x - cavasPins.leftTop.x + 100 < window.screen.width
+      ? window.screen.width
+      : cavasPins.rightBottom.x - cavasPins.leftTop.x + 100;
+  const height =
+    cavasPins.rightBottom.y - cavasPins.leftTop.y + 100 < window.screen.height
+      ? window.screen.height
+      : cavasPins.rightBottom.y - cavasPins.leftTop.y + 100;
 
   // If browser supports pointer events
   if (window.PointerEvent) {
