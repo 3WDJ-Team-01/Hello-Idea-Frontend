@@ -214,7 +214,6 @@ class App extends Component {
     } = this;
     const { paths, nodes, userId, repositoryId } = this.props;
     const { pointer, contextMenu, explore } = this.state;
-    console.log(nodes);
     return (
       <div
         className="App"

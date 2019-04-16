@@ -92,7 +92,7 @@ class NodeContainer extends Component {
   handleBlur = e => {
     const { MindmapActions } = this.props;
     const { node } = this.state;
-    MindmapActions.setNodeData({
+    MindmapActions.updateIdeaRequest({
       ...node,
       head: e.target.textContent,
       isEditing: false,
@@ -102,18 +102,15 @@ class NodeContainer extends Component {
       },
       size: { width: e.target.clientWidth + 10, height: e.target.clientHeight },
     });
-    MindmapActions.setNodeLocation(node);
   };
 
   handleKeyPress = e => {
     const { MindmapActions } = this.props;
     const { node, temp } = this.state;
     if (e.key === 'Enter') {
-      MindmapActions.setNodeData({ ...node, isEditing: false });
-      MindmapActions.setNodeLocation(node);
+      MindmapActions.updateIdeaRequest({ ...node, isEditing: false });
     } else if (e.key === 'Escape') {
-      MindmapActions.setNodeData({ ...temp, isEditing: false });
-      MindmapActions.setNodeLocation(node);
+      MindmapActions.updateIdeaRequest({ ...temp, isEditing: false });
     }
   };
 

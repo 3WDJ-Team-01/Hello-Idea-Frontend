@@ -20,12 +20,8 @@ const ADD_NODE_SUCCESS = 'mindmap/ADD_NODE_SUCCESS';
 const ADD_NODE_FAILURE = 'mindmap/ADD_NODE_FAILURE';
 const ADD_PATH = 'mindmap/ADD_PATH';
 const REMOVE_NODE = 'mindmap/REMOVE_NODE';
-const REMOVE_NODE_SUCCESS = 'mindmap/REMOVE_NODE_SUCCESS';
-const REMOVE_NODE_FAILURE = 'mindmap/REMOVE_NODE_FAILURE';
 const TOGGLE_NODE_EDITING = 'mindmap/TOGGLE_NODE_EDITING';
 const SET_NODE_DATA = 'mindmap/SET_NODE_DATA';
-const SET_NODE_DATA_SUCCESS = 'mindmap/SET_NODE_DATA_SUCCESS';
-const SET_NODE_DATA_FAILURE = 'mindmap/SET_NODE_DATA_FAILURE';
 const SET_NODE_LOCATION = 'mindmap/SET_NODE_LOCATION'; // Node & Path ReLocation
 
 export const setSourceNode = createAction(SET_SOURCE_NODE);
@@ -38,12 +34,8 @@ export const addNodeSuccess = createAction(ADD_NODE_SUCCESS);
 export const addNodeFailure = createAction(ADD_NODE_FAILURE);
 export const addPath = createAction(ADD_PATH);
 export const removeNode = createAction(REMOVE_NODE);
-export const removeNodeSuccess = createAction(REMOVE_NODE_SUCCESS);
-export const removeNodeFailure = createAction(REMOVE_NODE_FAILURE);
 export const toggleNodeEditing = createAction(TOGGLE_NODE_EDITING);
 export const setNodeData = createAction(SET_NODE_DATA);
-export const setNodeDataSuccess = createAction(SET_NODE_DATA_SUCCESS);
-export const setNodeDataFailure = createAction(SET_NODE_DATA_FAILURE);
 export const setNodeLocation = createAction(SET_NODE_LOCATION);
 
 // Communication
@@ -52,7 +44,7 @@ export const loadIdeasRequest = project_id => dispatch => {
   return axios
     .post('/api/idea/load/', { project_id })
     .then(res => {
-      dispatch(setSourceNode());
+      dispatch(setSourceNode(res.data));
       dispatch(getNodesSuccess(res.data));
     })
     .catch(err => {
@@ -70,37 +62,34 @@ export const createIdeaRequest = data => dispatch => {
       idea_color: data.color,
     })
     .then(res => {
-      axios
-        .post('/api/idea/loc/create/', {
-          idea_id: res.data.idea_id,
-          idea_x: data.location.x,
-          idea_y: data.location.y,
-          idea_width: data.size.width,
-          idea_height: data.size.height,
-        })
-        .then(() => {
-          const node = { ...data, id: res.data.idea_id };
-          dispatch(addNodeSuccess(node));
-          dispatch(addPath({ start: 0, end: node }));
+      const node = { ...data, id: res.data.idea_id };
+      dispatch(addNodeSuccess(node));
+      dispatch(addPath({ start: data.childOf, end: node }));
+      axios.post('/api/idea/loc/create/', {
+        idea_id: res.data.idea_id,
+        idea_x: data.location.x,
+        idea_y: data.location.y,
+        idea_width: data.size.width,
+        idea_height: data.size.height,
+      });
+      if (data.childOf !== 0) {
+        axios.post('/api/idea/child/create/', {
+          idea_id: data.childOf,
+          child_id: res.data.idea_id,
         });
+      }
     })
     .catch(err => {
       if (err.response) dispatch(addNodeFailure(err.response));
     });
 };
 export const removeIdeaRequest = idea_id => dispatch => {
-  dispatch(removeNode());
-  return axios
-    .post('/api/idea/delete/', { idea_id })
-    .then(res => {
-      dispatch(removeNodeSuccess(idea_id));
-    })
-    .catch(err => {
-      if (err.response) dispatch(removeNodeFailure(err.response));
-    });
+  dispatch(removeNode(idea_id));
+  return axios.post('/api/idea/delete/', { idea_id });
 };
 export const updateIdeaRequest = data => dispatch => {
-  dispatch(setNodeData());
+  dispatch(setNodeData(data));
+  dispatch(setNodeLocation(data));
   if (data.head)
     return axios
       .post('/api/idea/update/', {
@@ -117,10 +106,7 @@ export const updateIdeaRequest = data => dispatch => {
             idea_width: data.size.width,
             idea_height: data.size.height,
           })
-          .then(() => {
-            dispatch(setNodeDataSuccess(data));
-            dispatch(setNodeLocation(data));
-          });
+          .then(() => {});
         axios
           .post('/api/idea/keyword/create/', {
             idea_id: data.id,
@@ -132,9 +118,6 @@ export const updateIdeaRequest = data => dispatch => {
               idea_cont: keyword.data,
             });
           });
-      })
-      .catch(err => {
-        if (err.response) dispatch(setNodeDataFailure(err.response));
       });
   else
     return axios
@@ -195,15 +178,20 @@ export default handleActions(
               y: 0,
             },
             size: {
-              width: 100,
+              width: 150,
               height: 40,
             },
             color: '#ECF0F1',
-            head: '0',
-            parentOf: [1, 2],
+            head: 'Right click to edit',
+            parentOf: [],
             childOf: null,
           },
         ];
+        action.payload.map(node => {
+          if (node.parent_id === 0) {
+            draft.nodes[0].parentOf.push(node.idea_id);
+          }
+        });
       }),
     [GET_NODES]: (state, action) =>
       produce(state, draft => {
@@ -243,11 +231,12 @@ export default handleActions(
         const prevCanvasPins = state.cavasPins;
         draft.paths = [];
         for (let i = action.payload.length - 1; i > -1; i--) {
-          const indexOfChild = action.payload[i].childOf;
+          const parentIndex = action.payload.findIndex(
+            item => item.id === action.payload[i].childOf,
+          );
 
-          const start = action.payload[indexOfChild];
+          const start = action.payload[parentIndex];
           const end = action.payload[i];
-
           if (end.location.x < prevCanvasPins.leftTop.x) {
             prevCanvasPins.leftTop.x = end.location.x;
           } else if (end.location.x > prevCanvasPins.rightBottom.x) {
@@ -260,7 +249,7 @@ export default handleActions(
             prevCanvasPins.rightBottom.y = end.location.y;
           }
 
-          if (typeof indexOfChild === 'number') {
+          if (parentIndex > -1) {
             if (end.parentOf.length > 0) {
               start.parentOf = start.parentOf.concat(end.parentOf);
             }
@@ -337,66 +326,35 @@ export default handleActions(
     [ADD_PATH]: (state, action) =>
       produce(state, draft => {
         const { start, end } = action.payload;
-        if (start === 0) {
-          const { mode, position } = getPathEndPoint(
-            state.nodes[0].location,
-            end.location,
-            end.size,
-          );
-          draft.paths.push({
-            options: {
-              mode: mode,
-              color: state.nodes[0].color,
-              endPosition: position,
-            },
-            startAt: {
-              nodeId: state.nodes[0].id,
-              x: state.nodes[0].location.x,
-              y: state.nodes[0].location.y,
-            },
-            endAt: {
-              nodeId: end.id,
-              width: end.size.width,
-              height: end.size.height,
-              x: end.location.x,
-              y: end.location.y,
-            },
-          });
-        } else {
-          const { mode, position } = getPathEndPoint(
-            start.location,
-            end.location,
-            end.size,
-          );
-          draft.paths.push({
-            options: {
-              mode: mode,
-              color: start.color,
-              endPosition: position,
-            },
-            startAt: {
-              nodeId: start.id,
-              x: start.location.x,
-              y: start.location.y,
-            },
-            endAt: {
-              nodeId: end.id,
-              width: end.size.width,
-              height: end.size.height,
-              x: end.location.x,
-              y: end.location.y,
-            },
-          });
-        }
+        const parent =
+          state.nodes[state.nodes.findIndex(node => node.id === start)];
+        const { mode, position } = getPathEndPoint(
+          parent.location,
+          end.location,
+          end.size,
+        );
+        draft.paths.push({
+          options: {
+            mode: mode,
+            color: parent.color,
+            endPosition: position,
+          },
+          startAt: {
+            nodeId: parent.id,
+            x: parent.location.x,
+            y: parent.location.y,
+          },
+          endAt: {
+            nodeId: end.id,
+            width: end.size.width,
+            height: end.size.height,
+            x: end.location.x,
+            y: end.location.y,
+          },
+        });
       }),
     [REMOVE_NODE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
-      }),
-    // communication response
-    [REMOVE_NODE_SUCCESS]: (state, action) =>
-      produce(state, draft => {
-        draft.state = 'success';
         const targetNodeIndex = state.nodes.findIndex(
           node => node.id === action.payload,
         );
@@ -451,10 +409,6 @@ export default handleActions(
           1,
         );
       }),
-    [REMOVE_NODE_FAILURE]: (state, action) =>
-      produce(state, draft => {
-        draft.state = 'failure';
-      }),
     [TOGGLE_NODE_EDITING]: (state, action) =>
       produce(state, draft => {
         const index = draft.nodes.findIndex(node => node.id === action.payload);
@@ -463,12 +417,6 @@ export default handleActions(
       }),
     [SET_NODE_DATA]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
-      }),
-    // communication response
-    [SET_NODE_DATA_SUCCESS]: (state, action) =>
-      produce(state, draft => {
-        draft.state = 'success';
         const { id, color } = action.payload;
         const index = draft.nodes.findIndex(node => node.id === id);
         draft.nodes[index] = {
@@ -480,10 +428,7 @@ export default handleActions(
             draft.paths[i].options.color = color;
         });
       }),
-    [SET_NODE_DATA_FAILURE]: (state, action) =>
-      produce(state, draft => {
-        draft.state = 'failure';
-      }),
+
     [SET_NODE_LOCATION]: (state, action) =>
       produce(state, draft => {
         const index = draft.nodes.findIndex(
@@ -493,12 +438,14 @@ export default handleActions(
         draft.nodes[index].location.x = action.payload.location.x;
         draft.nodes[index].location.y = action.payload.location.y;
 
+        // adjust canvas horizontal size
         if (action.payload.location.x < state.cavasPins.leftTop.x) {
           draft.cavasPins.leftTop.x = action.payload.location.x;
         } else if (action.payload.location.x > state.cavasPins.rightBottom.x) {
           draft.cavasPins.rightBottom.x = action.payload.location.x;
         }
 
+        // adjust canvas vertical size
         if (action.payload.location.y < state.cavasPins.leftTop.y) {
           draft.cavasPins.leftTop.y = action.payload.location.y;
         } else if (action.payload.location.y > state.cavasPins.rightBottom.y) {

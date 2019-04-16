@@ -109,13 +109,9 @@ class ContextMenuContainer extends Component {
     /* From nodes */
 
     const addFromNode = e => {
-      const { nodes } = this.props.mindmap;
       const { targetNodeId } = this.state;
-      const targetNode =
-        nodes[nodes.findIndex(node => node.id === targetNodeId)];
+      MindmapActions.createIdeaRequest({ ...newNode, childOf: targetNodeId });
 
-      //addNode({ ...newNode, childOf: targetNodeId });
-      //addPath({ start: targetNode, end: newNode });
       toggleContextMenu(e);
     };
 

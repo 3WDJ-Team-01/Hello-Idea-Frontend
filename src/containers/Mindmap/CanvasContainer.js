@@ -77,6 +77,7 @@ class CanvasContainer extends Component {
 
       MindmapActions.updateIdeaRequest({
         id: nodes[index].id,
+        color: nodes[index].color,
         location: {
           x: pointerPosition.x,
           y: pointerPosition.y,
