@@ -27,10 +27,22 @@
   .projectName {
     color: white;
     font-size: 1.5rem;
+    @include media('<medium') {
+      font-size: 1.3rem;
+    }
+    @media (max-width: 325px) {
+      font-size: 1.2rem;
+    }
   }
   .groupName {
     color: rgb(255, 208, 0);
     font-size: 1.3rem;
+    @include media('<medium') {
+      font-size: 1rem;
+    }
+    @media (max-width: 325px) {
+      font-size: 1rem;
+    }
   }
   > div + div {
     margin-left: 10px;
@@ -43,5 +55,18 @@
   button {
     margin: 0;
     padding: 0.7rem 1.7rem;
+    @include media('<medium') {
+      padding: 0.5rem 1.3rem;
+      width: 50px;
+    }
+    @media (max-width: 325px) {
+      padding: 0.5rem 0.7rem;
+      width: 30px;
+    }
+  }
+  span {
+    @include media('<medium') {
+      display: none;
+    }
   }
 }

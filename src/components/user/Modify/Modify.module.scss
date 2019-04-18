@@ -3,6 +3,9 @@
 .modify {
   max-width: $app_width / 1.5;
   margin: 0 auto;
+  @include media('<medium') {
+    max-width: 768px;
+  }
 }
 .section {
   button {
@@ -29,8 +32,15 @@
   .paragraphWrapper {
     display: flex;
     justify-content: space-between;
+    @include media('<medium') {
+      display: block;
+    }
     > div {
       width: 48%;
+      @include media('<medium') {
+        margin-top: 10%;
+        width: 90%;
+      }
     }
   }
   .item {
@@ -46,6 +56,9 @@
   .title {
     font-size: 1.5rem;
     font-weight: 600;
+    @include media('<medium') {
+      margin-top: 5%;
+    }
   }
   hr {
     border-color: $gray;
@@ -58,6 +71,24 @@
     line-height: 2rem;
     padding: 0 0.5rem;
     width: 20rem;
+  }
+  input {
+    @include media('<medium') {
+      min-width: 50px;
+      max-width: 300px;
+      @media (max-width: 325px) {
+        max-width: 250px;
+      }
+    }
+  }
+  textarea {
+    @include media('<medium') {
+      min-width: 50px;
+      max-width: 300px;
+    }
+    @media (max-width: 325px) {
+      max-width: 250px;
+    }
   }
   .caution {
     color: darken(red, 10%) !important;

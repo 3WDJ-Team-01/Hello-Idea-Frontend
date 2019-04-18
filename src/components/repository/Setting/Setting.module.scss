@@ -3,6 +3,9 @@
 .modify {
   max-width: $app_width / 1.5;
   margin: 0 auto;
+  @include media('<medium') {
+    width: 90%;
+  }
 }
 .section {
   button {
@@ -20,9 +23,6 @@
     &:not([disabled]):not(.disabled):active {
       background-color: lighten($gray, 0%) !important;
     }
-  }
-  .input + .input {
-    margin-top: 1rem;
   }
   > div {
     font-weight: 500;
@@ -50,8 +50,22 @@
     margin-top: 0.2rem;
     margin-right: 5rem;
   }
+  input {
+    @include media('<medium') {
+      max-width: 290px;
+    }
+    @media (max-width: 325px) {
+      max-width: 240px;
+    }
+  }
   textarea {
     width: 40rem;
+    @include media('<medium') {
+      max-width: 290px;
+    }
+    @media (max-width: 325px) {
+      max-width: 240px;
+    }
   }
   .caution {
     color: darken(red, 10%) !important;

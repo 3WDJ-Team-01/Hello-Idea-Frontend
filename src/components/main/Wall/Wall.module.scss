@@ -8,12 +8,18 @@ $spaceImgToActivity: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  @include media('<medium') {
+    margin-top: 30px;
+  }
 }
 
 .feed {
   font-size: 0.9rem;
   width: 100%;
   padding: 2rem 0;
+  @include media('<medium') {
+    padding: 1rem 0;
+  }
   .header {
     display: flex;
     align-items: center;
@@ -26,6 +32,9 @@ $spaceImgToActivity: 1rem;
     }
     .date {
       color: gray;
+      @include media('<medium') {
+        display: none;
+      }
     }
   }
   .detail {
@@ -34,6 +43,7 @@ $spaceImgToActivity: 1rem;
     margin-left: calc(32px + #{$spaceImgToActivity});
     border: 1px solid $gray;
     border-radius: 5px;
+    margin-top: 1%;
   }
 }
 .feed + .feed {

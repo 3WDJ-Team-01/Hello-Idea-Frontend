@@ -430,6 +430,71 @@ export default handleActions(
       }),
 
     [SET_NODE_LOCATION]: (state, action) =>
+      /**
+      produce(state, draft => {
+        const index = draft.nodes.findIndex(
+          node => node.id === action.payload.id,
+        );
+        const gapX = state.nodes[index].location.x - action.payload.location.x;
+        const gapY = state.nodes[index].location.y - action.payload.location.y;
+
+        if (state.nodes[index].parentOf.length > 0) {
+          state.nodes[index].parentOf.map(child => {
+            const childIndex = draft.nodes.findIndex(node => node.id === child);
+            draft.nodes[childIndex].location.x -= gapX;
+            draft.nodes[childIndex].location.y -= gapY;
+          });
+        }
+
+        draft.nodes[index].location.x = action.payload.location.x;
+        draft.nodes[index].location.y = action.payload.location.y;
+
+        // adjust canvas horizontal size
+        if (action.payload.location.x < state.cavasPins.leftTop.x) {
+          draft.cavasPins.leftTop.x = action.payload.location.x;
+        } else if (action.payload.location.x > state.cavasPins.rightBottom.x) {
+          draft.cavasPins.rightBottom.x = action.payload.location.x;
+        }
+
+        // adjust canvas vertical size
+        if (action.payload.location.y < state.cavasPins.leftTop.y) {
+          draft.cavasPins.leftTop.y = action.payload.location.y;
+        } else if (action.payload.location.y > state.cavasPins.rightBottom.y) {
+          draft.cavasPins.rightBottom.y = action.payload.location.y;
+        }
+        // reset location of the path
+        draft.paths.map((path, i) => {
+          if (path.startAt) {
+            if (path.startAt.nodeId === draft.nodes[index].id) {
+              const { mode, position } = getPathEndPoint(
+                action.payload.location,
+                path.endAt,
+                path.endAt,
+              );
+              path.options.mode = mode;
+              path.options.endPosition = position;
+              path.startAt.x = action.payload.location.x;
+              path.startAt.y = action.payload.location.y;
+            } else if (path.endAt.nodeId === draft.nodes[index].id) {
+              const { mode, position } = getPathEndPoint(
+                path.startAt,
+                action.payload.location,
+                path.endAt,
+              );
+              path.options.mode = mode;
+              path.options.endPosition = position;
+              path.endAt.x = action.payload.location.x;
+              path.endAt.y = action.payload.location.y;
+
+              if (action.payload.size) {
+                path.endAt.width = action.payload.size.width;
+                path.endAt.height = action.payload.size.height;
+              }
+            }
+          }
+        });
+      }),
+    */
       produce(state, draft => {
         const index = draft.nodes.findIndex(
           node => node.id === action.payload.id,

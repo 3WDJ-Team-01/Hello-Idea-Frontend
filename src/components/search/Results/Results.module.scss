@@ -8,6 +8,9 @@
     border-bottom: 1px solid $gray;
     font-size: 1.3rem;
     padding-bottom: 0.5rem;
+    @include media('<medium') {
+      margin-top: 10%;
+    }
   }
 
   .Result {

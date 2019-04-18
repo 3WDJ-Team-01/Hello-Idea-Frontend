@@ -6,6 +6,10 @@
   border: 1px solid $gray;
   border-radius: 5px;
   margin-bottom: auto;
+  @include media('<medium') {
+    min-width: 305px;
+  }
+
   ul {
     padding: 0;
     margin: 0;

@@ -5,13 +5,18 @@
   max-width: $app_width;
   margin: 3rem auto;
   margin-bottom: 0;
-
+  @include media('<medium') {
+    max-width: 90%;
+  }
   article {
     display: flex;
     justify-content: space-between;
   }
   section {
     width: 65%;
+    @include media('<medium') {
+      width: 100%;
+    }
   }
   aside {
     display: block;
@@ -20,5 +25,8 @@
     width: 30%;
     height: 500px;
     margin-top: 6rem;
+    @include media('<medium') {
+      display: none;
+    }
   }
 }

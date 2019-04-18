@@ -3,6 +3,10 @@
 .new {
   max-width: $app_width / 1.8;
   margin: 6rem auto;
+  @include media('<medium') {
+    width: 90%;
+    margin: 1rem;
+  }
 
   .title {
     font-size: 1.5rem;
@@ -20,8 +24,29 @@
     padding: 0 0.5rem;
     width: 20rem;
   }
+  input {
+    @include media('<medium') {
+      min-width: 50px;
+      max-width: 150px;
+    }
+    @media (max-width: 325px) {
+      max-width: 130px;
+    }
+  }
+  textarea {
+    @include media('<medium') {
+      min-width: 50px;
+      max-width: 320px;
+    }
+    @media (max-width: 325px) {
+      max-width: 300px;
+    }
+  }
   select {
     background-color: lighten($gray, 10%);
+    @include media('<medium') {
+      min-width: 120px;
+    }
   }
 }
 .article {
@@ -33,6 +58,11 @@
     align-items: flex-end;
     font-size: 2rem;
     margin: 0 1.5rem;
+    @include media('<medium') {
+      font-size: 1.5rem;
+      margin: 0 0.5rem;
+      margin-bottom: 2%;
+    }
   }
   .section {
     .label {
@@ -41,5 +71,9 @@
   }
   button {
     border-radius: 5px;
+    @include media('<medium') {
+      width: 100%;
+      text-align: center;
+    }
   }
 }

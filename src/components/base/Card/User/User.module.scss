@@ -13,15 +13,43 @@
   }
   .description {
     width: 100%;
+    @include media('<medium') {
+      width: 150px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    @media (max-width: 380px) {
+      width: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    @media (max-width: 330px) {
+      width: 80px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   button {
     border-radius: 50px;
+    @include media('<medium') {
+      padding: 1%;
+    }
+    @media (max-width: 330px) {
+      padding: 1%;
+    }
   }
   .followerImg {
-    width: 60px;
-    height: 60px;
+    width: 4rem;
+    height: 4rem;
     border-radius: 50%;
     background-color: lightgray;
+    @include media('<medium') {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
   }
 }
 

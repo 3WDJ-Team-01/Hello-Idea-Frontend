@@ -16,12 +16,18 @@
   display: flex;
   justify-content: space-around;
   height: 300px;
+  @include media('<medium') {
+    height: 150px;
+  }
 
   .graph {
     width: 40%;
     max-height: 30rem;
     height: 100%;
     background-color: lightgray;
+    @include media('<medium') {
+      width: 45%;
+    }
   }
 }
 .activity {

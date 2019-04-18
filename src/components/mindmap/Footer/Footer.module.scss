@@ -27,6 +27,11 @@
   }
 }
 .brainRightFooter {
+  > div {
+    @include media('<medium') {
+      display: none;
+    }
+  }
   > div + div {
     margin-left: 10px;
   }

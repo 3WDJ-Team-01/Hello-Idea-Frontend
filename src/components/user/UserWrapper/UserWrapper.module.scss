@@ -4,4 +4,8 @@
   max-width: $app_width;
   width: 100%;
   margin: 6rem auto;
+  @include media('<medium') {
+    margin: 0;
+    padding: 1rem;
+  }
 }

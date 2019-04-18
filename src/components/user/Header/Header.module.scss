@@ -18,10 +18,22 @@ $navHeight: 60px;
   height: $backIMGHeight;
   display: flex;
   margin: 0 auto;
+  @include media('<medium') {
+    max-width: 768px;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
   > a {
     margin-top: $image_maxsize - $backIMGHeight;
     button {
       border-radius: 50px;
+      @include media('<medium') {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      @media (max-width: 330px) {
+        display: none;
+      }
     }
   }
 }
@@ -31,6 +43,13 @@ $navHeight: 60px;
   top: $image_maxsize - $backIMGHeight;
   width: 200px;
   height: 200px;
+  @include media('<medium') {
+    top: 21%;
+    min-width: 100px;
+    min-height: 100px;
+    width: 100px;
+    height: 100px;
+  }
   .userImage {
     border-radius: 1rem;
     box-shadow: $shadow2dp;
@@ -45,11 +64,24 @@ $navHeight: 60px;
   margin: 0 $descSpace;
   padding-top: $image_maxsize - $backIMGHeight;
   z-index: 10;
+  button {
+    display: none;
+    @media (max-width: 325px) {
+      display: inline-block;
+      border-radius: 25px 25px;
+      padding: 20%;
+      float: left;
+    }
+  }
 }
 .userProfileName {
   margin-bottom: 0.5rem;
   font-size: 2rem;
   color: black;
+  @include media('<medium') {
+    font-size: 1.5rem;
+    padding-top: 2%;
+  }
   &:hover {
     text-decoration: none;
     color: black;
@@ -57,7 +89,11 @@ $navHeight: 60px;
 }
 .userDescription {
   font-size: 1.1rem;
+  @include media('<medium') {
+    font-size: 0.9rem;
+  }
 }
+
 .userNavWrapper {
   position: sticky;
   z-index: 900;
@@ -80,6 +116,10 @@ $navHeight: 60px;
   display: flex;
   align-items: center;
   transition: all 500ms;
+  @include media('<medium') {
+    display: none;
+  }
+
   .userProfileImg {
     position: inherit;
     width: 40px;
@@ -101,21 +141,42 @@ $navHeight: 60px;
   width: 500px;
   height: 100%;
   font-size: 1.1rem;
+  justify-content: space-between;
   padding-left: $descSpace;
+  @include media('<medium') {
+    max-width: 100%;
+    padding-left: 1%;
+    padding-right: 5%;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 325px) {
+    margin-left: 3%;
+  }
+
   a {
     color: black;
 
     line-height: $navHeight;
     height: 100;
 
-    padding: 0 1rem;
+    padding: 0 0.7rem;
     &:hover {
       color: black;
       text-decoration: none;
       border-bottom: 3px solid darken($gray, 20%);
     }
+    @include media('<medium') {
+      max-width: 150px;
+      min-width: 30px;
+    }
+    @media (max-width: 325px) {
+      padding: 0 0.1rem;
+    }
   }
   a + a {
     margin-left: 1rem;
+    @include media('<medium') {
+      margin-left: 0;
+    }
   }
 }

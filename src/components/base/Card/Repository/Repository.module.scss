@@ -5,21 +5,45 @@
   flex: 1;
   padding: 2rem;
   border-top: 2px solid $gray;
+  @include media('<medium') {
+    padding: 1rem;
+  }
   .contents {
     display: flex;
     flex-direction: column;
   }
   .image {
-    width: 240px;
-    height: 180px;
+    width: 15rem;
+    height: 11.3rem;
     background-color: lightgray;
+    @include media('<medium') {
+      margin-left: 10%;
+      max-width: 100px;
+      height: 100px;
+    }
+    @media (max-width: 330px) {
+      margin-left: 10%;
+      margin-top: 5%;
+      max-width: 75px;
+      height: 75px;
+    }
   }
   .title {
     font-size: 2rem;
+    @include media('<medium') {
+      font-size: 1.5rem;
+    }
   }
   .body {
     flex: 1;
     margin: 1rem 0;
+    @include media('<medium') {
+      margin: 0;
+      width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   .property {
     display: flex;
@@ -29,8 +53,12 @@
     display: flex;
     > div {
       margin-right: 1rem;
+      @include media('<medium') {
+      }
     }
   }
   .date {
+    @include media('<medium') {
+    }
   }
 }

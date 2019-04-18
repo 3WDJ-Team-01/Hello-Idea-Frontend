@@ -9,17 +9,80 @@ import {
   DropdownTrigger,
   DropdownWrapper,
 } from 'components/base/Dropdown/Dropdown';
+import {
+  MobileMenu,
+  MobileMenuList,
+  MobileTrigger,
+  MobileWrapper,
+} from 'components/base/Dropdown/MobileMenubar';
 import styles from './Header.module.scss';
 
 const Header = ({ searchTo, onLogout, onChange, userInfo }) => (
   <div className={styles.header_wrapper}>
     <div className={styles.header}>
+      <div
+        className={styles.mobileMenu}
+        style={{ fontSize: '1.5rem', color: 'white' }}
+      >
+        <MobileWrapper>
+          <MobileTrigger>
+            <MDBIcon icon="bars" />
+          </MobileTrigger>
+          <MobileMenuList posRight="0">
+            <MobileMenu>
+              <div className={styles.item}>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search..."
+                  value={searchTo}
+                  onChange={onChange}
+                />
+                <div className={styles.searchResult}>
+                  {searchTo && (
+                    <Link to={`/search/${searchTo}`}>
+                      <div>
+                        <MDBIcon icon="search" />
+                        <span>{searchTo}</span>
+                      </div>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </MobileMenu>
+            <MobileMenu isDivider />
+            <MobileMenu>
+              <Link to="/Trends" className="headLink">
+                <div className={styles.item}>Trends</div>
+              </Link>
+            </MobileMenu>
+            <MobileMenu>
+              <Link to="/Explore" className="headLink">
+                <div className={styles.item}>Explore</div>
+              </Link>
+            </MobileMenu>
+            <MobileMenu isDivider />
+            <MobileMenu path={`/user/${userInfo.user_id}`}>
+              <div className={styles.item}>Your profile</div>
+            </MobileMenu>
+            <MobileMenu path={`/user/${userInfo.user_id}/repositories`}>
+              <div className={styles.item}>Your repositories</div>
+            </MobileMenu>
+            <MobileMenu>
+              <div className={styles.item} onClick={onLogout}>
+                Sign out
+              </div>
+            </MobileMenu>
+          </MobileMenuList>
+        </MobileWrapper>
+      </div>
       <div>
         <Link to="/" className={styles.logo}>
           <img
             src="https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/global/logo.png"
             alt=""
           />
+
           <span>HelloIdea</span>
         </Link>
 
@@ -52,6 +115,7 @@ const Header = ({ searchTo, onLogout, onChange, userInfo }) => (
           </Link>
         </div>
       </div>
+
       <div style={{ fontSize: '1.5rem', color: 'white' }}>
         <div className={styles.dropdown}>
           <DropdownWrapper>
@@ -84,11 +148,24 @@ const Header = ({ searchTo, onLogout, onChange, userInfo }) => (
               <DropdownMenu path={`/user/${userInfo.user_id}/modify`}>
                 <div className={styles.item}>Settings</div>
               </DropdownMenu>
-              <DropdownMenu path="/auth/login">
+              <DropdownMenu>
                 <div className={styles.item} onClick={onLogout}>
                   Sign out
                 </div>
               </DropdownMenu>
+            </DropdownMenuList>
+          </DropdownWrapper>
+        </div>
+        <div className={styles.mobileNotif} style={{ fontSize: '1.3rem' }}>
+          <DropdownWrapper>
+            <DropdownTrigger>
+              <MDBIcon icon="bell" />
+            </DropdownTrigger>
+            <DropdownMenuList>
+              <DropdownMenu>알림1</DropdownMenu>
+              <DropdownMenu>알림2</DropdownMenu>
+              <DropdownMenu isDivider />
+              <DropdownMenu>전체알림</DropdownMenu>
             </DropdownMenuList>
           </DropdownWrapper>
         </div>

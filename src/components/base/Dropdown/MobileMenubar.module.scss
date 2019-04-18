@@ -1,0 +1,42 @@
+@import '~styles/utils.scss';
+
+.dropdown {
+  summary {
+    outline: none;
+    font-size: 0.8em;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .wrapper {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    right: auto;
+    .menu {
+      position: relative;
+      z-index: 999;
+      background-color: #2f4e73;
+      color: white;
+      font-size: 0.9rem;
+      div {
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+      }
+      a {
+        font-weight: 400;
+        color: white;
+      }
+      a:hover {
+        color: #86bdff;
+      }
+      .item:hover {
+        color: #86bdff;
+      }
+      hr {
+        margin: 0.3rem;
+      }
+    }
+  }
+}
