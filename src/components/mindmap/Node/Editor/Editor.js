@@ -12,6 +12,7 @@ const Editor = React.forwardRef(
       color,
       handleInput,
       handleTextContent,
+      handleResize,
       handleBlur,
       handleKeyPress,
     },
@@ -20,16 +21,18 @@ const Editor = React.forwardRef(
     <foreignObject
       x={location.x - size.width / 2}
       y={location.y - size.height / 2}
-      width={size.width + 6}
-      height={size.height + 6}
+      width="100%"
+      height="100%"
     >
       <div
         className={styles.editor}
         style={{
-          minWidth: size.width,
-          minHeight: size.height,
+          width: size.width,
+          height: size.height,
           border: `2px solid ${color}`,
+          overflowY: 'hidden',
         }}
+        onMouseUp={handleResize}
       >
         <div
           ref={ref}

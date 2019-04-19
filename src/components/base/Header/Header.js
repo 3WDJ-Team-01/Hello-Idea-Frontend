@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
@@ -35,6 +36,7 @@ const Header = ({ searchTo, onLogout, onChange, userInfo }) => (
                   type="text"
                   className="form-control"
                   placeholder="Search..."
+                  className="mobile"
                   value={searchTo}
                   onChange={onChange}
                 />
@@ -51,15 +53,11 @@ const Header = ({ searchTo, onLogout, onChange, userInfo }) => (
               </div>
             </MobileMenu>
             <MobileMenu isDivider />
-            <MobileMenu>
-              <Link to="/Trends" className="headLink">
-                <div className={styles.item}>Trends</div>
-              </Link>
+            <MobileMenu path="/trends">
+              <div className={styles.item}>Trends</div>
             </MobileMenu>
-            <MobileMenu>
-              <Link to="/Explore" className="headLink">
-                <div className={styles.item}>Explore</div>
-              </Link>
+            <MobileMenu path="/explore">
+              <div className={styles.item}>Explore</div>
             </MobileMenu>
             <MobileMenu isDivider />
             <MobileMenu path={`/user/${userInfo.user_id}`}>

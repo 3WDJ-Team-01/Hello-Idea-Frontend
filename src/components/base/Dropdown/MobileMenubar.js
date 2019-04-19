@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable no-console */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -9,15 +10,28 @@ import styles from './MobileMenubar.module.scss';
 export const MobileMenu = ({ isDivider, disabled, path, onClick, children }) =>
   isDivider ? (
     <hr />
-  ) : (
+  ) : path ? (
     <Link to={`${path}`}>
       <div
-        onClick={disabled && onClick}
+        onClick={
+          disabled
+            ? e => {
+                e.preventDefault();
+              }
+            : () => {}
+        }
         className={disabled ? styles.head : styles.item}
       >
         {children}
       </div>
     </Link>
+  ) : (
+    <div
+      onClick={disabled && onClick}
+      className={disabled ? styles.head : styles.item}
+    >
+      {children}
+    </div>
   );
 
 export const MobileMenuList = ({

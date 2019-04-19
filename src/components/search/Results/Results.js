@@ -9,22 +9,19 @@ import Repository from 'components/base/Card/Repository';
 import User from 'components/base/Card/User';
 import styles from './Results.module.scss';
 
-const ComponentFromType = (type, value) => {
-  if (type === 'repositories') return <Repository value={value} />;
-  else if (type === 'users') return <User />;
-  else if (type === 'groups') return <User />;
+const ComponentFromType = (type, value, i) => {
+  if (type === 'repositories') return <Repository key={i} value={value} />;
+  else if (type === 'users') return <User key={i} value={value} />;
+  else if (type === 'groups') return <User key={i} value={value} />;
 };
 
-const Results = ({ type }) => {
+const Results = ({ type, results }) => {
   return (
     <div className={styles.Results}>
       <div className={styles.ResultsHeader}>
-        {`${123123123} ${type} results`}
+        {`${results[type].length} ${type} results`}
       </div>
-      {ComponentFromType(type, { title: 'test1' })}
-      {ComponentFromType(type, { title: 'test2' })}
-      {ComponentFromType(type, { title: 'test3' })}
-      {ComponentFromType(type, { title: 'test4' })}
+      {results[type].map((value, i) => ComponentFromType(type, value, i))}
     </div>
   );
 };

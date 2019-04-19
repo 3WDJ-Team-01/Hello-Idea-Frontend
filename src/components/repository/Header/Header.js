@@ -16,22 +16,32 @@ const Header = ({
     <div className={styles.repoHeader}>
       <div>
         <div className={styles.repoPath}>
-          <span>
-            <MDBIcon icon="folder-open" />
-          </span>
-          <span>
-            <Link to={`/user/${repositoryInfo.user_id}`}>{author}</Link>
-          </span>
-          <span>/</span>
-          <span>
-            <Link
-              to={`/user/${
-                repositoryInfo.user_id
-              }/repositories/${repositoryId}`}
-            >
-              {repositoryInfo.project_topic}
-            </Link>
-          </span>
+          <div className={styles.title}>
+            <span>
+              <MDBIcon icon="folder-open" />
+            </span>
+            <span>
+              <Link to={`/user/${repositoryInfo.user_id}`}>{author}</Link>
+            </span>
+            <span>/</span>
+            <span>
+              <Link
+                to={`/user/${
+                  repositoryInfo.user_id
+                }/repositories/${repositoryId}`}
+              >
+                {repositoryInfo.project_topic}
+              </Link>
+            </span>
+          </div>
+          <div className={styles.options}>
+            <div className={styles.star}>
+              <MDBIcon icon="star" /> 23
+            </div>
+            <div className={styles.watched}>
+              <MDBIcon far icon="eye" /> 43
+            </div>
+          </div>
         </div>
         <div className={styles.userNavWrapper}>
           <div className={styles.userNav}>

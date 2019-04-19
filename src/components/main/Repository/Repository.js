@@ -4,10 +4,14 @@ import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Repository.module.scss';
 
-const Repository = ({ userInfo, groups, repositories }) => {
+const Repository = ({ userInfo, groups, repositories, handleChageUser }) => {
   return (
     <div className={styles.repository}>
-      <Header userInfo={userInfo} groups={groups} />
+      <Header
+        userInfo={userInfo}
+        groups={groups}
+        handleChageUser={handleChageUser}
+      />
       <List>
         {repositories.map((repository, i) => (
           <Item key={i} userInfo={userInfo} repository={repository} />
@@ -23,11 +27,14 @@ const Repository = ({ userInfo, groups, repositories }) => {
   );
 };
 
-const Header = ({ userInfo, groups }) => (
+const Header = ({ userInfo, groups, handleChageUser }) => (
   <div className={styles.header}>
     <div>
-      <select className="browser-default custom-select">
-        {<option value={userInfo.user_id}>{userInfo.user_name}</option>}
+      <select
+        className="browser-default custom-select"
+        onChange={handleChageUser}
+      >
+        <option value="personal">{userInfo.user_name}</option>
         {groups.map(group => (
           <option key={group.group_id} value={group.group_id}>
             {group.group_name}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { MDBIcon } from 'mdbreact';
 import styles from './Repository.module.scss';
 
 const Repository = ({ value }) =>
@@ -7,17 +8,20 @@ const Repository = ({ value }) =>
     <div className={styles.repository}>
       <div className={styles.contents}>
         <div className={styles.title}>
-          <Link to={`repositories/${value.title}`}>{value.title}</Link>
+          <Link to={`repositories/${value.project_id}`}>
+            {value.project_topic}
+          </Link>
         </div>
 
-        <div className={styles.body}>
-          Lorem Ipsum has been the industry's standard dummy text ever since the
-          1500s, when an unknown printer took a galley of type and scrambled it
-          to make a type specimen book.
-        </div>
+        <div className={styles.body}>{value.project_intro}</div>
         <div className={styles.property}>
           <div className={styles.category}>
-            <div>IT</div>
+            <div>
+              <MDBIcon icon="star" /> {value.project_likes}
+            </div>
+            <div>
+              <MDBIcon far icon="eye" /> {value.project_hits}
+            </div>
           </div>
           <div className={styles.date}>Updated 7days ago</div>
         </div>

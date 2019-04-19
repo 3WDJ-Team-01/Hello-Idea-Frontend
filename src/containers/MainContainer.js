@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
+import produce from 'immer';
 import MainWrapper from 'components/main/MainWrapper';
 import Discover from 'components/main/Discover';
 import Repository from 'components/main/Repository';
@@ -20,7 +21,19 @@ class MainContainer extends Component {
     }
   }
 
+  handleChageUser = e => {
+    const { UserActions } = this.props;
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (e.target.value === 'personal') {
+      UserActions.repositoriesRequest(userInfo.user_id, 0);
+    } else {
+      UserActions.repositoriesRequest(0, e.target.value);
+    }
+  };
+
   render() {
+    const { handleChageUser } = this;
     const { userInfo, groups, repositories, tendencyRepo } = this.props;
     return (
       <MainWrapper>
@@ -30,6 +43,7 @@ class MainContainer extends Component {
               userInfo={userInfo}
               groups={groups}
               repositories={repositories.all}
+              handleChageUser={handleChageUser}
             />
             <article>
               <section>

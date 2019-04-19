@@ -5,23 +5,16 @@ import { Link } from 'react-router-dom';
 import { MDBBtn } from 'mdbreact';
 import styles from './Overview.module.scss';
 
-const Similar = ({ title }) => (
-  <div className={styles.sketchBox}>
-    <div className={styles.sketchImg}>이미지</div>
-    <div className={styles.sketchHov}>
-      <Link to="/" className={styles.hovlink}>
-        capstone_Idea
-      </Link>
-    </div>
-  </div>
-);
-
-const Overview = ({ repository }) => {
+const Overview = ({
+  repositoryId,
+  repositoryInfo,
+  repositoryCategory,
+  similarRepository,
+}) => {
   return (
     <>
       <div className={styles.sketchScreen}>
-        <span>screen</span>
-        <Link to="~/editor">
+        <Link to={`${repositoryId}/editor`}>
           <MDBBtn color="primary">full screen</MDBBtn>
         </Link>
       </div>
@@ -47,5 +40,16 @@ const Overview = ({ repository }) => {
     </>
   );
 };
+
+const Similar = ({ title }) => (
+  <div className={styles.sketchBox}>
+    <div className={styles.sketchImg}>이미지</div>
+    <div className={styles.sketchHov}>
+      <Link to="/" className={styles.hovlink}>
+        capstone_Idea
+      </Link>
+    </div>
+  </div>
+);
 
 export default Overview;

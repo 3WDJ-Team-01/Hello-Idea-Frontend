@@ -8,14 +8,6 @@ import * as mindmapActions from 'store/modules/mindmap';
 import Canvas from 'components/mindmap/Canvas';
 
 class CanvasContainer extends Component {
-  state = {
-    display: {
-      width: 2437 * 2,
-      height: 1609 * 2,
-      zoom: 1,
-    },
-  };
-
   getPointFromEvent = e => {
     e.persist();
 
@@ -56,7 +48,7 @@ class CanvasContainer extends Component {
         x: pointerPosition.x - pointer.prevLoc.x,
         y: pointerPosition.y - pointer.prevLoc.y,
       });
-    } else if (pointer.target.class === 'node') {
+    } else if (pointer.target.nodeId !== 0 && pointer.target.class === 'node') {
       MindmapActions.setNodeLocation({
         id: pointer.target.nodeId,
         location: {
@@ -72,7 +64,11 @@ class CanvasContainer extends Component {
     const { pointer, nodes, pointerUp, MindmapActions } = this.props;
 
     const pointerPosition = getPointFromEvent(e);
-    if (pointer.state.isDrag && pointer.target.class === 'node') {
+    if (
+      pointer.target.nodeId !== 0 &&
+      pointer.state.isDrag &&
+      pointer.target.class === 'node'
+    ) {
       const index = nodes.findIndex(node => node.id === pointer.target.nodeId);
 
       MindmapActions.updateIdeaRequest({
@@ -89,8 +85,7 @@ class CanvasContainer extends Component {
   };
 
   render() {
-    const { display } = this.state;
-    const { cavasPins, children } = this.props;
+    const { cavasPins, children, zoom } = this.props;
     const { handlePointerDown, handlePointerUp, handlePointerMove } = this;
     return (
       <Canvas
@@ -98,9 +93,7 @@ class CanvasContainer extends Component {
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerMove={handlePointerMove}
-        style={{
-          transform: `scale(${display.zoom})`,
-        }}
+        zoom={zoom}
       >
         {children}
       </Canvas>

@@ -89,6 +89,16 @@ class NodeContainer extends Component {
     );
   };
 
+  handleResize = e => {
+    e.persist();
+    this.setState(
+      produce(draft => {
+        draft.node.size.width = e.target.clientWidth;
+        draft.node.size.height = e.target.clientHeight;
+      }),
+    );
+  };
+
   handleBlur = e => {
     const { MindmapActions } = this.props;
     const { node } = this.state;
@@ -117,7 +127,13 @@ class NodeContainer extends Component {
   render() {
     const { node } = this.state;
     const { mode, pointer } = this.props;
-    const { ref, handleBlur, handleTextContent, handleKeyPress } = this;
+    const {
+      ref,
+      handleResize,
+      handleBlur,
+      handleTextContent,
+      handleKeyPress,
+    } = this;
     if (mode === 'SVG')
       return (
         <Node
@@ -138,8 +154,8 @@ class NodeContainer extends Component {
           location={node.location}
           size={node.size}
           color={node.color}
-          pointer={pointer}
           handleTextContent={handleTextContent}
+          handleResize={handleResize}
           handleBlur={handleBlur}
           handleKeyPress={handleKeyPress}
         />

@@ -25,6 +25,16 @@ $navHeight: 40px;
   display: flex;
   align-items: center;
   font-size: 1.2rem;
+  .title {
+    flex: 1;
+  }
+  .options {
+    font-size: 1rem;
+    display: flex;
+    div + div {
+      margin-left: 0.5rem;
+    }
+  }
   span + span {
     margin-left: 0.5rem;
   }

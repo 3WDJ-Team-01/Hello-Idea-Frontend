@@ -4,11 +4,28 @@ import Nav from 'components/search/Nav';
 import SearchWrapper from 'components/search/SearchWrapper';
 import Results from 'components/search/Results';
 import produce from 'immer';
+import axios from 'axios';
 
 class SearchContainer extends Component {
   state = {
     type: 'repositories',
+    results: {
+      repositories: [],
+      users: [],
+      groups: [],
+    },
   };
+
+  componentDidMount() {
+    const { searchTo } = this.props;
+    axios.post('/api/search/', { searchTo }).then(res =>
+      this.setState(
+        produce(draft => {
+          draft.results = res.data;
+        }),
+      ),
+    );
+  }
 
   handleType = e => {
     this.setState(
@@ -20,13 +37,13 @@ class SearchContainer extends Component {
 
   render() {
     const { url, user } = this.props;
-    const { type } = this.state;
+    const { type, results } = this.state;
     const { handleType } = this;
 
     return (
       <SearchWrapper>
         <Nav url={url} user={user} type={type} handleType={handleType} />
-        <Results type={type} />
+        <Results type={type} results={results} />
       </SearchWrapper>
     );
   }

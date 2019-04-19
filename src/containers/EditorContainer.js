@@ -29,6 +29,7 @@ class App extends Component {
     canvas: {
       svg: null,
       viewBox: 0,
+      zoom: 1,
     },
     contextMenu: null,
     explore: false,
@@ -72,6 +73,15 @@ class App extends Component {
     this.setState(
       produce(draft => {
         draft.canvas.viewBox = svg.viewBox.baseVal;
+      }),
+    );
+  };
+
+  handleCanvasZoom = e => {
+    e.persist();
+    this.setState(
+      produce(draft => {
+        draft.canvas.zoom = e.target.value;
       }),
     );
   };
@@ -147,6 +157,18 @@ class App extends Component {
     );
   };
 
+  handleMouseWheel = e => {
+    e.persist();
+
+    this.setState(
+      produce(draft => {
+        const { canvas } = this.state;
+        if (e.deltaY < 0 && canvas.zoom < 2.0) draft.canvas.zoom += 0.1;
+        else if (e.deltaY > 0 && canvas.zoom > 0.5) draft.canvas.zoom -= 0.1;
+      }),
+    );
+  };
+
   /* Toggle Actions */
   toggleContextMenu = event => {
     event.persist();
@@ -211,14 +233,17 @@ class App extends Component {
       toggleContextMenu,
       toggleExplore,
       exportMindmap,
+      handleCanvasZoom,
+      handleMouseWheel,
     } = this;
     const { paths, nodes, userId, repositoryId } = this.props;
-    const { pointer, contextMenu, explore } = this.state;
+    const { pointer, contextMenu, explore, canvas } = this.state;
     return (
       <div
         className="App"
         onContextMenu={preventEvent}
         style={{ overflow: 'hidden', maxHeight: '100vh' }}
+        onWheel={handleMouseWheel}
       >
         <Header exportMindmap={exportMindmap} />
         <CanvasContainer
@@ -232,6 +257,7 @@ class App extends Component {
           pointerDown={pointerDown}
           pointerMove={pointerMove}
           toggleContextMenu={toggleContextMenu}
+          zoom={canvas.zoom}
         >
           <g id="mindmap">
             <g id="paths">
@@ -284,7 +310,7 @@ class App extends Component {
         )}
         {explore && <Aside explore={explore} />}
 
-        <Footer />
+        <Footer zoom={canvas.zoom} handleCanvasZoom={handleCanvasZoom} />
       </div>
     );
   }

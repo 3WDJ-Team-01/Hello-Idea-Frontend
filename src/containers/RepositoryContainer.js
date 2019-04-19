@@ -94,6 +94,7 @@ class RepositoryContainer extends Component {
       default:
         return (
           <Overview
+            repositoryId={repositoryId}
             repositoryInfo={repositoryInfo}
             repositoryCategory={repositoryCategory}
             similarRepository={similarRepository}

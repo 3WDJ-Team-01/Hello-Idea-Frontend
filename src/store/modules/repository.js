@@ -36,6 +36,7 @@ export const getRequest = project_id => dispatch => {
     .post('/api/project/detail/', { project_id })
     .then(res => {
       dispatch(getSuccess(res.data));
+      console.log(res.data);
     })
     .catch(err => {
       if (err.response) dispatch(getFailure(err.response));
