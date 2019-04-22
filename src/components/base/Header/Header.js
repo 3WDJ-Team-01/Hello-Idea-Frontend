@@ -18,7 +18,11 @@ import {
 } from 'components/base/Dropdown/MobileMenubar';
 import styles from './Header.module.scss';
 
-const Header = ({ searchTo, onLogout, onChange, userInfo }) => (
+const userInfo =
+  localStorage.getItem('userInfo') &&
+  JSON.parse(localStorage.getItem('userInfo'));
+
+const Header = ({ searchTo, onLogout, onChange }) => (
   <div className={styles.header_wrapper}>
     <div className={styles.header}>
       <div

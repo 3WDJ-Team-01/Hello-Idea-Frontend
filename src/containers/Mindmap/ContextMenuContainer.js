@@ -36,18 +36,18 @@ class ContextMenuContainer extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.pointer.target.nodeId !== this.state.targetNodeId) {
-      this.setState({ targetNodeId: nextProps.pointer.target.nodeId });
-    }
-  }
-
   handleMouseOver = e => {
-    this.setState({ currentMenu: e.currentTarget.dataset.label });
+    this.setState({
+      currentMenu: e.currentTarget.dataset.label,
+    });
   };
 
-  handleMouseOut = e => {
-    this.setState({ currentMenu: '' });
+  handleMouseOut = () => {
+    this.setState(
+      produce(draft => {
+        draft.currentMenu = '';
+      }),
+    );
   };
 
   handleChangeComplete = (color, event) => {
@@ -116,8 +116,12 @@ class ContextMenuContainer extends Component {
     };
 
     const remove = e => {
+      const { nodes } = this.props;
       const { targetNodeId } = this.state;
-      MindmapActions.removeIdeaRequest(targetNodeId);
+      const index = nodes.findIndex(node => node.id === targetNodeId);
+      const targetNodes = nodes[index].parentOf.concat(targetNodeId);
+
+      MindmapActions.removeIdeaRequest(targetNodes);
       toggleContextMenu(e);
     };
 
@@ -182,7 +186,7 @@ class ContextMenuContainer extends Component {
   };
 
   render() {
-    const { mode, pointer } = this.props;
+    const { mode, location } = this.props;
     const { currentMenu, isColorPicker, color } = this.state;
     const {
       handleMenuClick,
@@ -199,13 +203,12 @@ class ContextMenuContainer extends Component {
       outerRadius,
       menuSpaceDegrees,
     } = ContextMenuData.options;
-
     const menuDegrees = 360 / list.length;
-
+    console.log(location);
     return (
       <div>
         <MenuWrapper
-          location={pointer.currLoc}
+          location={location}
           wrapperSize={wrapperSize}
           bgColor={bgColor}
           innerRadius={innerRadius}
@@ -218,7 +221,7 @@ class ContextMenuContainer extends Component {
             />
           ) : (
             <SVG
-              location={pointer.currLoc}
+              location={location}
               wrapperSize={wrapperSize}
               bgColor={bgColor}
               innerRadius={innerRadius}
@@ -249,7 +252,7 @@ class ContextMenuContainer extends Component {
         {isColorPicker ? null : (
           <MenuLabel
             wrapperSize={wrapperSize}
-            location={pointer.currLoc}
+            location={location}
             options={options}
             label={currentMenu}
           />

@@ -8,11 +8,11 @@ import axios from 'axios';
 
 class SearchContainer extends Component {
   state = {
-    type: 'repositories',
+    type: 'Repositories',
     results: {
-      repositories: [],
-      users: [],
-      groups: [],
+      Repositories: [],
+      Users: [],
+      Groups: [],
     },
   };
 
@@ -21,7 +21,9 @@ class SearchContainer extends Component {
     axios.post('/api/search/', { searchTo }).then(res =>
       this.setState(
         produce(draft => {
-          draft.results = res.data;
+          draft.results.Repositories = res.data.repositories;
+          draft.results.Users = res.data.users;
+          draft.results.Groups = res.data.groups;
         }),
       ),
     );
@@ -30,7 +32,7 @@ class SearchContainer extends Component {
   handleType = e => {
     this.setState(
       produce(this.state, draft => {
-        draft.type = e.currentTarget.id;
+        draft.type = e.target.attributes.name.nodeValue;
       }),
     );
   };
@@ -42,7 +44,11 @@ class SearchContainer extends Component {
 
     return (
       <SearchWrapper>
-        <Nav url={url} user={user} type={type} handleType={handleType} />
+        <Nav
+          type={type}
+          typeList={Object.keys(results)}
+          handleType={handleType}
+        />
         <Results type={type} results={results} />
       </SearchWrapper>
     );

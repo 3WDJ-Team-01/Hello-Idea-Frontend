@@ -13,6 +13,9 @@ const TARGET_GROUPS_FAILURE = 'user/TARGET_GROUPS_FAILURE';
 const REPOSITORIES = 'user/REPOSITORIES';
 const REPOSITORIES_SUCCESS = 'user/REPOSITORIES_SUCCESS';
 const REPOSITORIES_FAILURE = 'user/REPOSITORIES_FAILURE';
+const FOLLOWER = 'user/FOLLOWER';
+const FOLLOWER_SUCCESS = 'user/FOLLOWER_SUCCESS';
+const FOLLOWER_FAILURE = 'user/FOLLOWER_FAILURE';
 
 export const user = createAction(USER);
 export const userSuccess = createAction(USER_SUCCESS);
@@ -23,11 +26,14 @@ export const targetGroupsFailure = createAction(TARGET_GROUPS_FAILURE);
 export const repositories = createAction(REPOSITORIES);
 export const repositoriesSuccess = createAction(REPOSITORIES_SUCCESS);
 export const repositoriesFailure = createAction(REPOSITORIES_FAILURE);
+export const follower = createAction(FOLLOWER);
+export const followerSuccess = createAction(FOLLOWER_SUCCESS);
+export const followerFailure = createAction(FOLLOWER_FAILURE);
 
 export const userRequest = user_id => dispatch => {
   dispatch(user());
   return axios
-    .post('/api/user/', { user_id })
+    .post('/api/page/index/', { user_id })
     .then(res => {
       dispatch(userSuccess(res.data));
     })
@@ -58,6 +64,18 @@ export const repositoriesRequest = (user_id, group_id) => dispatch => {
     });
 };
 
+export const followerRequest = user_id => dispatch => {
+  dispatch(follower());
+  return axios
+    .post('/api/follow/', { user_id })
+    .then(res => {
+      dispatch(followerSuccess(res.data));
+    })
+    .catch(err => {
+      if (err.response) dispatch(followerFailure(err.response));
+    });
+};
+
 const initialState = {
   state: '',
   info: {},
@@ -79,6 +97,8 @@ const initialState = {
     Economy: [],
     Life: [],
   },
+  follower: [],
+  following: [],
 };
 
 export default handleActions(
@@ -129,6 +149,22 @@ export default handleActions(
     [REPOSITORIES_FAILURE]: (state, action) =>
       produce(state, draft => {
         draft.state = 'failure';
+      }),
+    [FOLLOWER]: (state, action) =>
+      produce(state, draft => {
+        draft.state = 'pending';
+      }),
+    [FOLLOWER_SUCCESS]: (state, action) =>
+      produce(state, draft => {
+        draft.state = 'success';
+        draft.follower = action.payload.follower;
+        draft.following = action.payload.following;
+      }),
+    [FOLLOWER_FAILURE]: (state, action) =>
+      produce(state, draft => {
+        draft.state = 'failure';
+        draft.follower = [];
+        draft.following = [];
       }),
   },
   initialState,

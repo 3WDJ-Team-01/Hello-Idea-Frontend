@@ -355,60 +355,17 @@ export default handleActions(
       }),
     [REMOVE_NODE]: (state, action) =>
       produce(state, draft => {
-        const targetNodeIndex = state.nodes.findIndex(
-          node => node.id === action.payload,
-        );
-        const targetNode = state.nodes[targetNodeIndex];
-
-        // recursive function for remove relation to parent node
-        const removeChildNode = nodeId => {
-          const childNodeIndex = draft.nodes.findIndex(
-            node => node.id === nodeId,
+        action.payload.map(nodeId => {
+          const nodeIndex = draft.nodes.findIndex(item => item.id === nodeId);
+          const pathIndex = draft.paths.findIndex(
+            item => item.endAt.nodeId === nodeId,
           );
-          const childNode = draft.nodes[childNodeIndex];
-          const parentNodeIndex = draft.nodes.findIndex(
-            node => node.id === childNode.childOf,
-          );
-          const parentNode = draft.nodes[parentNodeIndex];
 
-          if (parentNodeIndex > -1) {
-            parentNode.parentOf.splice(parentNode.parentOf.indexOf(nodeId), 1);
-            if (typeof parentNode.childOf === 'number')
-              removeChildNode(parentNode.id);
-          }
-        };
-
-        // if target node has child nodes, remove all child nodes & paths
-        if (targetNode.parentOf.length > 0) {
-          targetNode.parentOf.map(nodeId => {
-            // remove children relation
-            removeChildNode(nodeId);
-
-            // remove children node & path
-            const nodeIndex = draft.nodes.findIndex(item => item.id === nodeId);
-            draft.nodes.splice(nodeIndex, 1);
-            const pathIndex = draft.paths.findIndex(
-              path => path.endAt && path.endAt.nodeId === nodeId,
-            );
-            draft.paths.splice(pathIndex, 1);
-          });
-        }
-
-        // remove target relation
-        removeChildNode(action.payload);
-
-        // remove target node & path
-        draft.nodes.splice(
-          state.nodes.findIndex(node => node.id === action.payload),
-          1,
-        );
-        draft.paths.splice(
-          state.paths.findIndex(
-            path => path.endAt && path.endAt.nodeId === action.payload,
-          ),
-          1,
-        );
+          draft.nodes.splice(nodeIndex, 1);
+          draft.paths.splice(pathIndex, 1);
+        });
       }),
+
     [TOGGLE_NODE_EDITING]: (state, action) =>
       produce(state, draft => {
         const index = draft.nodes.findIndex(node => node.id === action.payload);

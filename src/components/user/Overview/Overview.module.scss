@@ -16,23 +16,33 @@
   display: flex;
   justify-content: space-around;
   height: 300px;
-  @include media('<medium') {
-    height: 150px;
-  }
+  overflow: auto;
+  overflow-y: hidden;
 
   .graph {
-    width: 40%;
-    max-height: 30rem;
+    display: flex;
+    justify-content: center;
+    flex: 1;
     height: 100%;
-    background-color: lightgray;
-    @include media('<medium') {
-      width: 45%;
+    font-size: 0.9rem;
+
+    span {
+      font-size: 0.8rem;
     }
   }
 }
 .activity {
   padding-left: 5%;
   width: 100%;
+  margin-top: 2%;
+  p {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 1rem 0;
+  }
+}
+.activity + .activity {
+  margin-top: 0;
 }
 .activityDate {
   display: flex;

@@ -3,8 +3,6 @@ import PageTemplate from 'components/base/PageTemplate';
 import EditorContainer from 'containers/EditorContainer';
 
 const Main = ({ match }) => {
-  const category = match.url.split('/')[4];
-
   return (
     <PageTemplate isHidden>
       <EditorContainer

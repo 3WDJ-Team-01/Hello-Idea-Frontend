@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { MDBBtn } from 'mdbreact';
 import styles from './Header.module.scss';
 
-const Header = ({ url, menu, user, shownProfile, modify }) => {
+const Header = ({ menu, user, info, shownProfile, modify }) => {
   return (
     <>
       <div
@@ -11,7 +11,10 @@ const Header = ({ url, menu, user, shownProfile, modify }) => {
         style={{ backgroundColor: modify.bgColor }}
       />
       <div className={styles.userHeader}>
-        <div className={styles.userProfileImg}>
+        <div
+          className={styles.userProfileImg}
+          style={shownProfile ? { opacity: 0 } : { opacity: 1 }}
+        >
           {modify.imgSrc ? (
             <img
               className={styles.userImage}
@@ -23,8 +26,10 @@ const Header = ({ url, menu, user, shownProfile, modify }) => {
           )}
         </div>
         <div className={styles.userDescWrapper}>
-          <div className={styles.userProfileName}>UserName</div>
-          <div className={styles.userDescription}>userDescription</div>
+          <div className={styles.userProfileName}>
+            {info.User_detail && info.User_detail.user_name}
+          </div>
+          <div className={styles.userDescription}>{}</div>
         </div>
         <Link to={`/user/${user}/modify`}>
           {menu === 'modify' ? (
@@ -56,60 +61,46 @@ const Header = ({ url, menu, user, shownProfile, modify }) => {
             <div className={styles.name}>UserName</div>
           </div>
           <div className={styles.userNav}>
-            <Link
-              to={`/user/${user}`}
-              style={
-                !menu
-                  ? { borderBottom: `3px solid #3498db`, fontWeight: 500 }
-                  : {}
-              }
-            >
-              Overview
-            </Link>
-            <Link
-              to={`/user/${user}/repositories`}
-              style={
-                menu === 'repositories'
-                  ? {
-                      borderBottom: `3px solid #4285f4`,
-                      fontWeight: 500,
-                    }
-                  : {}
-              }
-            >
-              Repositories
-            </Link>
-            <Link
-              to={`/user/${user}/followers`}
-              style={
-                menu === 'followers'
-                  ? {
-                      borderBottom: `3px solid #4285f4`,
-                      fontWeight: 500,
-                    }
-                  : {}
-              }
-            >
-              Followers
-            </Link>
-            <Link
-              to={`/user/${user}/followings`}
-              style={
-                menu === 'followings'
-                  ? {
-                      borderBottom: `3px solid #4285f4`,
-                      fontWeight: 500,
-                    }
-                  : {}
-              }
-            >
-              Followings
-            </Link>
+            <NavMenu user={user} menu={menu} label="Overview" />
+            <NavMenu
+              user={user}
+              menu={menu}
+              path="/repositories"
+              label="Repositories"
+            />
+            <NavMenu
+              user={user}
+              menu={menu}
+              path="/followers"
+              label="Followers"
+            />
+            <NavMenu
+              user={user}
+              menu={menu}
+              path="/followings"
+              label="Followings"
+            />
           </div>
         </div>
       </div>
     </>
   );
 };
+
+const NavMenu = ({ user, menu, path = '', label }) => (
+  <Link
+    to={`/user/${user}${path}`}
+    style={
+      (!menu && label === 'Overview') || (path && menu === path.split('/')[1])
+        ? {
+            borderBottom: `3px solid #4285f4`,
+            fontWeight: 500,
+          }
+        : {}
+    }
+  >
+    {label}
+  </Link>
+);
 
 export default Header;

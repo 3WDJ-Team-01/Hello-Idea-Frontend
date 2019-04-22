@@ -45,7 +45,11 @@ class NodeContainer extends Component {
   }
 
   componentDidMount() {
-    if (this.props.mode === 'Edit') this.ref.current.focus();
+    if (this.props.mode === 'Edit') {
+      const { temp } = this.state;
+      this.ref.current.focus();
+      this.ref.current.textContent = temp.head;
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -60,7 +64,11 @@ class NodeContainer extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.mode === 'Edit') this.ref.current.focus();
+    if (this.props.mode === 'Edit') {
+      const { temp } = this.state;
+      this.ref.current.focus();
+      this.ref.current.textContent = temp.head;
+    }
   }
 
   handleTextContent = e => {

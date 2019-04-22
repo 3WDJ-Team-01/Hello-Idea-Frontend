@@ -2,21 +2,12 @@ import React from 'react';
 import User from 'components/base/Card/User';
 import styles from './Following.module.scss';
 
-const Following = ({
-  user,
-  url,
-  Overview,
-  Repositories,
-  Followers,
-  children,
-}) => {
+const Following = ({ list }) => {
   return (
     <div className={styles.followerList}>
-      <User />
-      <User />
-      <User />
-      <User />
-      <User />
+      {list.map((item, i) => (
+        <User value={item} />
+      ))}
     </div>
   );
 };

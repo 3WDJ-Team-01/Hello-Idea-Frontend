@@ -1,6 +1,6 @@
 @import '~styles/utils.scss';
 
-.repositories {
+.repositoriesWrapper {
   display: flex;
   @include media('<medium') {
     display: block;
@@ -8,9 +8,14 @@
   }
 }
 
+.repositories {
+  flex: 1;
+}
+
 .repoCategory {
   width: 300px;
   margin-right: 5%;
+  font-size: 1.2rem;
   @include media('<medium') {
     margin-bottom: 10%;
   }
@@ -31,6 +36,17 @@
   }
   li {
     margin: 0.3rem 0;
+    padding: 0.3rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+      background-color: lighten($gray, 10%);
+    }
+    .count {
+      font-size: 0.75rem;
+      margin-left: 0.3rem;
+    }
   }
 }
 .search {

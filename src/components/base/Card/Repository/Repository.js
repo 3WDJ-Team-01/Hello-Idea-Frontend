@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { MDBIcon } from 'mdbreact';
 import styles from './Repository.module.scss';
 
-const Repository = ({ value }) =>
-  value ? (
+const Repository = ({ user, value }) =>
+  user && value ? (
     <div className={styles.repository}>
       <div className={styles.contents}>
         <div className={styles.title}>
-          <Link to={`repositories/${value.project_id}`}>
+          <Link to={`/user/${user.user_id}/repositories/${value.project_id}`}>
             {value.project_topic}
           </Link>
         </div>
@@ -27,7 +27,7 @@ const Repository = ({ value }) =>
         </div>
       </div>
 
-      <Link to={`repositories/${value.title}`}>
+      <Link to={`/user/${user.user_id}/repositories/${value.project_id}`}>
         <div className={styles.image}>이미지</div>
       </Link>
     </div>

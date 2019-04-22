@@ -2,6 +2,10 @@
 /* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
 import produce from 'immer';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router-dom';
+import * as userActions from 'store/modules/user';
 import UserWrapper from 'components/user/UserWrapper';
 import Header from 'components/user/Header';
 import Overview from 'components/user/Overview';
@@ -12,6 +16,8 @@ import getCroppedImg from 'tools/CropImage';
 
 class UserContainer extends Component {
   state = {
+    repositoriesFilter: 'all',
+    repositoriesSearchTo: '',
     displayColorPicker: false,
     shownProfile: false,
     cropper: {
@@ -28,6 +34,13 @@ class UserContainer extends Component {
   };
 
   componentDidMount() {
+    const { user } = this.props;
+    const { UserActions } = this.props;
+    UserActions.userRequest(user);
+    UserActions.targetGroupsRequest(user);
+    UserActions.repositoriesRequest(user, 0);
+    UserActions.followerRequest(user);
+
     window.addEventListener('scroll', () => {
       const { shownProfile } = this.state;
       if (!shownProfile && window.scrollY > 240) {
@@ -151,6 +164,29 @@ class UserContainer extends Component {
     }
   };
 
+  /* REPOSITORIES ACTIONS */
+
+  handleFilter = e => {
+    e.persist();
+    e.stopPropagation();
+
+    this.setState(
+      produce(draft => {
+        draft.repositoriesFilter = e.target.attributes.name.nodeValue;
+      }),
+    );
+  };
+
+  handleSearchTo = e => {
+    e.persist();
+
+    this.setState(
+      produce(draft => {
+        draft.repositoriesSearchTo = e.target.value;
+      }),
+    );
+  };
+
   renderMenu = menu => {
     const {
       onCropChange,
@@ -160,15 +196,36 @@ class UserContainer extends Component {
       handleChange,
       handleClick,
       handleClose,
+      handleFilter,
+      handleSearchTo,
     } = this;
-    const { cropper, modify, displayColorPicker } = this.state;
+    const {
+      cropper,
+      modify,
+      displayColorPicker,
+      repositoriesFilter,
+      repositoriesSearchTo,
+    } = this.state;
+    const { info, groups, repositories, follower, following } = this.props;
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
     switch (menu) {
       case 'repositories':
-        return <Repositories />;
+        return (
+          <Repositories
+            loggedUser={userInfo.id}
+            user={info.User_detail && info.User_detail}
+            repositories={repositories}
+            filter={repositoriesFilter}
+            searchTo={repositoriesSearchTo}
+            handleFilter={handleFilter}
+            handleSearchTo={handleSearchTo}
+          />
+        );
       case 'followers':
-        return <Following />;
+        return <Following list={follower} />;
       case 'followings':
-        return <Following />;
+        return <Following list={following} />;
       case 'modify':
         return (
           <Modify
@@ -185,13 +242,13 @@ class UserContainer extends Component {
           />
         );
       default:
-        return <Overview />;
+        return <Overview loggedUser={userInfo.id} info={info} />;
     }
   };
 
   render() {
     const { renderMenu } = this;
-    const { user, menu } = this.props;
+    const { user, menu, info } = this.props;
     const { shownProfile, modify } = this.state;
 
     return (
@@ -199,6 +256,7 @@ class UserContainer extends Component {
         <Header
           menu={menu}
           user={user}
+          info={info}
           shownProfile={shownProfile}
           modify={modify}
         />
@@ -207,5 +265,22 @@ class UserContainer extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  state: state.user.state,
+  info: state.user.info,
+  groups: state.user.groups,
+  repositories: state.user.repositories,
+  follower: state.user.follower,
+  following: state.user.following,
+});
 
-export default UserContainer;
+const mapDispatchToProps = dispatch => ({
+  UserActions: bindActionCreators(userActions, dispatch),
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(UserContainer),
+);

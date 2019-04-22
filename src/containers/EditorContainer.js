@@ -31,7 +31,13 @@ class App extends Component {
       viewBox: 0,
       zoom: 1,
     },
-    contextMenu: null,
+    contextMenu: {
+      mode: null,
+      location: {
+        x: 0,
+        y: 0,
+      },
+    },
     explore: false,
   };
 
@@ -172,12 +178,16 @@ class App extends Component {
   /* Toggle Actions */
   toggleContextMenu = event => {
     event.persist();
+    const { pointer } = this.state;
+
     this.setState(
       produce(draft => {
-        if (event.button === 0) draft.contextMenu = null;
-        else if (event.button === 2)
-          draft.contextMenu =
+        if (event.button === 0) draft.contextMenu.mode = null;
+        else if (event.button === 2) {
+          draft.contextMenu.mode =
             event.target.className.baseVal && event.target.className.baseVal;
+          draft.contextMenu.location = pointer.currLoc;
+        }
       }),
     );
   };
@@ -238,6 +248,7 @@ class App extends Component {
     } = this;
     const { paths, nodes, userId, repositoryId } = this.props;
     const { pointer, contextMenu, explore, canvas } = this.state;
+
     return (
       <div
         className="App"
@@ -298,10 +309,11 @@ class App extends Component {
             </g>
           </g>
         </CanvasContainer>
-        {contextMenu && (
+        {contextMenu.mode && (
           <ContextMenuContainer
             pointer={pointer}
-            mode={contextMenu}
+            mode={contextMenu.mode}
+            location={contextMenu.location}
             userId={userId}
             repositoryId={repositoryId}
             toggleContextMenu={toggleContextMenu}

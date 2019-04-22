@@ -10,9 +10,9 @@ import User from 'components/base/Card/User';
 import styles from './Results.module.scss';
 
 const ComponentFromType = (type, value, i) => {
-  if (type === 'repositories') return <Repository key={i} value={value} />;
-  else if (type === 'users') return <User key={i} value={value} />;
-  else if (type === 'groups') return <User key={i} value={value} />;
+  if (type === 'Repositories') return <Repository key={i} value={value} />;
+  else if (type === 'Users') return <User key={i} value={value} />;
+  else if (type === 'Groups') return <User key={i} value={value} />;
 };
 
 const Results = ({ type, results }) => {
