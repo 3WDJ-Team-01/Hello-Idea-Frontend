@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
@@ -63,7 +65,9 @@ const Repositories = ({
         {repositories[filter].map((repository, i) => {
           const target = new RegExp(searchTo);
           if (target.test(repository.project_topic))
-            return <Repository key={i} user={user} value={repository} />;
+            return (
+              <Repository key={i} author={user.user_id} value={repository} />
+            );
         })}
       </div>
     </div>

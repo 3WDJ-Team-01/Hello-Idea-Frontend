@@ -4,7 +4,7 @@ import NewContainer from 'containers/NewContainer';
 
 const Main = ({ match, history }) => {
   return (
-    <PageTemplate>
+    <PageTemplate history={history}>
       <NewContainer
         user={match.params.user}
         url={match.url}

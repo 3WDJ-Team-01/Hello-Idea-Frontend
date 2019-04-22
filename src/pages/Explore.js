@@ -2,10 +2,10 @@ import React from 'react';
 import PageTemplate from 'components/base/PageTemplate';
 import ExploreContainer from 'containers/ExploreContainer';
 
-const Main = ({ match }) => {
+const Main = ({ match, history }) => {
   const category = match.url.split('/')[4];
   return (
-    <PageTemplate>
+    <PageTemplate history={history}>
       <ExploreContainer />
     </PageTemplate>
   );

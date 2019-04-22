@@ -1,14 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBIcon } from 'mdbreact';
+import TimeAgo from 'react-timeago';
+import koreanStrings from 'react-timeago/lib/language-strings/ko';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import styles from './Repository.module.scss';
 
-const Repository = ({ user, value }) =>
-  user && value ? (
+const formatter = buildFormatter(koreanStrings);
+
+const Repository = ({ author, value, isGroup = false }) =>
+  author && value ? (
     <div className={styles.repository}>
       <div className={styles.contents}>
         <div className={styles.title}>
-          <Link to={`/user/${user.user_id}/repositories/${value.project_id}`}>
+          <Link
+            to={`/${isGroup ? 'group' : 'user'}/${author}/repositories/${
+              value.project_id
+            }`}
+          >
             {value.project_topic}
           </Link>
         </div>
@@ -23,11 +32,17 @@ const Repository = ({ user, value }) =>
               <MDBIcon far icon="eye" /> {value.project_hits}
             </div>
           </div>
-          <div className={styles.date}>Updated 7days ago</div>
+          <div className={styles.date}>
+            <TimeAgo date={value.updated_at} formatter={formatter} />
+          </div>
         </div>
       </div>
 
-      <Link to={`/user/${user.user_id}/repositories/${value.project_id}`}>
+      <Link
+        to={`/${isGroup ? 'group' : 'user'}/${author}/repositories/${
+          value.project_id
+        }`}
+      >
         <div className={styles.image}>이미지</div>
       </Link>
     </div>

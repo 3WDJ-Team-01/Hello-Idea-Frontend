@@ -55,12 +55,13 @@ class HeaderContainer extends Component {
   };
 
   render() {
-    const { isHidden, userInfo } = this.props;
+    const { isHidden, userInfo, history } = this.props;
     const { searchTo } = this.state;
     const { handleLogout, handleSearch } = this;
 
     return isHidden ? null : (
       <Header
+        history={history}
         searchTo={searchTo}
         onLogout={handleLogout}
         onChange={handleSearch}

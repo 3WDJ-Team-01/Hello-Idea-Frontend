@@ -4,7 +4,7 @@ import RepositoryContainer from 'containers/RepositoryContainer';
 
 const Main = ({ match, history }) => {
   return (
-    <PageTemplate>
+    <PageTemplate history={history}>
       <RepositoryContainer
         userId={match.params.user}
         menu={match.params.menu}

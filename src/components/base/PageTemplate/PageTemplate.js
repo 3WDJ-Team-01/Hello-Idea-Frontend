@@ -17,7 +17,12 @@ class PageTemplate extends Component {
   };
 
   render() {
-    const { children, isHidden = false, bgColor = 'white' } = this.props;
+    const {
+      history,
+      children,
+      isHidden = false,
+      bgColor = 'white',
+    } = this.props;
     const { handleDropdown } = this;
     return (
       <div
@@ -25,7 +30,7 @@ class PageTemplate extends Component {
         style={{ backgroundColor: bgColor }}
         onClick={handleDropdown}
       >
-        <HeaderContainer isHidden={isHidden} />
+        <HeaderContainer isHidden={isHidden} history={history} />
         {children}
       </div>
     );

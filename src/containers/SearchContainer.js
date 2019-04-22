@@ -29,6 +29,21 @@ class SearchContainer extends Component {
     );
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { searchTo } = this.props;
+
+    if (prevProps.searchTo !== searchTo)
+      axios.post('/api/search/', { searchTo }).then(res =>
+        this.setState(
+          produce(draft => {
+            draft.results.Repositories = res.data.repositories;
+            draft.results.Users = res.data.users;
+            draft.results.Groups = res.data.groups;
+          }),
+        ),
+      );
+  }
+
   handleType = e => {
     this.setState(
       produce(this.state, draft => {
