@@ -69,12 +69,10 @@ const Header = ({ history, searchTo, onLogout, onChange }) => {
                 <div className={styles.item}>Explore</div>
               </MobileMenu>
               <MobileMenu isDivider />
-              <MobileMenu path={`/user/${userInfo && userInfo.user_id}`}>
+              <MobileMenu path={`/user/${userInfo.user_id}`}>
                 <div className={styles.item}>Your profile</div>
               </MobileMenu>
-              <MobileMenu
-                path={`/user/${userInfo && userInfo.user_id}/repositories`}
-              >
+              <MobileMenu path={`/user/${userInfo.user_id}/repositories`}>
                 <div className={styles.item}>Your repositories</div>
               </MobileMenu>
               <MobileMenu>
@@ -148,18 +146,14 @@ const Header = ({ history, searchTo, onLogout, onChange }) => {
                 <MDBIcon icon="user-alt" />
               </DropdownTrigger>
               <DropdownMenuList>
-                <DropdownMenu path={`/user/${userInfo && userInfo.user_id}`}>
+                <DropdownMenu path={`/user/${userInfo.user_id}`}>
                   <div className={styles.item}>Your profile</div>
                 </DropdownMenu>
-                <DropdownMenu
-                  path={`/user/${userInfo && userInfo.user_id}/repositories`}
-                >
+                <DropdownMenu path={`/user/${userInfo.user_id}/repositories`}>
                   <div className={styles.item}>Your repositories</div>
                 </DropdownMenu>
                 <DropdownMenu isDivider />
-                <DropdownMenu
-                  path={`/user/${userInfo && userInfo.user_id}/modify`}
-                >
+                <DropdownMenu path={`/user/${userInfo.user_id}/modify`}>
                   <div className={styles.item}>Settings</div>
                 </DropdownMenu>
                 <DropdownMenu>

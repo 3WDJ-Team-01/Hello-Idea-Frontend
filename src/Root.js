@@ -44,6 +44,7 @@ const Root = () => (
           exact
           component={Repository}
         />
+        <Route path="/group/:group/:menu" exact component={Group} />
         <Route path="/group/:group" exact component={Group} />
         <Route component={NotFound} />
       </Switch>

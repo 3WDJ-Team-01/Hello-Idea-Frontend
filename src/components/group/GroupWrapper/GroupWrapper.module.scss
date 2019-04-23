@@ -1,7 +1,11 @@
 @import '~styles/utils.scss';
 
 .groupWrapper {
-  max-width: $app_width;
+  max-width: $app_width / 1.5;
   width: 100%;
-  margin: 6rem auto;
+  margin: 0 auto;
+  margin-top: 2rem;
+  @include media('<medium') {
+    max-width: 90%;
+  }
 }

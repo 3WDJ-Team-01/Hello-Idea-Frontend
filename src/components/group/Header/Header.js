@@ -1,108 +1,69 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MDBBtn } from 'mdbreact';
+import { MDBIcon } from 'mdbreact';
 import styles from './Header.module.scss';
 
-const Header = ({ url, menu, user, shownProfile, modify }) => {
+const Header = ({ url, menu, groupId }) => {
   return (
-    <>
-      <div
-        className={styles.backgroundImg}
-        style={{ backgroundColor: 'gray' }}
-      />
-      <div className={styles.userHeader}>
-        <div className={styles.userProfileImg}>
-          {modify ? (
-            <img className={styles.userImage} src="" alt="userprofile" />
-          ) : (
-            <div className={styles.userImage} />
-          )}
+    <div className={styles.groupHeader}>
+      <div>
+        <div className={styles.groupTitle}>
+          <div className={styles.emblem} />
+          <div className={styles.name}>test</div>
         </div>
-        <div className={styles.userDescWrapper}>
-          <div className={styles.userProfileName}>
-            <Link to="*/">UserName</Link>
-          </div>
-          <div className={styles.userDescription}>userDescription</div>
-        </div>
-        <Link to={`/user/${user}/modify`}>
-          {menu === 'modify' ? (
-            <MDBBtn color="elegant">EDIT</MDBBtn>
-          ) : (
-            <MDBBtn outline color="elegant">
-              EDIT
-            </MDBBtn>
-          )}
-        </Link>
-      </div>
-      <div className={styles.userNavWrapper}>
-        <div>
-          <div
-            className={styles.profile}
-            style={shownProfile ? { opacity: 1 } : { opacity: 0 }}
-          >
-            <div className={styles.userProfileImg}>
-              {modify ? (
-                <img className={styles.userImage} src="" alt="userprofile" />
-              ) : (
-                <div className={styles.userImage} />
-              )}
-            </div>
-            <div className={styles.name}>UserName</div>
-          </div>
-          <div className={styles.userNav}>
+        <div className={styles.groupNavWrapper}>
+          <div className={styles.groupNav}>
             <Link
-              to={`/user/${user}`}
+              to={`/group/${groupId}`}
               style={
                 !menu
-                  ? { borderBottom: `3px solid #3498db`, fontWeight: 500 }
-                  : {}
-              }
-            >
-              Overview
-            </Link>
-            <Link
-              to={`/user/${user}/repositories`}
-              style={
-                menu === 'repositories'
                   ? {
-                      borderBottom: `3px solid #4285f4`,
+                      borderTop: `3px solid #4285f4`,
+                      borderBottom: 'none',
+                      backgroundColor: 'white',
                       fontWeight: 500,
                     }
-                  : {}
+                  : { border: 'none' }
               }
             >
-              Repositories
+              <div className={styles.MyPageOverview}>Repositories</div>
             </Link>
             <Link
-              to={`/user/${user}/followers`}
+              to={`/group/${groupId}/people`}
               style={
-                menu === 'followers'
+                menu === 'people'
                   ? {
-                      borderBottom: `3px solid #4285f4`,
+                      borderTop: `3px solid #4285f4`,
+                      borderBottom: 'none',
+                      backgroundColor: 'white',
                       fontWeight: 500,
                     }
-                  : {}
+                  : { border: 'none' }
               }
             >
-              Followers
+              <div className={styles.MyPageRepositories}>People</div>
             </Link>
             <Link
-              to={`/user/${user}/followings`}
+              to={`/group/${groupId}/settings`}
               style={
-                menu === 'followings'
+                menu === 'settings'
                   ? {
-                      borderBottom: `3px solid #4285f4`,
+                      borderTop: `3px solid #4285f4`,
+                      borderBottom: 'none',
+                      backgroundColor: 'white',
                       fontWeight: 500,
                     }
-                  : {}
+                  : { border: 'none' }
               }
             >
-              Followings
+              <div className={styles.MyPageRepositories}>Settings</div>
             </Link>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

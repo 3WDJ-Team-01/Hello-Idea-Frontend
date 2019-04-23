@@ -5,7 +5,11 @@ import GroupContainer from 'containers/GroupContainer';
 const Main = ({ match, history }) => {
   return (
     <PageTemplate history={history}>
-      <GroupContainer user={match.params.user} url={match.url} />
+      <GroupContainer
+        groupId={match.params.group}
+        menu={match.params.menu}
+        url={match.url}
+      />
     </PageTemplate>
   );
 };
