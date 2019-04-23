@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBIcon } from 'mdbreact';
@@ -6,11 +8,11 @@ import styles from './Header.module.scss';
 const Header = ({
   url,
   menu,
-  repositoryId,
   author,
+  isLiked,
+  repositoryId,
   repositoryInfo,
-  repositoryCategory,
-  similarRepository,
+  handleStar,
 }) => {
   return (
     <div className={styles.repoHeader}>
@@ -35,11 +37,28 @@ const Header = ({
             </span>
           </div>
           <div className={styles.options}>
-            <div className={styles.star}>
-              <MDBIcon icon="star" /> 23
-            </div>
             <div className={styles.watched}>
-              <MDBIcon far icon="eye" /> 43
+              <MDBIcon far icon="eye" className="mr-1" />
+              {repositoryInfo.project_hits > 999
+                ? `${parseInt(repositoryInfo.project_hits / 1000, 10)}K`
+                : repositoryInfo.project_hits}
+            </div>
+            <div
+              className={styles.star}
+              onClick={handleStar}
+              style={
+                isLiked
+                  ? {
+                      backgroundColor: `black`,
+                      color: `white`,
+                    }
+                  : {}
+              }
+            >
+              <MDBIcon icon="star" className="mr-1" />
+              {repositoryInfo.project_likes > 999
+                ? `${parseInt(repositoryInfo.project_likes / 1000, 10)}K`
+                : repositoryInfo.project_likes}
             </div>
           </div>
         </div>

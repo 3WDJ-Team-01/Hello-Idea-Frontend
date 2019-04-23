@@ -53,7 +53,6 @@ class SearchContainer extends Component {
   };
 
   render() {
-    const { url, user } = this.props;
     const { type, results } = this.state;
     const { handleType } = this;
 

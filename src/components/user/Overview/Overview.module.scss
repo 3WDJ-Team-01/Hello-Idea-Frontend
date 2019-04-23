@@ -1,7 +1,7 @@
 @import '~styles/utils.scss';
 
 .section {
-  span {
+  > span {
     font-size: 1.2rem;
     font-weight: 600;
   }
@@ -14,7 +14,7 @@
 }
 .myPageGraph {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 300px;
   overflow: auto;
   overflow-y: hidden;
@@ -46,21 +46,30 @@
 }
 .activityDate {
   display: flex;
-  padding-left: 4%;
+  margin-left: 4%;
+  align-items: center;
+  border-left: 2px solid $gray;
 }
 .verticlLine {
   width: 2px;
-  height: 400px;
   background-color: $gray;
 }
 .activityList {
   width: 100%;
 }
 .activityGroup {
-  padding: 2% 5%;
-  border-bottom: 2px solid $gray;
+  padding: 4% 5%;
 }
 .activities {
   margin-top: 0.5rem;
-  font-size: 0.9rem;
+  > div + div {
+    margin-top: 0.5rem;
+  }
+  a {
+    font-size: 1.1rem;
+  }
+  span {
+    font-size: 1.1rem;
+    font-weight: 400;
+  }
 }

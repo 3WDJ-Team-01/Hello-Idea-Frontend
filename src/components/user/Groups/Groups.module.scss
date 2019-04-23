@@ -1,11 +1,9 @@
 @import '~styles/utils.scss';
 
-.userWrapper {
+.followerList {
   max-width: $app_width / 1.5;
-  width: 100%;
   margin: 0 auto;
-  margin-top: 2rem;
   @include media('<medium') {
-    max-width: 90%;
+    max-width: 768px;
   }
 }

@@ -4,6 +4,7 @@ import produce from 'immer';
 import { createAction, handleActions } from 'redux-actions';
 import axios from 'axios';
 
+const INITIALIZE = 'repository/INITIALIZE';
 const GET = 'repository/GET';
 const GET_SUCCESS = 'repository/GET_SUCCESS';
 const GET_FAILURE = 'repository/GET_FAILURE';
@@ -17,6 +18,7 @@ const REMOVE = 'repository/REMOVE';
 const REMOVE_SUCCESS = 'repository/REMOVE_SUCCESS';
 const REMOVE_FAILURE = 'repository/REMOVE_FAILURE';
 
+export const initialize = createAction(INITIALIZE);
 export const get = createAction(GET);
 export const getSuccess = createAction(GET_SUCCESS);
 export const getFailure = createAction(GET_FAILURE);
@@ -47,6 +49,7 @@ export const createRequest = ({
   group_id,
   project_topic,
   project_intro,
+  history,
 }) => dispatch => {
   dispatch(create());
   return axios
@@ -66,7 +69,17 @@ export const createRequest = ({
           user_id,
           project_topic,
         })
-        .then(() => dispatch(createSuccess(res.data)));
+        .then(() => {
+          dispatch(createSuccess(res.data));
+          if (group_id === 0)
+            history.push(
+              `/user/${user_id}/repositories/${res.data.project_id}/editor`,
+            );
+          else
+            history.push(
+              `/group/${group_id}/repositories/${res.data.project_id}/editor`,
+            );
+        });
     })
     .catch(err => {
       if (err.response) dispatch(createFailure(err.response));
@@ -108,10 +121,25 @@ const initialState = {
   },
   category: {},
   similar: [],
+  likes: [],
 };
 
 export default handleActions(
   {
+    [INITIALIZE]: (state, action) =>
+      produce(state, draft => {
+        draft.state = '';
+        draft.author = '';
+        draft.info = {
+          project_id: null,
+          project_topic: null,
+          project_intro: null,
+          project_img: null,
+        };
+        draft.category = {};
+        draft.similar = [];
+        draft.likes = [];
+      }),
     [GET]: (state, action) =>
       produce(state, draft => {
         draft.state = 'pending';
@@ -127,6 +155,7 @@ export default handleActions(
           ...action.payload.project_category,
         };
         draft.similar = action.payload.similar_projects;
+        draft.likes = action.payload.project_like;
       }),
     [GET_FAILURE]: (state, action) =>
       produce(state, draft => {
@@ -135,6 +164,7 @@ export default handleActions(
         draft.info = null;
         draft.category = null;
         draft.similar = null;
+        draft.likes = null;
       }),
     [CREATE]: (state, action) =>
       produce(state, draft => {
@@ -143,6 +173,9 @@ export default handleActions(
     [CREATE_SUCCESS]: (state, action) =>
       produce(state, draft => {
         draft.state = 'success';
+        draft.info = {
+          project_id: action.payload.project_id,
+        };
       }),
     [CREATE_FAILURE]: (state, action) =>
       produce(state, draft => {

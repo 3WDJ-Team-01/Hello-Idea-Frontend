@@ -1,8 +1,12 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MDBBtn } from 'mdbreact';
+import { MDBBtn, MDBIcon } from 'mdbreact';
+import { getTendencyColor } from 'tools/TendencyColor';
 import styles from './Overview.module.scss';
 
 const Overview = ({
@@ -12,42 +16,82 @@ const Overview = ({
   similarRepository,
 }) => {
   return (
-    <>
-      <div className={styles.sketchScreen}>
+    <div className={styles.repositoryWrapper}>
+      <div className={styles.info}>
+        <div className={styles.intro}>
+          <div>{repositoryInfo.project_intro}</div>
+        </div>
+        <div className={styles.tendency}>
+          {Object.keys(repositoryCategory).map((category, i) => {
+            if (repositoryCategory[category] > 0)
+              return (
+                <div key={i} className={styles.category}>
+                  <MDBIcon
+                    icon="circle"
+                    style={{
+                      color: getTendencyColor(category),
+                    }}
+                  />
+                  <span className={styles.label}>{category}</span>
+                  <span className={styles.ratio}>
+                    {`${repositoryCategory[category]}%`}
+                  </span>
+                </div>
+              );
+          })}
+        </div>
+      </div>
+      <div className={styles.repoScreen}>
         <Link to={`${repositoryId}/editor`}>
-          <MDBBtn color="primary">full screen</MDBBtn>
+          <MDBBtn color="primary">open viewer</MDBBtn>
         </Link>
       </div>
-      <div className={styles.sketchAll}>
-        <MDBBtn color="primary">nnn Likes</MDBBtn>
-        <div className={styles.sketchInfor}>
-          Lorem Ipsum has been the industry's standard dummy text ever since the
-          1500s, when an unknown printer took a galley
-        </div>
-
-        <div className={styles.sketchUnder}>
-          <div className="myPageRepoField">* IT 72% *nn nn% *nn nn%</div>
-        </div>
+      <div className={styles.similarRepo}>
+        <span>Similar Sketch</span>
+        <List>
+          {similarRepository &&
+            similarRepository.map((repository, i) => {
+              return (
+                <Item
+                  key={i}
+                  path={
+                    repository.group_id === 0
+                      ? `/user/${repository.user_id}/repositories/${
+                          repository.project_id
+                        }/editor`
+                      : `/group/${repository.group_id}/repositories/${
+                          repository.project_id
+                        }/editor`
+                  }
+                  repository={repository}
+                />
+              );
+            })}
+        </List>
       </div>
-      <div className={styles.similarSketch}>
-        <h6>Similar Sketch</h6>
-        <div className={styles.sketchList}>
-          <Similar title="capston" />
-          <Similar title="test" />
-          <Similar title="test2" />
-        </div>
-      </div>
-    </>
+    </div>
   );
 };
 
-const Similar = ({ title }) => (
-  <div className={styles.sketchBox}>
-    <div className={styles.sketchImg}>이미지</div>
-    <div className={styles.sketchHov}>
-      <Link to="/" className={styles.hovlink}>
-        capstone_Idea
-      </Link>
+const List = ({ children }) => (
+  <div className={styles.idealist}>
+    <div>{children}</div>
+  </div>
+);
+
+const Item = ({ path, repository }) => (
+  <div className={styles.ideabox}>
+    <div className={styles.ideaimg} />
+    <div className={styles.ideahov}>
+      <div className={styles.idealabel}>
+        <div className={styles.title}>{repository.project_topic}</div>
+        <div className={styles.options}>
+          <Link className={styles.box} to={path}>
+            open
+          </Link>
+          <Link to={path}>more+</Link>
+        </div>
+      </div>
     </div>
   </div>
 );

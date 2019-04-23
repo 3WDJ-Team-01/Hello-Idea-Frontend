@@ -78,7 +78,25 @@ export const followerRequest = user_id => dispatch => {
 
 const initialState = {
   state: '',
-  info: {},
+  info: {
+    User_detail: {
+      user_name: '',
+      user_id: 0,
+      user_email: '',
+      user_img: '',
+      user_bgimg: '#ECF0F1',
+    },
+    User_tendency: {
+      it: 0,
+      sport: 0,
+      society: 0,
+      politics: 0,
+      life: 0,
+      economy: 0,
+    },
+    User_feed: {},
+    User_log: {},
+  },
   groups: [
     // {
     //   group_id: 0,

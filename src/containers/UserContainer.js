@@ -6,11 +6,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as userActions from 'store/modules/user';
+import axios from 'axios';
 import UserWrapper from 'components/user/UserWrapper';
 import Header from 'components/user/Header';
 import Overview from 'components/user/Overview';
 import Repositories from 'components/user/Repositories';
 import Following from 'components/user/Following';
+import Groups from 'components/user/Groups';
 import Modify from 'components/user/Modify';
 import getCroppedImg from 'tools/CropImage';
 
@@ -57,6 +59,16 @@ class UserContainer extends Component {
         );
       }
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { user, UserActions } = this.props;
+    if (prevProps.user !== user) {
+      UserActions.userRequest(user);
+      UserActions.targetGroupsRequest(user);
+      UserActions.repositoriesRequest(user, 0);
+      UserActions.followerRequest(user);
+    }
   }
 
   componentWillUnmount() {
@@ -112,6 +124,8 @@ class UserContainer extends Component {
         draft.modify.imgSrc = croppedImage;
       }),
     );
+    console.log(croppedImage);
+    // axios.post('/api/user_img/update/', {})
   };
 
   /* COLOR PICKER ACTIONS */
@@ -214,7 +228,7 @@ class UserContainer extends Component {
         return (
           <Repositories
             loggedUser={userInfo.id}
-            user={info.User_detail && info.User_detail}
+            user={info.User_detail}
             repositories={repositories}
             filter={repositoriesFilter}
             searchTo={repositoriesSearchTo}
@@ -226,6 +240,8 @@ class UserContainer extends Component {
         return <Following list={follower} />;
       case 'followings':
         return <Following list={following} />;
+      case 'groups':
+        return <Groups list={groups} />;
       case 'modify':
         return (
           <Modify

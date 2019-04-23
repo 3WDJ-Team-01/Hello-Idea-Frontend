@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable no-plusplus */
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { MDBIcon } from 'mdbreact';
@@ -5,12 +7,27 @@ import { Link } from 'react-router-dom';
 import { getTendencyColor } from 'tools/TendencyColor';
 import styles from './Discover.module.scss';
 
+const shuffleRepo = repositories => {
+  let count = 0;
+  const randomRepo = [];
+  repositories.map((repository, index) => {
+    if (count !== 3 && index - count > 2) {
+      count++;
+      randomRepo.push(repository);
+    } else if (count !== 3 && Math.random() < 0.5) {
+      count++;
+      randomRepo.push(repository);
+    }
+  });
+  return randomRepo;
+};
+
 const Discover = ({ tendencyRepo }) => {
   return (
     <div className={styles.discover}>
       <span>이런 주제의 생각은 어떠세요?</span>
       <div className={styles.repoList}>
-        {tendencyRepo.map((repository, i) => (
+        {shuffleRepo(tendencyRepo).map((repository, i) => (
           <Item
             key={i}
             user_id={repository.user_id}

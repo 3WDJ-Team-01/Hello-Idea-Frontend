@@ -1,3 +1,6 @@
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -39,7 +42,20 @@ const Overview = ({ loggedUser, info }) => {
       };
       return obj;
     });
-  const activity = info.User_log && info.User_feed && function() {};
+  const activity =
+    info.User_feed &&
+    Object.keys(info.User_feed).map(key => {
+      const date = key.split('/');
+      const obj = {
+        repositories: info.User_feed[key],
+      };
+
+      if (info.User_feed[key][0]) {
+        obj.date = `${date[2]}년 ${date[0]}월 ${date[1]}일`;
+
+        return obj;
+      }
+    });
   return (
     <>
       <div className={styles.section}>
@@ -116,41 +132,44 @@ const Overview = ({ loggedUser, info }) => {
       </div>
       <div className={styles.section}>
         <span>recently activity</span>
-        <div className={styles.activity}>
-          <p>2019년 04월</p>
-          <div className={styles.activityDate}>
-            <div className={styles.verticlLine} />
-            <div className={styles.activityList}>
-              <ActivityGroup />
-              <ActivityGroup />
-              <ActivityGroup />
-            </div>
-          </div>
-        </div>
-        <div className={styles.activity}>
-          <p>2019년 03월</p>
-          <div className={styles.activityDate}>
-            <div className={styles.verticlLine} />
-            <div className={styles.activityList}>
-              <ActivityGroup />
-              <ActivityGroup />
-              <ActivityGroup />
-            </div>
-          </div>
-        </div>
+        {activity.map(
+          (item, i) =>
+            item && (
+              <ActivityGroup
+                key={i}
+                date={item.date}
+                repositories={item.repositories}
+              />
+            ),
+        )}
       </div>
     </>
   );
 };
 
-const ActivityGroup = () => (
-  <div className={styles.activityGroup}>
-    <div className={styles.activityCreated}>
-      Created 10 ideas in 2 Repositories
-    </div>
-    <div className={styles.activities}>
-      <Link to="/">USERNAME/capstone</Link> 8ideas <br />
-      <Link to="/">1st GROUPUSER/free_topics</Link> 2ideas
+const ActivityGroup = ({ date, repositories }) => (
+  <div className={styles.activity}>
+    <p>{date}</p>
+    <div className={styles.activityDate}>
+      <div className={styles.activityList}>
+        <div className={styles.activityGroup}>
+          <div className={styles.activities}>
+            {repositories &&
+              repositories.map((item, i) => (
+                <div key={i}>
+                  <Link
+                    to={`/user/${item.user_id}/repositories/${item.project_id}`}
+                  >
+                    {item.project_topic}
+                  </Link>
+                  {`에 관하여 `}
+                  <span>{item.idea_count}개의 아이디어</span>
+                  {`를 생성했습니다.`}
+                </div>
+              ))}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 );

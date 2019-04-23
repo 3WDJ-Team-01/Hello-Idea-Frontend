@@ -58,28 +58,33 @@ const Header = ({ menu, user, info, shownProfile, modify }) => {
                 <div className={styles.userImage} />
               )}
             </div>
-            <div className={styles.name}>UserName</div>
+            <div className={styles.name}>
+              {info.User_detail && info.User_detail.user_name}
+            </div>
           </div>
           <div className={styles.userNav}>
-            <NavMenu user={user} menu={menu} label="Overview" />
-            <NavMenu
-              user={user}
-              menu={menu}
-              path="/repositories"
-              label="Repositories"
-            />
-            <NavMenu
-              user={user}
-              menu={menu}
-              path="/followers"
-              label="Followers"
-            />
-            <NavMenu
-              user={user}
-              menu={menu}
-              path="/followings"
-              label="Followings"
-            />
+            <div>
+              <NavMenu user={user} menu={menu} label="Overview" />
+              <NavMenu
+                user={user}
+                menu={menu}
+                path="/repositories"
+                label="Repositories"
+              />
+              <NavMenu
+                user={user}
+                menu={menu}
+                path="/followers"
+                label="Followers"
+              />
+              <NavMenu
+                user={user}
+                menu={menu}
+                path="/followings"
+                label="Followings"
+              />
+              <NavMenu user={user} menu={menu} path="/groups" label="Groups" />
+            </div>
           </div>
         </div>
       </div>

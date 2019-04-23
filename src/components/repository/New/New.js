@@ -33,7 +33,7 @@ const New = ({ groups, userInfo, name, desc, handleChange, handleSubmit }) => {
         <div className={styles.section}>
           <label>
             <div className={styles.label}>
-              <b>Repository name</b>
+              <b>Repository topic</b>
             </div>
             <input
               type="text"

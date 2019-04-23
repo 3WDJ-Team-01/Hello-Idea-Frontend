@@ -1,21 +1,34 @@
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Repository.module.scss';
 
-const Repository = ({ userInfo, groups, repositories, handleChageUser }) => {
+const Repository = ({
+  userInfo,
+  groups,
+  repositories,
+  searchTo,
+  handleChageUser,
+  handleSearchTo,
+}) => {
   return (
     <div className={styles.repository}>
       <Header
         userInfo={userInfo}
         groups={groups}
+        searchTo={searchTo}
+        handleSearchTo={handleSearchTo}
         handleChageUser={handleChageUser}
       />
       <List>
-        {repositories.map((repository, i) => (
-          <Item key={i} userInfo={userInfo} repository={repository} />
-        ))}
+        {repositories.map((repository, i) => {
+          const target = new RegExp(searchTo);
+          if (target.test(repository.project_topic))
+            return <Item key={i} userInfo={userInfo} repository={repository} />;
+        })}
         <div className={styles.moreRepository}>
           <Link to={`/user/${userInfo.user_id}/repositories`}>
             <MDBIcon icon="folder-open" />
@@ -27,7 +40,13 @@ const Repository = ({ userInfo, groups, repositories, handleChageUser }) => {
   );
 };
 
-const Header = ({ userInfo, groups, handleChageUser }) => (
+const Header = ({
+  userInfo,
+  groups,
+  searchTo,
+  handleSearchTo,
+  handleChageUser,
+}) => (
   <div className={styles.header}>
     <div>
       <select
@@ -42,7 +61,13 @@ const Header = ({ userInfo, groups, handleChageUser }) => (
         ))}
       </select>
       <span>/</span>
-      <input type="text" className="form-control" placeholder="저장소 이름" />
+      <input
+        type="text"
+        value={searchTo}
+        onChange={handleSearchTo}
+        className="form-control"
+        placeholder="저장소 이름"
+      />
     </div>
     <Link to={`/user/${userInfo.user_id}/new`}>
       <MDBBtn color="primary">

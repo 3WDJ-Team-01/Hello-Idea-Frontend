@@ -29,8 +29,20 @@ $navHeight: 40px;
     flex: 1;
   }
   .options {
+    width: 23%;
     font-size: 1rem;
     display: flex;
+    > div {
+      flex: 1;
+      height: 2.5rem;
+      line-height: 2.5rem;
+      text-align: center;
+      border: 2px solid black;
+      border-radius: 1.5rem;
+    }
+    .star {
+      cursor: pointer;
+    }
     div + div {
       margin-left: 0.5rem;
     }

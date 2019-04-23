@@ -45,18 +45,16 @@ class NewContainer extends Component {
         group_id: author_id.replace('G', ''),
         project_topic: name,
         project_intro: desc,
-      }).then(() =>
-        history.push(`/group/${author_id}/repositories/repo/editor`),
-      );
+        history,
+      });
     } else {
       RepositoryActions.createRequest({
         user_id: author_id,
         group_id: 0,
         project_topic: name,
         project_intro: desc,
-      }).then(() =>
-        history.push(`/user/${author_id}/repositories/repo/editor`),
-      );
+        history,
+      });
     }
   };
 
@@ -80,6 +78,7 @@ class NewContainer extends Component {
 const mapStateToProps = state => ({
   groups: state.user.groups,
   userInfo: state.auth.userInfo,
+  project_id: state.repository.info.project_id,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -11,6 +11,10 @@ import * as userActions from 'store/modules/user';
 import * as recommendActions from 'store/modules/recommend';
 
 class MainContainer extends Component {
+  state = {
+    searchTo: '',
+  };
+
   componentDidMount() {
     const { UserActions, RecommendActions } = this.props;
     if (localStorage.getItem('userInfo')) {
@@ -20,6 +24,12 @@ class MainContainer extends Component {
       RecommendActions.withTendencyRequest(userInfo.user_id);
     }
   }
+
+  handleSearchTo = e => {
+    this.setState({
+      searchTo: e.target.value,
+    });
+  };
 
   handleChageUser = e => {
     const { UserActions } = this.props;
@@ -33,7 +43,8 @@ class MainContainer extends Component {
   };
 
   render() {
-    const { handleChageUser } = this;
+    const { handleSearchTo, handleChageUser } = this;
+    const { searchTo } = this.state;
     const { userInfo, groups, repositories, tendencyRepo } = this.props;
     return (
       <MainWrapper>
@@ -43,6 +54,8 @@ class MainContainer extends Component {
               userInfo={userInfo}
               groups={groups}
               repositories={repositories.all}
+              searchTo={searchTo}
+              handleSearchTo={handleSearchTo}
               handleChageUser={handleChageUser}
             />
             <article>

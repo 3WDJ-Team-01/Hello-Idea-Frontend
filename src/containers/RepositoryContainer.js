@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable eqeqeq */
 /* eslint-disable no-alert */
 /* eslint-disable no-useless-return */
 import React, { Component } from 'react';
@@ -5,6 +7,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as repositoryActions from 'store/modules/repository';
+import axios from 'axios';
 import produce from 'immer';
 import Header from 'components/repository/Header';
 import RepositoryWrapper from 'components/repository/RepositoryWrapper';
@@ -15,20 +18,72 @@ class RepositoryContainer extends Component {
   state = {
     name: '',
     description: '',
+    isLiked: false,
   };
 
   componentDidMount() {
-    const { RepositoryActions, repositoryId } = this.props;
-    RepositoryActions.getRequest(repositoryId).then(() => {
-      const { repositoryInfo } = this.props;
-      this.setState(
-        produce(draft => {
-          draft.name = repositoryInfo.project_topic;
-          draft.description = repositoryInfo.project_intro;
-        }),
-      );
-    });
+    const { RepositoryActions, userId, repositoryId } = this.props;
+    axios
+      .post('/api/project/hit/', {
+        user_id: userId,
+        project_id: repositoryId,
+      })
+      .then(() => {
+        RepositoryActions.getRequest(repositoryId).then(() => {
+          const { repositoryInfo, likedUsers } = this.props;
+          this.setState(
+            produce(draft => {
+              draft.name = repositoryInfo.project_topic;
+              draft.description = repositoryInfo.project_intro;
+              likedUsers.map(user => {
+                if (user.user_id == userId) draft.isLiked = true;
+              });
+            }),
+          );
+        });
+      });
   }
+
+  componentWillUnmount() {
+    const { RepositoryActions } = this.props;
+    RepositoryActions.initialize();
+  }
+
+  handleStar = () => {
+    const { RepositoryActions, userId, repositoryId } = this.props;
+    const { isLiked } = this.state;
+    if (isLiked) {
+      axios
+        .post('/api/project/like/delete/', {
+          user_id: userId,
+          project_id: repositoryId,
+        })
+        .then(() => {
+          RepositoryActions.getRequest(repositoryId).then(() => {
+            this.setState(
+              produce(draft => {
+                draft.isLiked = false;
+              }),
+            );
+          });
+        });
+    } else {
+      axios
+        .post('/api/project/like/', {
+          user_id: userId,
+          project_id: repositoryId,
+        })
+        .then(() => {
+          RepositoryActions.getRequest(repositoryId).then(() => {
+            this.setState(
+              produce(draft => {
+                draft.isLiked = true;
+              }),
+            );
+          });
+        });
+    }
+  };
 
   handleChange = e => {
     e.persist();
@@ -61,11 +116,17 @@ class RepositoryContainer extends Component {
   };
 
   handleRemove = () => {
-    const { repositoryId, RepositoryActions, history, author } = this.props;
+    const {
+      repositoryId,
+      RepositoryActions,
+      history,
+      repositoryInfo,
+    } = this.props;
     if (window.confirm('해당 저장소를 삭제하시겠습니까?')) {
-      RepositoryActions.removeRequest(repositoryId).then(() =>
-        history.push(`/user/${author}/repositories/`),
-      );
+      RepositoryActions.removeRequest(repositoryId).then(() => {
+        if (repositoryInfo.group_id === 0)
+          history.push(`/user/${repositoryInfo.user_id}/repositories/`);
+      });
     } else return;
   };
 
@@ -104,7 +165,8 @@ class RepositoryContainer extends Component {
   };
 
   render() {
-    const { renderMenu } = this;
+    const { renderMenu, handleStar } = this;
+    const { isLiked } = this.state;
     const {
       url,
       menu,
@@ -120,8 +182,10 @@ class RepositoryContainer extends Component {
           url={url}
           menu={menu}
           author={author}
+          isLiked={isLiked}
           repositoryId={repositoryId}
           repositoryInfo={repositoryInfo}
+          handleStar={handleStar}
         />
         <RepositoryWrapper>{renderMenu(menu)}</RepositoryWrapper>
       </>
@@ -136,6 +200,7 @@ const mapStateToProps = state => ({
   repositoryInfo: state.repository.info,
   repositoryCategory: state.repository.category,
   similarRepository: state.repository.similar,
+  likedUsers: state.repository.likes,
 });
 
 const mapDispatchToProps = dispatch => ({
