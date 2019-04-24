@@ -105,6 +105,10 @@
     background-color: white;
     width: 240px;
     height: 100%;
+    img {
+      width: 100%;
+      height: calc(100% - 3.4rem);
+    }
     z-index: 0;
   }
   .ideahov {

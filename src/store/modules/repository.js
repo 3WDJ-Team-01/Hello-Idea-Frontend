@@ -62,7 +62,7 @@ export const createRequest = ({
     .then(res => {
       axios.post('/api/project_category/create/', {
         project_id: res.data.project_id,
-        project_topic,
+        result: res.data.result,
       });
       axios
         .post('/api/person_tendency/update/', {

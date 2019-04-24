@@ -16,8 +16,7 @@ const ComponentFromType = (type, value, i) => {
     ) : (
       <Repository key={i} author={value.user_id} value={value} />
     );
-  else if (type === 'Users') return <User key={i} value={value} />;
-  else if (type === 'Groups') return <User key={i} value={value} />;
+  else return <User key={i} value={value} />;
 };
 
 const Results = ({ type, results }) => {

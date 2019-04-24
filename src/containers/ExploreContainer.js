@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-plusplus */
 import React, { Component } from 'react';
@@ -71,6 +72,7 @@ class ExploreContainer extends Component {
         <List title="Your interest">
           {recommendsTendency.map((item, i) => (
             <Item
+              key={i}
               user_id={item.user_id}
               group_id={item.group_id}
               project_img={item.project_img}
@@ -82,6 +84,7 @@ class ExploreContainer extends Component {
         <List title="Recently Popular">
           {recommendsPopular.map((item, i) => (
             <Item
+              key={i}
               user_id={item.user_id}
               group_id={item.group_id}
               project_img={item.project_img}

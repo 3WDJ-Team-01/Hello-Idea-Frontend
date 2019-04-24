@@ -13,6 +13,7 @@ class SearchContainer extends Component {
       Repositories: [],
       Users: [],
       Groups: [],
+      Keywords: [],
     },
   };
 

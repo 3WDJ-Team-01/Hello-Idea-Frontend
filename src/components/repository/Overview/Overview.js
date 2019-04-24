@@ -85,7 +85,9 @@ const List = ({ children }) => (
 
 const Item = ({ path, repository }) => (
   <div className={styles.ideabox}>
-    <div className={styles.ideaimg} />
+    <div className={styles.ideaimg}>
+      <img src={repository.project_img} alt={repository.project_topic} />
+    </div>
     <div className={styles.ideahov}>
       <div className={styles.idealabel}>
         <div className={styles.title}>{repository.project_topic}</div>
