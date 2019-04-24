@@ -152,6 +152,9 @@ const Header = ({ history, searchTo, onLogout, onChange }) => {
                 <DropdownMenu path={`/user/${userInfo.user_id}/repositories`}>
                   <div className={styles.item}>Your repositories</div>
                 </DropdownMenu>
+                <DropdownMenu path={`/user/${userInfo.user_id}/groups`}>
+                  <div className={styles.item}>Your groups</div>
+                </DropdownMenu>
                 <DropdownMenu isDivider />
                 <DropdownMenu path={`/user/${userInfo.user_id}/modify`}>
                   <div className={styles.item}>Settings</div>

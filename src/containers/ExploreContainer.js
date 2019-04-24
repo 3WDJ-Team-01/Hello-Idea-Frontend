@@ -73,6 +73,7 @@ class ExploreContainer extends Component {
             <Item
               user_id={item.user_id}
               group_id={item.group_id}
+              project_img={item.project_img}
               project_id={item.project_id}
               project_topic={item.project_topic}
             />
@@ -83,6 +84,7 @@ class ExploreContainer extends Component {
             <Item
               user_id={item.user_id}
               group_id={item.group_id}
+              project_img={item.project_img}
               project_id={item.project_id}
               project_topic={item.project_topic}
             />

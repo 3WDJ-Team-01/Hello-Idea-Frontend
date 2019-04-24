@@ -6,7 +6,7 @@ const Following = ({ list }) => {
   return (
     <div className={styles.followerList}>
       {list.map((item, i) => (
-        <User value={item} />
+        <User key={i} value={item} />
       ))}
     </div>
   );

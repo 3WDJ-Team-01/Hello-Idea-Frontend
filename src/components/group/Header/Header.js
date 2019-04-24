@@ -5,13 +5,18 @@ import { Link } from 'react-router-dom';
 import { MDBIcon } from 'mdbreact';
 import styles from './Header.module.scss';
 
-const Header = ({ url, menu, groupId }) => {
+const Header = ({ url, menu, groupId, info }) => {
   return (
     <div className={styles.groupHeader}>
       <div>
         <div className={styles.groupTitle}>
-          <div className={styles.emblem} />
-          <div className={styles.name}>test</div>
+          <div className={styles.emblem}>
+            <img src={info.group_img} alt={info.group_name} />
+          </div>
+          <div className={styles.groupDesc}>
+            <div className={styles.name}>{info.group_name}</div>
+            <div className={styles.intro}>{info.group_intro}</div>
+          </div>
         </div>
         <div className={styles.groupNavWrapper}>
           <div className={styles.groupNav}>

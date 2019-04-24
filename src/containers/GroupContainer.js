@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -6,6 +7,7 @@ import produce from 'immer';
 import Header from 'components/group/Header';
 import GroupWrapper from 'components/group/GroupWrapper';
 import Repositories from 'components/group/Repositories';
+import People from 'components/group/People';
 import Setting from 'components/group/Setting';
 
 class GroupContainer extends Component {
@@ -20,7 +22,7 @@ class GroupContainer extends Component {
     repositories: {
       all: [],
     },
-    member: [],
+    people: [],
     filter: 'all',
     searchTo: '',
   };
@@ -48,7 +50,7 @@ class GroupContainer extends Component {
     axios.post('/api/group_entry/', { group_id: groupId }).then(res => {
       this.setState(
         produce(draft => {
-          draft.member = res.data;
+          draft.people = res.data;
         }),
       );
     });
@@ -67,7 +69,7 @@ class GroupContainer extends Component {
 
     this.setState(
       produce(draft => {
-        draft.filter = e.target.attributes.name.nodeValue;
+        draft.filter = e.target.value;
       }),
     );
   };
@@ -85,9 +87,11 @@ class GroupContainer extends Component {
   renderMenu = menu => {
     const { handleFilter, handleSearchTo } = this;
     const { groupId } = this.props;
-    const { repositories, filter, searchTo } = this.state;
+    const { repositories, people, filter, searchTo } = this.state;
 
     switch (menu) {
+      case 'people':
+        return <People list={people} />;
       // case 'settings':
       //   return (
       //     <Setting
@@ -115,11 +119,12 @@ class GroupContainer extends Component {
 
   render() {
     const { renderMenu } = this;
+    const { info } = this.state;
     const { url, menu, groupId } = this.props;
 
     return (
       <>
-        <Header url={url} menu={menu} groupId={groupId} />
+        <Header url={url} menu={menu} groupId={groupId} info={info} />
         <GroupWrapper>{renderMenu(menu)}</GroupWrapper>
       </>
     );

@@ -5,15 +5,15 @@ import styles from './User.module.scss';
 
 const User = ({ value }) => (
   <div className={styles.followerCard}>
-    <div className={styles.followerImg}>img</div>
+    <div className={styles.followerImg}>
+      <img src={value.user_img} alt={value.user_name} />
+    </div>
     <div className={styles.follower}>
       <div className={styles.name}>
         <Link to={`/user/${value.user_id}`}>{value.user_name}</Link>
       </div>
 
-      <div className={styles.description}>
-        when an unknown printer took a galley of type and scrambled it.
-      </div>
+      <div className={styles.description}>{value.user_intro}</div>
     </div>
     <MDBBtn outline color="primary">
       follow

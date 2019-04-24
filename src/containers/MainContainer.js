@@ -13,6 +13,7 @@ import * as recommendActions from 'store/modules/recommend';
 class MainContainer extends Component {
   state = {
     searchTo: '',
+    filter: 'all',
   };
 
   componentDidMount() {
@@ -24,6 +25,17 @@ class MainContainer extends Component {
       RecommendActions.withTendencyRequest(userInfo.user_id);
     }
   }
+
+  handleFilter = e => {
+    e.persist();
+    e.stopPropagation();
+
+    this.setState(
+      produce(draft => {
+        draft.filter = e.target.value;
+      }),
+    );
+  };
 
   handleSearchTo = e => {
     this.setState({
@@ -43,8 +55,8 @@ class MainContainer extends Component {
   };
 
   render() {
-    const { handleSearchTo, handleChageUser } = this;
-    const { searchTo } = this.state;
+    const { handleFilter, handleSearchTo, handleChageUser } = this;
+    const { searchTo, filter } = this.state;
     const { userInfo, groups, repositories, tendencyRepo } = this.props;
     return (
       <MainWrapper>
@@ -53,8 +65,10 @@ class MainContainer extends Component {
             <Repository
               userInfo={userInfo}
               groups={groups}
-              repositories={repositories.all}
+              repositories={repositories}
+              filter={filter}
               searchTo={searchTo}
+              handleFilter={handleFilter}
               handleSearchTo={handleSearchTo}
               handleChageUser={handleChageUser}
             />

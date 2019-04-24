@@ -10,8 +10,10 @@ const Repository = ({
   userInfo,
   groups,
   repositories,
+  filter,
   searchTo,
   handleChageUser,
+  handleFilter,
   handleSearchTo,
 }) => {
   return (
@@ -20,11 +22,14 @@ const Repository = ({
         userInfo={userInfo}
         groups={groups}
         searchTo={searchTo}
+        filter={filter}
+        handleFilter={handleFilter}
+        repositories={repositories}
         handleSearchTo={handleSearchTo}
         handleChageUser={handleChageUser}
       />
       <List>
-        {repositories.map((repository, i) => {
+        {repositories[filter].map((repository, i) => {
           const target = new RegExp(searchTo);
           if (target.test(repository.project_topic))
             return <Item key={i} userInfo={userInfo} repository={repository} />;
@@ -43,7 +48,10 @@ const Repository = ({
 const Header = ({
   userInfo,
   groups,
+  repositories,
   searchTo,
+  filter,
+  handleFilter,
   handleSearchTo,
   handleChageUser,
 }) => (
@@ -68,6 +76,18 @@ const Header = ({
         className="form-control"
         placeholder="저장소 이름"
       />
+      <select
+        className={`browser-default custom-select ${styles.filter}`}
+        onChange={handleFilter}
+      >
+        {Object.keys(repositories)
+          .reverse()
+          .map((key, i) => (
+            <option key={i} value={key}>
+              {`${key} (${repositories[key].length})`}
+            </option>
+          ))}
+      </select>
     </div>
     <Link to={`/user/${userInfo.user_id}/new`}>
       <MDBBtn color="primary">
@@ -86,7 +106,9 @@ const List = ({ children }) => (
 
 const Item = ({ userInfo, repository }) => (
   <div className={styles.ideabox}>
-    <div className={styles.ideaimg} />
+    <div className={styles.ideaimg}>
+      <img src={repository.project_img} alt={repository.project_img} />
+    </div>
     <div className={styles.ideahov}>
       <div className={styles.idealabel}>
         <div className={styles.title}>{repository.project_topic}</div>

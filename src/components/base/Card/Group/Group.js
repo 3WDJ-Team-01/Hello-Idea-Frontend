@@ -5,7 +5,9 @@ import styles from './Group.module.scss';
 
 const Group = ({ value }) => (
   <div className={styles.followerCard}>
-    <div className={styles.followerImg}>img</div>
+    <div className={styles.followerImg}>
+      <img src={value.group_img} alt={value.group_name} />
+    </div>
     <div className={styles.follower}>
       <div className={styles.name}>
         <Link to={`/group/${value.group_id}`}>{value.group_name}</Link>

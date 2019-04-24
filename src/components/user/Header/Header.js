@@ -22,14 +22,20 @@ const Header = ({ menu, user, info, shownProfile, modify }) => {
               alt="userprofile"
             />
           ) : (
-            <div className={styles.userImage} />
+            <img
+              className={styles.userImage}
+              src={info.User_detail.user_img}
+              alt={info.User_detail.user_name}
+            />
           )}
         </div>
         <div className={styles.userDescWrapper}>
           <div className={styles.userProfileName}>
             {info.User_detail && info.User_detail.user_name}
           </div>
-          <div className={styles.userDescription}>{}</div>
+          <div className={styles.userDescription}>
+            {info.User_detail.user_intro}
+          </div>
         </div>
         <Link to={`/user/${user}/modify`}>
           {menu === 'modify' ? (
@@ -55,7 +61,11 @@ const Header = ({ menu, user, info, shownProfile, modify }) => {
                   alt="userprofile"
                 />
               ) : (
-                <div className={styles.userImage} />
+                <img
+                  className={styles.userImage}
+                  src={info.User_detail.user_img}
+                  alt={info.User_detail.user_name}
+                />
               )}
             </div>
             <div className={styles.name}>

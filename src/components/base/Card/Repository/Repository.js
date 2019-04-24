@@ -43,7 +43,9 @@ const Repository = ({ author, value, isGroup = false }) =>
           value.project_id
         }`}
       >
-        <div className={styles.image}>이미지</div>
+        <div className={styles.image}>
+          <img src={value.project_img} alt={value.project_name} />
+        </div>
       </Link>
     </div>
   ) : null;

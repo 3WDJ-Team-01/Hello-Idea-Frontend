@@ -1,0 +1,9 @@
+@import '~styles/utils.scss';
+
+.peopleList {
+  max-width: $app_width / 1.5;
+  margin: 0 auto;
+  @include media('<medium') {
+    max-width: 768px;
+  }
+}

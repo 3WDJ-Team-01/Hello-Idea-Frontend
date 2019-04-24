@@ -11,6 +11,10 @@
     width: 240px;
     height: 100%;
     z-index: 0;
+    img {
+      width: 100%;
+      height: calc(100% - 3.4rem);
+    }
   }
   .ideahov {
     position: relative;

@@ -22,35 +22,6 @@ const Repositories = ({
 }) => {
   return (
     <div className={styles.repositoriesWrapper}>
-      <div className={styles.repoCategory}>
-        <div>Category</div>
-        <ul>
-          {Object.keys(repositories)
-            .reverse()
-            .map((key, i) => (
-              <li
-                key={i}
-                name={key}
-                onClick={handleFilter}
-                style={
-                  filter === key
-                    ? {
-                        borderLeft: '3px solid #4285f4',
-                        fontWeight: 500,
-                      }
-                    : {}
-                }
-              >
-                <span name={key} className={styles.label}>
-                  {key}
-                </span>
-                <span name={key} className={styles.count}>
-                  ({repositories[key].length})
-                </span>
-              </li>
-            ))}
-        </ul>
-      </div>
       <div className={styles.repositories}>
         <div className={styles.search}>
           <Link to={`/group/${groupId}/new`}>
@@ -65,6 +36,18 @@ const Repositories = ({
             onChange={handleSearchTo}
             placeholder="Find a repository..."
           />
+          <select
+            className="browser-default custom-select"
+            onChange={handleFilter}
+          >
+            {Object.keys(repositories)
+              .reverse()
+              .map((key, i) => (
+                <option key={i} value={key}>
+                  {`${key} (${repositories[key].length})`}
+                </option>
+              ))}
+          </select>
         </div>
         {repositories[filter].map((repository, i) => {
           const target = new RegExp(searchTo);

@@ -18,6 +18,8 @@ class SearchContainer extends Component {
 
   componentDidMount() {
     const { searchTo } = this.props;
+    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
+
     axios.post('/api/search/', { searchTo }).then(res =>
       this.setState(
         produce(draft => {
@@ -27,6 +29,7 @@ class SearchContainer extends Component {
         }),
       ),
     );
+    axios.post('/api/search/log/create/', { user_id, keyword: searchTo });
   }
 
   componentDidUpdate(prevProps, prevState) {

@@ -42,6 +42,10 @@ const Overview = ({
         </div>
       </div>
       <div className={styles.repoScreen}>
+        <img
+          src={repositoryInfo.project_img}
+          alt={repositoryInfo.project_topic}
+        />
         <Link to={`${repositoryId}/editor`}>
           <MDBBtn color="primary">open viewer</MDBBtn>
         </Link>
