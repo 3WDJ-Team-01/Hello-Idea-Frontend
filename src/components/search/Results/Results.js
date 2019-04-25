@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
 import { MDBBtn } from 'mdbreact';
 import Repository from 'components/base/Card/Repository';
 import User from 'components/base/Card/User';

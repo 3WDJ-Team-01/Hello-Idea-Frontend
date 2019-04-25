@@ -6,7 +6,7 @@ const Main = ({ match, history }) => {
   return (
     <PageTemplate history={history}>
       <RepositoryContainer
-        userId={match.params.user}
+        author={match.params.author}
         menu={match.params.menu}
         url={match.url}
         repositoryId={match.params.repository}

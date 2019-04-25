@@ -22,10 +22,11 @@ class RepositoryContainer extends Component {
   };
 
   componentDidMount() {
-    const { RepositoryActions, userId, repositoryId } = this.props;
+    const { RepositoryActions, author, repositoryId } = this.props;
+    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
     axios
       .post('/api/project/hit/', {
-        user_id: userId,
+        user_id,
         project_id: repositoryId,
       })
       .then(() => {
@@ -36,7 +37,7 @@ class RepositoryContainer extends Component {
               draft.name = repositoryInfo.project_topic;
               draft.description = repositoryInfo.project_intro;
               likedUsers.map(user => {
-                if (user.user_id == userId) draft.isLiked = true;
+                if (user.user_id == user_id) draft.isLiked = true;
               });
             }),
           );
@@ -50,12 +51,13 @@ class RepositoryContainer extends Component {
   }
 
   handleStar = () => {
-    const { RepositoryActions, userId, repositoryId } = this.props;
+    const { RepositoryActions, repositoryId } = this.props;
+    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
     const { isLiked } = this.state;
     if (isLiked) {
       axios
         .post('/api/project/like/delete/', {
-          user_id: userId,
+          user_id,
           project_id: repositoryId,
         })
         .then(() => {
@@ -70,7 +72,7 @@ class RepositoryContainer extends Component {
     } else {
       axios
         .post('/api/project/like/', {
-          user_id: userId,
+          user_id,
           project_id: repositoryId,
         })
         .then(() => {

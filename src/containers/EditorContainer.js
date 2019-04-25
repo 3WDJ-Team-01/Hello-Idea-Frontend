@@ -246,9 +246,9 @@ class App extends Component {
       handleCanvasZoom,
       handleMouseWheel,
     } = this;
-    const { paths, nodes, userId, repositoryId } = this.props;
+    const { paths, nodes, repositoryId } = this.props;
     const { pointer, contextMenu, explore, canvas } = this.state;
-
+    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
     return (
       <div
         className="App"
@@ -314,7 +314,7 @@ class App extends Component {
             pointer={pointer}
             mode={contextMenu.mode}
             location={contextMenu.location}
-            userId={userId}
+            userId={user_id}
             repositoryId={repositoryId}
             toggleContextMenu={toggleContextMenu}
             toggleExplore={toggleExplore}

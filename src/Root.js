@@ -23,29 +23,44 @@ const Root = () => (
         <Route path="/" exact component={Main} />
         <Route path="/search/:searchTo" exact component={Search} />
         <Route path="/auth/:kind" exact component={Auth} />
-        <Route path="/trends" exact component={Trends} />
         <Route path="/trends/:searchTo" exact component={Trends} />
+        <Route path="/trends" exact component={Trends} />
         <Route path="/explore" exact component={Explore} />
         <Route path="/user/:user/new" exact component={New} />
         <Route path="/user/:user/:menu" exact component={User} />
         <Route path="/user/:user" exact component={User} />
         <Route
-          path="/user/:user/repositories/:repository/editor"
+          path="/user/:author/repositories/:repository/editor"
           exact
           component={Editor}
         />
         <Route
-          path="/user/:user/repositories/:repository/:menu"
+          path="/user/:author/repositories/:repository/:menu"
           exact
           component={Repository}
         />
         <Route
-          path="/user/:user/repositories/:repository"
+          path="/user/:author/repositories/:repository"
           exact
           component={Repository}
         />
         <Route path="/group/:group/:menu" exact component={Group} />
         <Route path="/group/:group" exact component={Group} />
+        <Route
+          path="/group/:author/repositories/:repository/editor"
+          exact
+          component={Editor}
+        />
+        <Route
+          path="/group/:author/repositories/:repository/:menu"
+          exact
+          component={Repository}
+        />
+        <Route
+          path="/group/:author/repositories/:repository"
+          exact
+          component={Repository}
+        />
         <Route component={NotFound} />
       </Switch>
     </BrowserRouter>

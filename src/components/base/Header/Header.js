@@ -41,7 +41,7 @@ const Header = ({ history, searchTo, onLogout, onChange }) => {
               <MobileMenu>
                 <div className={styles.item}>
                   <input
-                    type="text"
+                    type="search"
                     className="form-control"
                     placeholder="Search..."
                     className="mobile"
@@ -95,7 +95,7 @@ const Header = ({ history, searchTo, onLogout, onChange }) => {
 
           <span className={styles.search}>
             <input
-              type="text"
+              type="search"
               className="form-control"
               placeholder="Search..."
               value={searchTo}
@@ -115,10 +115,10 @@ const Header = ({ history, searchTo, onLogout, onChange }) => {
           </span>
 
           <div className={styles.link}>
-            <Link to="/Trends" className="headLink">
+            <Link to="/trends" className="headLink">
               <span>Trends</span>
             </Link>
-            <Link to="/Explore" className="headLink">
+            <Link to="/explore" className="headLink">
               <span>Explore</span>
             </Link>
           </div>

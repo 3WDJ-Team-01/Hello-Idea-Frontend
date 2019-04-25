@@ -6,7 +6,7 @@ const Main = ({ match }) => {
   return (
     <PageTemplate isHidden>
       <EditorContainer
-        userId={match.params.user}
+        author={match.params.author}
         url={match.url}
         repositoryId={match.params.repository}
       />
