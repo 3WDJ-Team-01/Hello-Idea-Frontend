@@ -48,17 +48,17 @@ const Results = ({ keyword, attention, log, relate }) => {
       if (key === 'Male')
         logData.push({
           name: '남성',
-          ratio: log[item][key],
+          비율: log[item][key],
         });
       else if (key === 'Female')
         logData.push({
           name: '여성',
-          ratio: log[item][key],
+          비율: log[item][key],
         });
       else
         logData.push({
           name: key,
-          ratio: log[item][key],
+          비율: log[item][key],
         });
     });
   });
@@ -86,6 +86,7 @@ const Results = ({ keyword, attention, log, relate }) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
             <YAxis />
+            <Tooltip />
             <Line
               type="monotone"
               dataKey={keyword}
@@ -101,7 +102,7 @@ const Results = ({ keyword, attention, log, relate }) => {
         <h5>성별, 연령별 관심도</h5>
         <div className={styles.graph}>
           <BarChart
-            width={1200}
+            width={1000}
             height={300}
             data={logData}
             margin={{ top: 30, right: 30, left: 30, bottom: 5 }}
@@ -109,7 +110,8 @@ const Results = ({ keyword, attention, log, relate }) => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            <Bar dataKey="ratio" fill="#82ca9d" label>
+            <Tooltip />
+            <Bar dataKey="비율" fill="#3498db" label={{ position: 'top' }}>
               {logData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index]} />
               ))}

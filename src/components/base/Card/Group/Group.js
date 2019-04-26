@@ -15,11 +15,6 @@ const Group = ({ value }) => (
 
       <div className={styles.description}>{value.group_intro}</div>
     </div>
-    <Link to={`/group/${value.group_id}`}>
-      <MDBBtn outline color="primary">
-        visit
-      </MDBBtn>
-    </Link>
   </div>
 );
 

@@ -6,11 +6,11 @@ import Header from '../components/base/Header';
 import * as authActions from '../store/modules/auth';
 
 class HeaderContainer extends Component {
-  state = {
-    searchTo: '',
-  };
-
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchTo: '',
+    };
     this.checkUser();
   }
 
@@ -58,13 +58,15 @@ class HeaderContainer extends Component {
     const { isHidden, history } = this.props;
     const { searchTo } = this.state;
     const { handleLogout, handleSearch } = this;
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
-    return isHidden ? null : (
+    return !userInfo && isHidden ? null : (
       <Header
         history={history}
         searchTo={searchTo}
         onLogout={handleLogout}
         onChange={handleSearch}
+        userInfo={userInfo}
       />
     );
   }

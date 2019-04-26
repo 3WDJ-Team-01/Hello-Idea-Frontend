@@ -3,7 +3,16 @@ import { Link } from 'react-router-dom';
 import { MDBBtn } from 'mdbreact';
 import styles from './Header.module.scss';
 
-const Header = ({ menu, user, info, shownProfile, modify }) => {
+const Header = ({
+  menu,
+  user,
+  info,
+  shownProfile,
+  modify,
+  loggedUser,
+  isFollow,
+  handleFollow,
+}) => {
   return (
     <>
       <div
@@ -37,15 +46,29 @@ const Header = ({ menu, user, info, shownProfile, modify }) => {
             {info.User_detail.user_intro}
           </div>
         </div>
-        <Link to={`/user/${user}/modify`}>
-          {menu === 'modify' ? (
-            <MDBBtn color="elegant">EDIT</MDBBtn>
-          ) : (
-            <MDBBtn outline color="elegant">
-              EDIT
-            </MDBBtn>
-          )}
-        </Link>
+        {user == loggedUser ? (
+          <Link to={`/user/${user}/modify`}>
+            {menu === 'modify' ? (
+              <MDBBtn color="elegant">EDIT</MDBBtn>
+            ) : (
+              <MDBBtn outline color="elegant">
+                EDIT
+              </MDBBtn>
+            )}
+          </Link>
+        ) : (
+          <div>
+            {isFollow ? (
+              <MDBBtn color="primary" onClick={handleFollow}>
+                unfollow
+              </MDBBtn>
+            ) : (
+              <MDBBtn outline color="primary" onClick={handleFollow}>
+                follow
+              </MDBBtn>
+            )}
+          </div>
+        )}
       </div>
       <div className={styles.userNavWrapper}>
         <div>

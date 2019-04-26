@@ -18,14 +18,11 @@ import {
 } from 'components/base/Dropdown/MobileMenubar';
 import styles from './Header.module.scss';
 
-const userInfo =
-  localStorage.getItem('userInfo') &&
-  JSON.parse(localStorage.getItem('userInfo'));
-
-const Header = ({ history, searchTo, onLogout, onChange }) => {
+const Header = ({ history, searchTo, onLogout, onChange, userInfo }) => {
   const onKeyPress = e => {
     if (e.key === 'Enter') history.push(`/search/${searchTo}`);
   };
+  if (!userInfo) return <></>;
   return (
     <div className={styles.header_wrapper}>
       <div className={styles.header}>
@@ -159,7 +156,7 @@ const Header = ({ history, searchTo, onLogout, onChange }) => {
                 <DropdownMenu path={`/user/${userInfo.user_id}/modify`}>
                   <div className={styles.item}>Settings</div>
                 </DropdownMenu>
-                <DropdownMenu>
+                <DropdownMenu path={`/user/${userInfo.user_id}/modify`}>
                   <div className={styles.item} onClick={onLogout}>
                     Sign out
                   </div>

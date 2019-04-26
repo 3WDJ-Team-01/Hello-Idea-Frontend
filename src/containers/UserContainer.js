@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
@@ -6,6 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as userActions from 'store/modules/user';
+import * as authActions from 'store/modules/auth';
 import axios from 'axios';
 import UserWrapper from 'components/user/UserWrapper';
 import Header from 'components/user/Header';
@@ -18,6 +20,9 @@ import getCroppedImg from 'tools/CropImage';
 
 class UserContainer extends Component {
   state = {
+    userInfo: JSON.parse(localStorage.getItem('userInfo')),
+    isOwner: false,
+    isFollow: false,
     repositoriesFilter: 'all',
     repositoriesSearchTo: '',
     displayColorPicker: false,
@@ -37,7 +42,13 @@ class UserContainer extends Component {
 
   componentDidMount() {
     const { user } = this.props;
-    const { UserActions } = this.props;
+    const { UserActions, loggedUserRelation } = this.props;
+    const { userInfo } = this.state;
+    this.setState(
+      produce(this.state, draft => {
+        draft.isOwner = user == userInfo.user_id;
+      }),
+    );
     UserActions.userRequest(user);
     UserActions.targetGroupsRequest(user);
     UserActions.repositoriesRequest(user, 0);
@@ -61,12 +72,33 @@ class UserContainer extends Component {
     });
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return !!JSON.parse(localStorage.getItem('userInfo'));
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.loggedUserRelation.followings) {
+      return {
+        isFollow:
+          nextProps.loggedUserRelation.followings.findIndex(
+            following => following.user_id == nextProps.user,
+          ) > -1,
+      };
+    }
+
+    return null;
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const { user, UserActions } = this.props;
+    const { isFollow } = this.state;
     if (prevProps.user !== user) {
       UserActions.userRequest(user);
       UserActions.targetGroupsRequest(user);
       UserActions.repositoriesRequest(user, 0);
+      UserActions.followerRequest(user);
+    }
+    if (prevState.isFollow !== isFollow) {
       UserActions.followerRequest(user);
     }
   }
@@ -89,6 +121,8 @@ class UserContainer extends Component {
       }
     });
   }
+
+  /* HEADER ACTIONS */
 
   /* IMAGE CROPPER ACTIONS */
 
@@ -126,6 +160,43 @@ class UserContainer extends Component {
     );
     console.log(croppedImage);
     // axios.post('/api/user_img/update/', {})
+  };
+
+  /* HEADER ACTIONS */
+  handleFollow = e => {
+    e.persist();
+    const { user, AuthActions } = this.props;
+    const { isFollow, userInfo } = this.state;
+
+    if (!isFollow) {
+      axios
+        .post('/api/follow/insert/', {
+          user_id: userInfo.user_id,
+          partner_id: user,
+        })
+        .then(() => {
+          this.setState(
+            produce(draft => {
+              draft.isFollow = true;
+            }),
+          );
+        });
+    } else {
+      axios
+        .post('/api/follow/delete/', {
+          user_id: userInfo.user_id,
+          partner_id: user,
+        })
+        .then(() => {
+          this.setState(
+            produce(draft => {
+              draft.isFollow = false;
+            }),
+          );
+        });
+    }
+
+    AuthActions.userRequest();
   };
 
   /* COLOR PICKER ACTIONS */
@@ -214,20 +285,27 @@ class UserContainer extends Component {
       handleSearchTo,
     } = this;
     const {
+      userInfo,
       cropper,
       modify,
       displayColorPicker,
       repositoriesFilter,
       repositoriesSearchTo,
     } = this.state;
-    const { info, groups, repositories, follower, following } = this.props;
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const {
+      info,
+      groups,
+      repositories,
+      follower,
+      following,
+      loggedUserRelation,
+    } = this.props;
 
     switch (menu) {
       case 'repositories':
         return (
           <Repositories
-            loggedUser={userInfo.id}
+            loggedUser={userInfo.user_id}
             user={info.User_detail}
             repositories={repositories}
             filter={repositoriesFilter}
@@ -237,14 +315,27 @@ class UserContainer extends Component {
           />
         );
       case 'followers':
-        return <Following list={follower} />;
+        return (
+          <Following
+            list={follower}
+            loggedUserFollowings={loggedUserRelation.followings}
+          />
+        );
       case 'followings':
-        return <Following list={following} />;
+        return (
+          <Following
+            list={following}
+            loggedUserFollowings={loggedUserRelation.followings}
+          />
+        );
       case 'groups':
-        return <Groups list={groups} />;
+        return (
+          <Groups list={groups} loggedUserGroups={loggedUserRelation.groups} />
+        );
       case 'modify':
         return (
           <Modify
+            loggedUser={userInfo.user_id}
             cropper={cropper}
             modify={modify}
             displayColorPicker={displayColorPicker}
@@ -258,29 +349,33 @@ class UserContainer extends Component {
           />
         );
       default:
-        return <Overview loggedUser={userInfo.id} info={info} />;
+        return <Overview loggedUser={userInfo.user_id} info={info} />;
     }
   };
 
   render() {
-    const { renderMenu } = this;
+    const { renderMenu, handleFollow } = this;
     const { user, menu, info } = this.props;
-    const { shownProfile, modify } = this.state;
+    const { userInfo, isFollow, shownProfile, modify } = this.state;
 
     return (
       <>
         <Header
+          loggedUser={userInfo.user_id}
+          isFollow={isFollow}
           menu={menu}
           user={user}
           info={info}
           shownProfile={shownProfile}
           modify={modify}
+          handleFollow={handleFollow}
         />
         <UserWrapper>{renderMenu(menu)}</UserWrapper>
       </>
     );
   }
 }
+
 const mapStateToProps = state => ({
   state: state.user.state,
   info: state.user.info,
@@ -288,10 +383,12 @@ const mapStateToProps = state => ({
   repositories: state.user.repositories,
   follower: state.user.follower,
   following: state.user.following,
+  loggedUserRelation: state.auth.relation,
 });
 
 const mapDispatchToProps = dispatch => ({
   UserActions: bindActionCreators(userActions, dispatch),
+  AuthActions: bindActionCreators(authActions, dispatch),
 });
 
 export default withRouter(

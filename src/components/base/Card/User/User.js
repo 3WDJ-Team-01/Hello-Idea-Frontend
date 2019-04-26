@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { MDBBtn } from 'mdbreact';
 import styles from './User.module.scss';
 
-const User = ({ value }) => (
+const User = ({ value, isFollow }) => (
   <div className={styles.followerCard}>
     <div className={styles.followerImg}>
       <img src={value.user_img} alt={value.user_name} />
@@ -15,9 +15,13 @@ const User = ({ value }) => (
 
       <div className={styles.description}>{value.user_intro}</div>
     </div>
-    <MDBBtn outline color="primary">
-      follow
-    </MDBBtn>
+    {isFollow ? (
+      <MDBBtn color="primary">unfollow</MDBBtn>
+    ) : (
+      <MDBBtn outline color="primary">
+        follow
+      </MDBBtn>
+    )}
   </div>
 );
 

@@ -18,6 +18,8 @@ const SET_USER_TEMP = 'auth/SET_USER_TEMP';
 const LOGOUT = 'auth/LOGOUT';
 const LOGOUT_SUCCESS = 'auth/LOGOUT_SUCCESS';
 const LOGOUT_FAILURE = 'auth/LOGOUT_FAILURE';
+const GET_FOLLOWINGS = 'auth/GET_FOLLOWINGS';
+const GET_GROUPS = 'auth/GET_GROUPS';
 
 export const initializeInput = createAction(INITIALIZE_INPUT);
 export const changeInput = createAction(CHANGE_INPUT);
@@ -35,6 +37,8 @@ export const setUserTemp = createAction(SET_USER_TEMP);
 export const logout = createAction(LOGOUT);
 export const logoutSuccess = createAction(LOGOUT_SUCCESS);
 export const logoutFailure = createAction(LOGOUT_FAILURE);
+export const getFollowings = createAction(GET_FOLLOWINGS);
+export const getGroups = createAction(GET_GROUPS);
 
 export const registerRequest = data => dispatch => {
   dispatch(register());
@@ -88,6 +92,13 @@ export const userRequest = () => dispatch => {
     .get('/api/auth/user/')
     .then(res => {
       dispatch(checkUserSuccess(res.data));
+      const { user_id } = res.data;
+      axios
+        .post('/api/main/group/', { user_id })
+        .then(({ data }) => dispatch(getGroups(data)));
+      axios
+        .post('/api/follow/', { user_id })
+        .then(({ data }) => dispatch(getFollowings(data)));
     })
     .catch(err => {
       axios.defaults.headers.common.Authorization = '';
@@ -108,6 +119,10 @@ const initialState = {
     user_name: '',
     token: null,
   },
+  relation: {
+    followings: [],
+    groups: [],
+  },
 };
 
 export default handleActions(
@@ -121,7 +136,7 @@ export default handleActions(
         draft.logged = true;
         draft.state = 'success';
         draft.userInfo = {
-          user_id: action.payload.id,
+          user_id: action.payload.user_id,
           user_name: action.payload.user_name,
           token: action.payload.token,
         };
@@ -195,6 +210,7 @@ export default handleActions(
       produce(state, draft => {
         draft.logged = true;
         draft.state = 'success';
+        draft.relation = {};
       }),
     [CHECK_USER_FAILURE]: state =>
       produce(state, draft => {
@@ -205,6 +221,14 @@ export default handleActions(
           user_name: '',
           token: null,
         };
+      }),
+    [GET_FOLLOWINGS]: (state, action) =>
+      produce(state, draft => {
+        draft.relation.followings = action.payload.following;
+      }),
+    [GET_GROUPS]: (state, action) =>
+      produce(state, draft => {
+        draft.relation.groups = action.payload;
       }),
     [SET_USER_TEMP]: (state, action) =>
       produce(state, draft => {

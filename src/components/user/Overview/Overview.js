@@ -71,7 +71,7 @@ const Overview = ({ loggedUser, info }) => {
               >
                 <PolarGrid />
                 <PolarAngleAxis dataKey="subject" />
-                <PolarRadiusAxis />
+                <PolarRadiusAxis angle={30} />
                 <Tooltip
                   labelStyle={{ fontSize: '1rem', fontWeight: 500 }}
                   itemStyle={{ padding: 0 }}
