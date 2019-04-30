@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-find-dom-node */
 /* eslint-disable no-shadow */
@@ -61,8 +63,8 @@ class CanvasContainer extends Component {
   handlePointerUp = e => {
     const { getPointFromEvent } = this;
     const { pointer, nodes, pointerUp, MindmapActions } = this.props;
-
     const pointerPosition = getPointFromEvent(e);
+
     if (
       pointer.target.nodeId !== 0 &&
       pointer.state.isDrag &&
@@ -83,15 +85,56 @@ class CanvasContainer extends Component {
     pointerUp();
   };
 
+  handleIdeaDrop = e => {
+    e.stopPropagation();
+    e.persist();
+    const { getPointFromEvent } = this;
+    const { results } = this.props.explore;
+    const forkedIdeaId = e.dataTransfer.getData('text');
+    const forkedIdea = results.reduce((res, list) => {
+      const resultIndex = list.Idea.findIndex(
+        item => item.idea_id === parseInt(forkedIdeaId, 10),
+      );
+      if (resultIndex) return list.Idea[resultIndex];
+    });
+    const pointerPosition = getPointFromEvent(e);
+    console.log(forkedIdea);
+    // const newNode = {
+    //   project_id: repositoryId,
+    //   user_id: userId,
+    //   childOf: 0,
+    //   isForked: 0,
+    //   isEditing: true,
+    //   color: '#ECF0F1',
+    //   location: {
+    //     x: pointer.prevLoc.x,
+    //     y: pointer.prevLoc.y,
+    //   },
+    //   size: {
+    //     width: 100,
+    //     height: 40,
+    //   },
+    //   head: '',
+    //   parentOf: [],
+    // };
+  };
+
   render() {
-    const { cavasPins, children, zoom } = this.props;
-    const { handlePointerDown, handlePointerUp, handlePointerMove } = this;
+    const { cavasPins, children, zoom, handleMouseWheel } = this.props;
+    const {
+      handlePointerDown,
+      handlePointerUp,
+      handlePointerMove,
+      handleIdeaDrop,
+    } = this;
     return (
       <Canvas
         cavasPins={cavasPins}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerMove={handlePointerMove}
+        onWheel={handleMouseWheel}
+        onDrop={handleIdeaDrop}
         zoom={zoom}
       >
         {children}

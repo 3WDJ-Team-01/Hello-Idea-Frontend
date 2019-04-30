@@ -8,6 +8,7 @@ const Canvas = ({
   onPointerUp,
   onPointerMove,
   onWheel,
+  onDrop,
   children,
   zoom,
 }) => {
@@ -30,6 +31,10 @@ const Canvas = ({
           height,
           overflow: 'visible',
         }}
+        onDragOver={e => {
+          e.preventDefault();
+        }}
+        onDrop={onDrop}
       >
         <svg
           id="canvas"

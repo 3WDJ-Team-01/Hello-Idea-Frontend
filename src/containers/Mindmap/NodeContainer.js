@@ -10,7 +10,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import produce from 'immer';
-import axios from 'axios';
 import { bindActionCreators } from 'redux';
 import * as mindmapActions from 'store/modules/mindmap';
 import Node from 'components/mindmap/Node/SVG';
@@ -67,7 +66,6 @@ class NodeContainer extends Component {
   }
 
   componentDidUpdate() {
-    const { node } = this.state;
     if (this.props.mode === 'Edit') {
       document.querySelector('.editable').focus();
     }
@@ -82,7 +80,6 @@ class NodeContainer extends Component {
     // - min-width = 100px
     this.setState(
       produce(this.state, draft => {
-        const { size } = this.state.node;
         const strByteLength = (s, b, i, c) => {
           for (
             b = i = 0;
@@ -128,20 +125,6 @@ class NodeContainer extends Component {
     } else if (e.key === 'Escape') {
       MindmapActions.updateIdeaRequest({ ...temp, isEditing: false });
     }
-  };
-
-  updateRoot = () => {
-    const { repositoryId } = this.props;
-    const { node } = this.state;
-
-    // if(node.id === 0)
-    //   axios.post('/api/idea/root/update/', {
-    //     idea_cont: ,
-    //     idea_color: ,
-    //     idea_height: ,
-    //     idea_width: ,
-    //     project_id:repositoryId
-    //   })
   };
 
   render() {

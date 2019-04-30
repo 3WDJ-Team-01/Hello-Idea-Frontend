@@ -89,7 +89,8 @@ class ContextMenuContainer extends Component {
     };
 
     const explore = e => {
-      toggleExplore();
+      const { targetNodeId } = this.state;
+      toggleExplore(targetNodeId);
       toggleContextMenu(e);
     };
 
@@ -110,6 +111,7 @@ class ContextMenuContainer extends Component {
       const { color } = nodes[
         nodes.findIndex(item => item.id === targetNodeId)
       ];
+
       MindmapActions.createIdeaRequest({
         ...newNode,
         color,
@@ -179,7 +181,7 @@ class ContextMenuContainer extends Component {
           return editNode;
         case 'REMOVE':
           return remove;
-        case 'SEARCH_IDEAS':
+        case 'SEARCH':
           return explore;
         case 'STYLE':
           return changeColor;

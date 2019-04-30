@@ -9,10 +9,11 @@ import * as repositoryActions from 'store/modules/repository';
 import * as mindmapActions from 'store/modules/mindmap';
 import html2canvas from 'html2canvas';
 import produce from 'immer';
+import axios from 'axios';
 import Path from 'components/mindmap/Path';
 import Header from 'components/mindmap/Header';
-import Aside from 'components/mindmap/Aside';
 import Footer from 'components/mindmap/Footer';
+import AsideContainer from './Mindmap/AsideContainer';
 import CanvasContainer from './Mindmap/CanvasContainer';
 import ContextMenuContainer from './Mindmap/ContextMenuContainer';
 import NodeContainer from './Mindmap/NodeContainer';
@@ -48,7 +49,12 @@ class App extends Component {
           y: 0,
         },
       },
-      explore: false,
+      explore: {
+        state: 'pending',
+        isActivated: false,
+        targetNode: null,
+        results: [],
+      },
     };
   }
 
@@ -67,10 +73,7 @@ class App extends Component {
         }),
       );
     });
-    MindmapActions.loadIdeasRequest(repositoryId).then(() => {
-      const { nodes, MindmapActions } = this.props;
-      // MindmapActions.getPaths(nodes);
-    });
+    MindmapActions.loadIdeasRequest(repositoryId);
     const svg = document.querySelector('#canvas');
     setSVG(svg);
     createSVGPoint(svg);
@@ -168,7 +171,7 @@ class App extends Component {
     this.setState(
       produce(draft => {
         draft.pointer.state.isDown = true;
-        draft.explore = false;
+        draft.explore.isActivated = false;
         draft.pointer.target.class =
           event.target.className.baseVal && event.target.className.baseVal;
         draft.pointer.target.nodeId =
@@ -218,12 +221,38 @@ class App extends Component {
     );
   };
 
-  toggleExplore = () => {
+  toggleExplore = (id = 0) => {
+    const nodeId = id || 0;
+    const { nodes } = this.props;
+    const index = nodes.findIndex(node => node.id === nodeId);
     this.setState(
       produce(draft => {
-        draft.explore = true;
+        draft.explore = {
+          state: 'pending',
+          isActivated: true,
+          targetNode: nodes[index],
+          results: [],
+        };
       }),
     );
+    console.log(nodes[index].head);
+    axios
+      .post('/api/idea/search/', { idea_cont: nodes[index].head })
+      .then(({ data }) => {
+        this.setState(
+          produce(draft => {
+            draft.explore.state = 'success';
+            draft.explore.results = data;
+          }),
+        );
+      })
+      .catch(() => {
+        this.setState(
+          produce(draft => {
+            draft.explore.state = 'failure';
+          }),
+        );
+      });
   };
 
   /* Export Mindmap PNG Image   */
@@ -288,7 +317,6 @@ class App extends Component {
         className="App"
         onContextMenu={preventEvent}
         style={{ overflow: 'hidden', maxHeight: '100vh' }}
-        onWheel={handleMouseWheel}
       >
         <Header
           exportMindmap={exportMindmap}
@@ -306,6 +334,8 @@ class App extends Component {
           pointerDown={pointerDown}
           pointerMove={pointerMove}
           toggleContextMenu={toggleContextMenu}
+          handleMouseWheel={handleMouseWheel}
+          explore={explore}
           zoom={canvas.zoom}
         >
           <g id="mindmap">
@@ -359,7 +389,7 @@ class App extends Component {
             toggleExplore={toggleExplore}
           />
         )}
-        {explore && <Aside explore={explore} />}
+        {explore.isActivated && <AsideContainer explore={explore} />}
         <Footer
           type={type}
           zoom={canvas.zoom}
