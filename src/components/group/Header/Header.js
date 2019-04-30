@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MDBIcon } from 'mdbreact';
 import styles from './Header.module.scss';
 
 const Header = ({ url, menu, groupId, info }) => {

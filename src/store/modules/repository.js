@@ -60,9 +60,17 @@ export const createRequest = ({
       project_intro,
     })
     .then(res => {
+      const { project_id, result } = res.data;
       axios.post('/api/project_category/create/', {
-        project_id: res.data.project_id,
-        result: res.data.result,
+        project_id,
+        result,
+      });
+      axios.post('/api/idea/root/create/', {
+        project_id,
+        idea_cont: 'Right click to edit',
+        idea_color: '#ECF0F1',
+        idea_width: 150,
+        idea_height: 40,
       });
       axios
         .post('/api/person_tendency/update/', {
@@ -72,12 +80,10 @@ export const createRequest = ({
         .then(() => {
           dispatch(createSuccess(res.data));
           if (group_id === 0)
-            history.push(
-              `/user/${user_id}/repositories/${res.data.project_id}/editor`,
-            );
+            history.push(`/user/${user_id}/repositories/${project_id}/editor`);
           else
             history.push(
-              `/group/${group_id}/repositories/${res.data.project_id}/editor`,
+              `/group/${group_id}/repositories/${project_id}/editor`,
             );
         });
     })

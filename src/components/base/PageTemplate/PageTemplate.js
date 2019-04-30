@@ -27,7 +27,11 @@ class PageTemplate extends Component {
     return (
       <div
         className={styles.App}
-        style={{ backgroundColor: bgColor }}
+        style={
+          isHidden
+            ? { backgroundColor: bgColor, padding: 0 }
+            : { backgroundColor: bgColor }
+        }
         onClick={handleDropdown}
       >
         <HeaderContainer isHidden={isHidden} history={history} />

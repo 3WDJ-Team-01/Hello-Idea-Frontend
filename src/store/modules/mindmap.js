@@ -44,8 +44,10 @@ export const loadIdeasRequest = project_id => dispatch => {
   return axios
     .post('/api/idea/load/', { project_id })
     .then(res => {
-      dispatch(setSourceNode(res.data));
-      dispatch(getNodesSuccess(res.data));
+      axios.post('/api/idea/root/select/', { project_id }).then(({ data }) => {
+        dispatch(setSourceNode({ data, list: res.data }));
+        dispatch(getNodesSuccess(res.data));
+      });
     })
     .catch(err => {
       if (err.response) dispatch(getNodesFailure(err.response));
@@ -90,6 +92,15 @@ export const removeIdeaRequest = idea_id => dispatch => {
 export const updateIdeaRequest = data => dispatch => {
   dispatch(setNodeData(data));
   dispatch(setNodeLocation(data));
+  const project_id = window.location.pathname.split('/')[4];
+  if (data.id === 0)
+    return axios.post('/api/idea/root/update/', {
+      idea_cont: data.head,
+      idea_color: data.color,
+      idea_height: data.size.width,
+      idea_width: data.size.height,
+      project_id,
+    });
   if (data.head)
     return axios
       .post('/api/idea/update/', {
@@ -169,6 +180,16 @@ export default handleActions(
   {
     [SET_SOURCE_NODE]: (state, action) =>
       produce(state, draft => {
+        const { data, list } = action.payload;
+        /*
+          size: {
+            width: 150,
+            height: 40,
+          },
+          color: '#ECF0F1',
+          head: 'Right click to edit',
+        */
+
         draft.nodes = [
           {
             id: 0,
@@ -178,16 +199,16 @@ export default handleActions(
               y: 0,
             },
             size: {
-              width: 150,
-              height: 40,
+              width: data.idea_width,
+              height: data.idea_height,
             },
-            color: '#ECF0F1',
-            head: 'Right click to edit',
+            color: data.idea_color,
+            head: data.idea_cont,
             parentOf: [],
             childOf: null,
           },
         ];
-        action.payload.map(node => {
+        list.map(node => {
           if (node.parent_id === 0) {
             draft.nodes[0].parentOf.push(node.idea_id);
           }
@@ -201,8 +222,11 @@ export default handleActions(
     [GET_NODES_SUCCESS]: (state, action) =>
       produce(state, draft => {
         draft.state = 'success';
+
+        const { nodes } = state;
+        // Get Node List
         action.payload.map(node =>
-          draft.nodes.push({
+          nodes.push({
             id: node.idea_id,
             user_id: node.user_id,
             childOf: node.parent_id,
@@ -221,6 +245,75 @@ export default handleActions(
             parentOf: node.child_id,
           }),
         );
+        draft.nodes = nodes;
+
+        // Get Path List
+        const prevCanvasPins = state.cavasPins;
+        draft.paths = [];
+        for (let i = nodes.length - 1; i > -1; i--) {
+          const parentIndex = nodes.findIndex(
+            item => item.id === nodes[i].childOf,
+          );
+
+          const start = nodes[parentIndex];
+          const end = nodes[i];
+          if (end.location.x < prevCanvasPins.leftTop.x) {
+            prevCanvasPins.leftTop.x = end.location.x;
+          } else if (end.location.x > prevCanvasPins.rightBottom.x) {
+            prevCanvasPins.rightBottom.x = end.location.x;
+          }
+
+          if (end.location.y < prevCanvasPins.leftTop.y) {
+            prevCanvasPins.leftTop.y = end.location.y;
+          } else if (end.location.y > prevCanvasPins.rightBottom.y) {
+            prevCanvasPins.rightBottom.y = end.location.y;
+          }
+
+          if (parentIndex > -1) {
+            if (end.parentOf.length > 0) {
+              start.parentOf = start.parentOf.concat(end.parentOf);
+            }
+            const { mode, position } = getPathEndPoint(
+              start.location,
+              end.location,
+              end.size,
+            );
+
+            draft.paths.unshift({
+              options: {
+                mode: mode,
+                color: start.color,
+                endPosition: position,
+              },
+              startAt: {
+                nodeId: start.id,
+                width: start.size.width,
+                height: start.size.height,
+                x: start.location.x,
+                y: start.location.y,
+              },
+              endAt: {
+                nodeId: end.id,
+                width: end.size.width,
+                height: end.size.height,
+                x: end.location.x,
+                y: end.location.y,
+              },
+            });
+          } else {
+            draft.paths.unshift({
+              startAt: null,
+              endAt: {
+                nodeId: end.id,
+                width: end.size.width,
+                height: end.size.height,
+                x: end.location.x,
+                y: end.location.y,
+              },
+            });
+          }
+        }
+        draft.canvasPins = prevCanvasPins;
       }),
     [GET_NODES_FAILURE]: (state, action) =>
       produce(state, draft => {

@@ -1,3 +1,8 @@
+/* eslint-disable no-bitwise */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-multi-assign */
+/* eslint-disable no-cond-assign */
 /* eslint-disable no-else-return */
 /* eslint-disable no-shadow */
 /* eslint-disable react/no-access-state-in-setstate */
@@ -5,6 +10,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import produce from 'immer';
+import axios from 'axios';
 import { bindActionCreators } from 'redux';
 import * as mindmapActions from 'store/modules/mindmap';
 import Node from 'components/mindmap/Node/SVG';
@@ -32,7 +38,6 @@ class NodeContainer extends Component {
   constructor(props) {
     super(props);
     const { item } = this.props;
-    this.ref = React.createRef();
 
     this.state = {
       node: {
@@ -46,9 +51,7 @@ class NodeContainer extends Component {
 
   componentDidMount() {
     if (this.props.mode === 'Edit') {
-      const { temp } = this.state;
-      this.ref.current.focus();
-      this.ref.current.textContent = temp.head;
+      document.querySelector('.editable').focus();
     }
   }
 
@@ -64,35 +67,38 @@ class NodeContainer extends Component {
   }
 
   componentDidUpdate() {
+    const { node } = this.state;
     if (this.props.mode === 'Edit') {
-      const { temp } = this.state;
-      this.ref.current.focus();
-      this.ref.current.textContent = temp.head;
+      document.querySelector('.editable').focus();
     }
   }
 
   handleTextContent = e => {
-    e.persist();
     // wrapper-width (356px)
     // default size: w100px, h40px
 
     // offset-width (116px) (default case: font-size 16px)
     // - padding 0.5em * 2 = 16px;
     // - min-width = 100px
-
     this.setState(
       produce(this.state, draft => {
         const { size } = this.state.node;
-        const gab = {
-          width: e.target.clientWidth - size.width,
-          height: e.target.clientHeight - size.height,
+        const strByteLength = (s, b, i, c) => {
+          for (
+            b = i = 0;
+            (c = s.charCodeAt(i++));
+            b += c >> 11 ? 3 : c >> 7 ? 2 : 1
+          );
+          return b;
         };
 
-        draft.node.head = e.target.textContent;
-        draft.node.location.x -= gab.width > 0 && gab.width / 2;
-        draft.node.location.y -= gab.height > 0 && gab.height / 2;
-        draft.node.size.width += gab.width > 0 && gab.width * 4;
-        draft.node.size.height += gab.height > 0 && gab.height * 2;
+        draft.node.head = e.target.value;
+        if (strByteLength(e.target.value) / 40 < 1) {
+          draft.node.size.width = strByteLength(e.target.value) * 8 + 30;
+        } else {
+          draft.node.size.height =
+            ((40 + strByteLength(e.target.value)) / 40) * 30;
+        }
       }),
     );
   };
@@ -110,16 +116,8 @@ class NodeContainer extends Component {
   handleBlur = e => {
     const { MindmapActions } = this.props;
     const { node } = this.state;
-    MindmapActions.updateIdeaRequest({
-      ...node,
-      head: e.target.textContent,
-      isEditing: false,
-      location: {
-        x: node.location.x - e.target.clientWidth / 2 - 60,
-        y: node.location.y - e.target.clientHeight / 2 - 40,
-      },
-      size: { width: e.target.clientWidth + 10, height: e.target.clientHeight },
-    });
+
+    MindmapActions.updateIdeaRequest({ ...node, isEditing: false });
   };
 
   handleKeyPress = e => {
@@ -132,11 +130,24 @@ class NodeContainer extends Component {
     }
   };
 
+  updateRoot = () => {
+    const { repositoryId } = this.props;
+    const { node } = this.state;
+
+    // if(node.id === 0)
+    //   axios.post('/api/idea/root/update/', {
+    //     idea_cont: ,
+    //     idea_color: ,
+    //     idea_height: ,
+    //     idea_width: ,
+    //     project_id:repositoryId
+    //   })
+  };
+
   render() {
     const { node } = this.state;
     const { mode, pointer } = this.props;
     const {
-      ref,
       handleResize,
       handleBlur,
       handleTextContent,
@@ -156,7 +167,6 @@ class NodeContainer extends Component {
     else if (mode === 'Edit')
       return (
         <NodeEditor
-          ref={ref}
           index={node.id}
           head={node.head}
           location={node.location}

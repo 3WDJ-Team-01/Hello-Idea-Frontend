@@ -62,6 +62,7 @@ class HeaderContainer extends Component {
 
     return !userInfo && isHidden ? null : (
       <Header
+        isHidden={isHidden}
         history={history}
         searchTo={searchTo}
         onLogout={handleLogout}

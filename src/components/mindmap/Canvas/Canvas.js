@@ -41,7 +41,7 @@ const Canvas = ({
           style={style}
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
-          onPointerLeave={onPointerUp}
+          // onPointerLeave={onPointerUp}
           onPointerMove={onPointerMove}
           onWheel={onWheel}
         >
@@ -63,7 +63,7 @@ const Canvas = ({
           style={style}
           onMouseDown={onPointerDown}
           onMouseUp={onPointerUp}
-          onMouseLeave={onPointerUp}
+          // onMouseLeave={onPointerUp}
           onMouseMove={onPointerMove}
           onTouchStart={onPointerDown}
           onTouchEnd={onPointerUp}

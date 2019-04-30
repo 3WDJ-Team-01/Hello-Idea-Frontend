@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styles from './ExploreWrapper.module.scss';
 
 const ExploreWrapper = ({ news, children }) => {

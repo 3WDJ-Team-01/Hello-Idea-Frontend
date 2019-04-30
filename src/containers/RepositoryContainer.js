@@ -3,7 +3,7 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-useless-return */
 import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as repositoryActions from 'store/modules/repository';
@@ -22,7 +22,7 @@ class RepositoryContainer extends Component {
   };
 
   componentDidMount() {
-    const { RepositoryActions, author, repositoryId } = this.props;
+    const { RepositoryActions, repositoryId } = this.props;
     const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
     axios
       .post('/api/project/hit/', {
@@ -169,14 +169,7 @@ class RepositoryContainer extends Component {
   render() {
     const { renderMenu, handleStar } = this;
     const { isLiked } = this.state;
-    const {
-      url,
-      menu,
-      userInfo,
-      repositoryId,
-      author,
-      repositoryInfo,
-    } = this.props;
+    const { url, menu, repositoryId, author, repositoryInfo } = this.props;
 
     return (
       <>

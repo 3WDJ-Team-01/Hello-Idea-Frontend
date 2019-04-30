@@ -18,13 +18,23 @@ import {
 } from 'components/base/Dropdown/MobileMenubar';
 import styles from './Header.module.scss';
 
-const Header = ({ history, searchTo, onLogout, onChange, userInfo }) => {
+const Header = ({
+  history,
+  isHidden,
+  searchTo,
+  onLogout,
+  onChange,
+  userInfo,
+}) => {
   const onKeyPress = e => {
     if (e.key === 'Enter') history.push(`/search/${searchTo}`);
   };
   if (!userInfo) return <></>;
   return (
-    <div className={styles.header_wrapper}>
+    <div
+      style={isHidden ? { display: 'none' } : { display: 'block' }}
+      className={styles.header_wrapper}
+    >
       <div className={styles.header}>
         <div
           className={styles.mobileMenu}

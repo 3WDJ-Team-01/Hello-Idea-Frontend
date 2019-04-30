@@ -8,7 +8,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
-import { getTendencyColor } from 'tools/TendencyColor';
 import Repository from 'components/base/Card/Repository';
 import styles from './Repositories.module.scss';
 

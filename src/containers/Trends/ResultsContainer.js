@@ -1,7 +1,6 @@
 /* eslint-disable no-else-return */
 /* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
-import Search from 'components/trends/Search';
 import Results from 'components/trends/Results';
 import produce from 'immer';
 import axios from 'axios';
@@ -22,7 +21,6 @@ class TrendsContainer extends Component {
   componentDidMount() {
     const { loadAttention, loadLog, loadRelate } = this;
     const { searchTo } = this.props;
-    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
 
     loadAttention(searchTo);
     loadLog(searchTo);
@@ -60,9 +58,8 @@ class TrendsContainer extends Component {
   };
 
   render() {
-    const { handleKeyword, handleSearch } = this;
     const { attention, log, relate } = this.state;
-    const { url, searchTo } = this.props;
+    const { searchTo } = this.props;
 
     return (
       <Results

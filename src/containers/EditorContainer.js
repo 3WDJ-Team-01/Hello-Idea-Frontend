@@ -1,9 +1,11 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-shadow */
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import * as repositoryActions from 'store/modules/repository';
 import * as mindmapActions from 'store/modules/mindmap';
 import html2canvas from 'html2canvas';
 import produce from 'immer';
@@ -16,37 +18,58 @@ import ContextMenuContainer from './Mindmap/ContextMenuContainer';
 import NodeContainer from './Mindmap/NodeContainer';
 
 class App extends Component {
-  state = {
-    pointer: {
-      target: { class: null, nodeId: null },
-      state: {
-        isDown: false,
-        isDrag: false,
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      repositoryInfo: {
+        user_id: 0,
+        group_id: 0,
+        project_topic: '',
       },
-      currLoc: { x: 0, y: 0 },
-      prevLoc: { x: 0, y: 0 },
-    },
-    canvas: {
-      svg: null,
-      viewBox: 0,
-      zoom: 1,
-    },
-    contextMenu: {
-      mode: null,
-      location: {
-        x: 0,
-        y: 0,
+      pointer: {
+        target: { class: null, nodeId: null },
+        state: {
+          isDown: false,
+          isDrag: false,
+        },
+        currLoc: { x: 0, y: 0 },
+        prevLoc: { x: 0, y: 0 },
       },
-    },
-    explore: false,
-  };
+      canvas: {
+        svg: null,
+        viewBox: 0,
+        zoom: 1,
+      },
+      contextMenu: {
+        mode: null,
+        location: {
+          x: 0,
+          y: 0,
+        },
+      },
+      explore: false,
+    };
+  }
 
   componentDidMount() {
     const { setSVG, createSVGPoint, setViewBoxBaseVal } = this;
-    const { MindmapActions, repositoryId } = this.props;
+    const { repositoryId, RepositoryActions, MindmapActions } = this.props;
+    RepositoryActions.getRequest(repositoryId).then(() => {
+      const { user_id, group_id, project_topic } = this.props.repository;
+      this.setState(
+        produce(draft => {
+          draft.repositoryInfo = {
+            user_id,
+            group_id,
+            project_topic,
+          };
+        }),
+      );
+    });
     MindmapActions.loadIdeasRequest(repositoryId).then(() => {
       const { nodes, MindmapActions } = this.props;
-      MindmapActions.getPaths(nodes);
+      // MindmapActions.getPaths(nodes);
     });
     const svg = document.querySelector('#canvas');
     setSVG(svg);
@@ -141,6 +164,7 @@ class App extends Component {
 
   pointerDown = event => {
     event.persist();
+
     this.setState(
       produce(draft => {
         draft.pointer.state.isDown = true;
@@ -187,6 +211,8 @@ class App extends Component {
           draft.contextMenu.mode =
             event.target.className.baseVal && event.target.className.baseVal;
           draft.contextMenu.location = pointer.currLoc;
+          draft.pointer.state.isDown = false;
+          draft.pointer.state.isDrag = false;
         }
       }),
     );
@@ -247,8 +273,16 @@ class App extends Component {
       handleMouseWheel,
     } = this;
     const { paths, nodes, repositoryId } = this.props;
-    const { pointer, contextMenu, explore, canvas } = this.state;
+    const {
+      type,
+      repositoryInfo,
+      pointer,
+      contextMenu,
+      explore,
+      canvas,
+    } = this.state;
     const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
+
     return (
       <div
         className="App"
@@ -256,7 +290,11 @@ class App extends Component {
         style={{ overflow: 'hidden', maxHeight: '100vh' }}
         onWheel={handleMouseWheel}
       >
-        <Header exportMindmap={exportMindmap} />
+        <Header
+          exportMindmap={exportMindmap}
+          type={type}
+          info={repositoryInfo}
+        />
         <CanvasContainer
           pointer={pointer}
           setSVG={setSVG}
@@ -292,6 +330,7 @@ class App extends Component {
               {nodes.map((item, i) =>
                 item.isEditing ? (
                   <NodeContainer
+                    repositoryId={repositoryId}
                     key={i}
                     pointer={pointer}
                     item={item}
@@ -321,20 +360,25 @@ class App extends Component {
           />
         )}
         {explore && <Aside explore={explore} />}
-
-        <Footer zoom={canvas.zoom} handleCanvasZoom={handleCanvasZoom} />
+        <Footer
+          type={type}
+          zoom={canvas.zoom}
+          handleCanvasZoom={handleCanvasZoom}
+        />
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
+  repository: state.repository.info,
   cavasPins: state.mindmap.cavasPins,
   paths: state.mindmap.paths,
   nodes: state.mindmap.nodes,
 });
 
 const mapDispatchToProps = dispatch => ({
+  RepositoryActions: bindActionCreators(repositoryActions, dispatch),
   MindmapActions: bindActionCreators(mindmapActions, dispatch),
 });
 

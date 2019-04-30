@@ -1,7 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MDBBtn, MDBIcon } from 'mdbreact';
-import { getTendencyColor } from 'tools/TendencyColor';
 import styles from './Item.module.scss';
 
 const Item = ({

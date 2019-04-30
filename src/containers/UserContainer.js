@@ -42,7 +42,7 @@ class UserContainer extends Component {
 
   componentDidMount() {
     const { user } = this.props;
-    const { UserActions, loggedUserRelation } = this.props;
+    const { UserActions } = this.props;
     const { userInfo } = this.state;
     this.setState(
       produce(this.state, draft => {
@@ -93,10 +93,12 @@ class UserContainer extends Component {
     const { user, UserActions } = this.props;
     const { isFollow } = this.state;
     if (prevProps.user !== user) {
-      UserActions.userRequest(user);
-      UserActions.targetGroupsRequest(user);
-      UserActions.repositoriesRequest(user, 0);
-      UserActions.followerRequest(user);
+      UserActions.initialize().then(() => {
+        UserActions.userRequest(user);
+        UserActions.targetGroupsRequest(user);
+        UserActions.repositoriesRequest(user, 0);
+        UserActions.followerRequest(user);
+      });
     }
     if (prevState.isFollow !== isFollow) {
       UserActions.followerRequest(user);
@@ -104,6 +106,10 @@ class UserContainer extends Component {
   }
 
   componentWillUnmount() {
+    const { UserActions } = this.props;
+
+    UserActions.initialize();
+
     window.removeEventListener('scroll', () => {
       const { shownProfile } = this.state;
       if (!shownProfile && window.scrollY > 240) {

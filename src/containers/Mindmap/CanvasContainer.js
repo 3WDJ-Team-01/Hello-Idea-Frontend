@@ -21,7 +21,7 @@ class CanvasContainer extends Component {
   handlePointerDown = e => {
     const { getPointFromEvent } = this;
     const { setPrevLoc, pointerDown, toggleContextMenu } = this.props;
-
+    e.persist();
     setPrevLoc(getPointFromEvent(e));
     pointerDown(e);
     toggleContextMenu(e);
@@ -31,7 +31,6 @@ class CanvasContainer extends Component {
     const { getPointFromEvent } = this;
     const {
       pointer,
-      nodes,
       pointerMove,
       MindmapActions,
       setViewBoxLocation,

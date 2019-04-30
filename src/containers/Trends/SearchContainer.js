@@ -2,7 +2,6 @@
 /* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
 import Search from 'components/trends/Search';
-import Results from 'components/trends/Results';
 import produce from 'immer';
 import axios from 'axios';
 
@@ -14,8 +13,6 @@ class SearchContainer extends Component {
 
   componentDidMount() {
     const { loadRecentlyKeywords } = this;
-    const { searchTo } = this.props;
-    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
 
     loadRecentlyKeywords();
   }
@@ -61,7 +58,6 @@ class SearchContainer extends Component {
   render() {
     const { handleKeyword, handleSearch } = this;
     const { keyword, recentlyKeywords } = this.state;
-    const { url } = this.props;
 
     return (
       <Search

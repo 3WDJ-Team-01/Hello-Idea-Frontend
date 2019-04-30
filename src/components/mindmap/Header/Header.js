@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Header.module.scss';
 
-const Header = ({ repository, exportMindmap }) => {
+const Header = ({ type, info, repository, exportMindmap }) => {
   return (
     <div className={styles.brainHeader}>
       <div className={styles.brainLeftHeader}>
@@ -20,8 +20,10 @@ const Header = ({ repository, exportMindmap }) => {
             />
           </Link>
         </div>
-        <div className={styles.projectName}>ProjectName</div>
-        <div className={styles.groupName}>GroupName</div>
+        <div className={styles.projectName}>{info.project_topic}</div>
+        {type === 'group' ? (
+          <div className={styles.groupName}>GroupName</div>
+        ) : null}
       </div>
       <div className={styles.brainRightHeader}>
         <MDBBtn

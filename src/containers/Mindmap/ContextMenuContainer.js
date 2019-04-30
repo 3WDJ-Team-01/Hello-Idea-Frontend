@@ -25,7 +25,6 @@ import ContextMenuData from 'data/ContextMenu';
 class ContextMenuContainer extends Component {
   constructor(props) {
     super(props);
-
     const { pointer } = this.props;
 
     this.state = {
@@ -67,13 +66,8 @@ class ContextMenuContainer extends Component {
   };
 
   handleMenuClick = (mode, type) => {
-    const { pointer, mindmap, userId, repositoryId } = this.props;
-    const {
-      toggleContextMenu,
-      toggleStyleMenu,
-      toggleExplore,
-      MindmapActions,
-    } = this.props;
+    const { pointer, userId, repositoryId } = this.props;
+    const { toggleContextMenu, toggleExplore, MindmapActions } = this.props;
 
     const newNode = {
       project_id: repositoryId,
@@ -102,15 +96,25 @@ class ContextMenuContainer extends Component {
     /* From canvas */
 
     const addFromCanvas = e => {
-      MindmapActions.createIdeaRequest(newNode);
+      const { nodes } = this.props;
+      const { color } = nodes[0];
+      MindmapActions.createIdeaRequest({ ...newNode, color });
       toggleContextMenu(e);
     };
 
     /* From nodes */
 
     const addFromNode = e => {
+      const { nodes } = this.props;
       const { targetNodeId } = this.state;
-      MindmapActions.createIdeaRequest({ ...newNode, childOf: targetNodeId });
+      const { color } = nodes[
+        nodes.findIndex(item => item.id === targetNodeId)
+      ];
+      MindmapActions.createIdeaRequest({
+        ...newNode,
+        color,
+        childOf: targetNodeId,
+      });
 
       toggleContextMenu(e);
     };
@@ -204,7 +208,6 @@ class ContextMenuContainer extends Component {
       menuSpaceDegrees,
     } = ContextMenuData.options;
     const menuDegrees = 360 / list.length;
-    console.log(location);
     return (
       <div>
         <MenuWrapper

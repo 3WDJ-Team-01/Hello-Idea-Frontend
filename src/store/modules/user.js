@@ -4,6 +4,7 @@ import produce from 'immer';
 import { createAction, handleActions } from 'redux-actions';
 import axios from 'axios';
 
+const INITIALIZE = 'user/INITIALIZE';
 const USER = 'user/USER';
 const USER_SUCCESS = 'user/USER_SUCCESS';
 const USER_FAILURE = 'user/USER_FAILURE';
@@ -17,6 +18,7 @@ const FOLLOWER = 'user/FOLLOWER';
 const FOLLOWER_SUCCESS = 'user/FOLLOWER_SUCCESS';
 const FOLLOWER_FAILURE = 'user/FOLLOWER_FAILURE';
 
+export const initialize = createAction(INITIALIZE);
 export const user = createAction(USER);
 export const userSuccess = createAction(USER_SUCCESS);
 export const userFailure = createAction(USER_FAILURE);
@@ -121,6 +123,41 @@ const initialState = {
 
 export default handleActions(
   {
+    [INITIALIZE]: state =>
+      produce(state, draft => {
+        draft.state = '';
+        draft.info = {
+          User_detail: {
+            user_name: '',
+            user_id: 0,
+            user_email: '',
+            user_img: '',
+            user_bgimg: '#ECF0F1',
+          },
+          User_tendency: {
+            it: 0,
+            sport: 0,
+            society: 0,
+            politics: 0,
+            life: 0,
+            economy: 0,
+          },
+          User_feed: {},
+          User_log: {},
+        };
+        draft.groups = [];
+        draft.repositories = {
+          all: [],
+          Society: [],
+          Sport: [],
+          It: [],
+          Politics: [],
+          Economy: [],
+          Life: [],
+        };
+        draft.follower = [];
+        draft.following = [];
+      }),
     [USER]: (state, action) =>
       produce(state, draft => {
         draft.state = 'pending';

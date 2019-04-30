@@ -102,7 +102,7 @@ class AuthContainer extends Component {
   };
 
   handleRegister = () => {
-    const { AuthActions, history } = this.props;
+    const { AuthActions } = this.props;
     const { form } = this.state;
     AuthActions.registerRequest({
       user_email: form.user_email,

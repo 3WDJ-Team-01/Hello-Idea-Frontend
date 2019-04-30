@@ -57,6 +57,7 @@
     "node-sass": "^4.11.0",
     "open-color": "^1.6.3",
     "react-color": "^2.17.0",
+    "react-contenteditable": "^3.2.6",
     "react-easy-crop": "^1.10.0",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",

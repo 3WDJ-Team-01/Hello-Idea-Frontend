@@ -2,8 +2,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { MDBBtn } from 'mdbreact';
 import styles from './Nav.module.scss';
 
 const Nav = ({ type, typeList, handleType }) => {

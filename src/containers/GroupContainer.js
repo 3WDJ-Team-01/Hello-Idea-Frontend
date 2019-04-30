@@ -1,14 +1,13 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import produce from 'immer';
 import Header from 'components/group/Header';
 import GroupWrapper from 'components/group/GroupWrapper';
 import Repositories from 'components/group/Repositories';
 import People from 'components/group/People';
-import Setting from 'components/group/Setting';
+// import Setting from 'components/group/Setting';
 
 class GroupContainer extends Component {
   state = {
