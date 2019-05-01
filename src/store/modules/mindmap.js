@@ -145,7 +145,12 @@ export const updateIdeaRequest = data => dispatch => {
 };
 
 const initialState = {
-  state: '',
+  state: {
+    create: '',
+    read: '',
+    update: '',
+    delete: '',
+  },
   cavasPins: {
     leftTop: { x: -window.innerWidth / 2, y: -window.innerHeight / 2 },
     rightBottom: { x: 0, y: 0 },
@@ -216,12 +221,12 @@ export default handleActions(
       }),
     [GET_NODES]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.read = 'pending';
       }),
     // communication response
     [GET_NODES_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.read = 'success';
 
         const { nodes } = state;
         // Get Node List
@@ -317,7 +322,7 @@ export default handleActions(
       }),
     [GET_NODES_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.read = 'failure';
       }),
     [GET_PATHS]: (state, action) =>
       produce(state, draft => {
@@ -390,12 +395,12 @@ export default handleActions(
       }),
     [ADD_NODE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.create = 'pending';
       }),
     // communication response
     [ADD_NODE_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.create = 'success';
         // recursive function for add relation to parent node
         const addChildNode = node => {
           const index = draft.nodes.findIndex(item => item.id === node.childOf);
@@ -414,7 +419,7 @@ export default handleActions(
       }),
     [ADD_NODE_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.create = 'failure';
       }),
     [ADD_PATH]: (state, action) =>
       produce(state, draft => {
@@ -448,6 +453,7 @@ export default handleActions(
       }),
     [REMOVE_NODE]: (state, action) =>
       produce(state, draft => {
+        draft.state.delete = 'success';
         action.payload.map(nodeId => {
           const nodeIndex = draft.nodes.findIndex(item => item.id === nodeId);
           const pathIndex = draft.paths.findIndex(
@@ -469,6 +475,8 @@ export default handleActions(
       produce(state, draft => {
         const { id, color } = action.payload;
         const index = draft.nodes.findIndex(node => node.id === id);
+
+        draft.state.update = 'success';
         draft.nodes[index] = {
           ...state.nodes[index],
           ...action.payload,
@@ -488,6 +496,7 @@ export default handleActions(
         const gapX = state.nodes[index].location.x - action.payload.location.x;
         const gapY = state.nodes[index].location.y - action.payload.location.y;
 
+        draft.state.update = 'success';
         // reset location all of the child path
         if (state.nodes[index].parentOf.length > 0) {
           state.nodes[index].parentOf.map(child => {

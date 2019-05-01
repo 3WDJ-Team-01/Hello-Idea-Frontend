@@ -40,7 +40,10 @@ export const withPopularRequest = () => dispatch => {
 };
 
 const initialState = {
-  state: 'pending',
+  state: {
+    tendency: '',
+    popular: '',
+  },
   tendency: [
     {
       project_topic: '',
@@ -61,29 +64,29 @@ export default handleActions(
   {
     [WITH_TENDENCY]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.tendency = 'pending';
       }),
     [WITH_TENDENCY_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.tendency = 'success';
         draft.tendency = action.payload;
       }),
     [WITH_TENDENCY_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.tendency = 'failure';
       }),
     [WITH_POPULAR]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.popular = 'pending';
       }),
     [WITH_POPULAR_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.popular = 'success';
         draft.popular = action.payload;
       }),
     [WITH_POPULAR_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.popular = 'failure';
       }),
   },
   initialState,

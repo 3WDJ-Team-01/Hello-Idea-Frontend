@@ -79,7 +79,12 @@ export const followerRequest = user_id => dispatch => {
 };
 
 const initialState = {
-  state: '',
+  state: {
+    info: '',
+    group: '',
+    repositories: '',
+    follower: '',
+  },
   info: {
     User_detail: {
       user_name: '',
@@ -125,7 +130,12 @@ export default handleActions(
   {
     [INITIALIZE]: state =>
       produce(state, draft => {
-        draft.state = '';
+        draft.state = {
+          info: '',
+          group: '',
+          repositories: '',
+          follower: '',
+        };
         draft.info = {
           User_detail: {
             user_name: '',
@@ -160,33 +170,33 @@ export default handleActions(
       }),
     [USER]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.info = 'pending';
       }),
     [USER_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.info = 'success';
         draft.info = action.payload;
       }),
     [USER_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.info = 'failure';
       }),
     [TARGET_GROUPS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.group = 'pending';
       }),
     [TARGET_GROUPS_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.group = 'success';
         draft.groups = action.payload;
       }),
     [TARGET_GROUPS_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.group = 'failure';
       }),
     [REPOSITORIES]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.repositories = 'pending';
       }),
     [REPOSITORIES_SUCCESS]: (state, action) =>
       produce(state, draft => {
@@ -195,7 +205,7 @@ export default handleActions(
           for (const repository in action.payload[category])
             all.push(action.payload[category][repository]);
         }
-        draft.state = 'success';
+        draft.state.repositories = 'success';
         draft.repositories = {
           ...action.payload,
           all,
@@ -203,21 +213,21 @@ export default handleActions(
       }),
     [REPOSITORIES_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.repositories = 'failure';
       }),
     [FOLLOWER]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.follower = 'pending';
       }),
     [FOLLOWER_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.follower = 'success';
         draft.follower = action.payload.follower;
         draft.following = action.payload.following;
       }),
     [FOLLOWER_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.follower = 'failure';
         draft.follower = [];
         draft.following = [];
       }),

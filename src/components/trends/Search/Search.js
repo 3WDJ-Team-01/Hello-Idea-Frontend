@@ -2,9 +2,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import styles from './Search.module.scss';
 
-const Search = ({ keyword, recentlyKeywords, handleKeyword, handleSearch }) => {
+const Search = ({
+  state,
+  keyword,
+  recentlyKeywords,
+  handleKeyword,
+  handleSearch,
+}) => {
   const onKeyPress = e => {
     if (e.key === 'Enter') handleSearch(e);
   };
@@ -26,14 +33,20 @@ const Search = ({ keyword, recentlyKeywords, handleKeyword, handleSearch }) => {
         </div>
       </div>
       <div className={styles.recentlyKeywords}>
-        <h4>최근 검색어</h4>
-        <div className={styles.list}>
-          {recentlyKeywords.map((item, i) => (
-            <Link key={i} to={`/trends/${item}`} onClick={handleSearch}>
-              <div className={styles.item}>{item}</div>
-            </Link>
-          ))}
-        </div>
+        {state === 'success' ? (
+          <>
+            <h4>최근 검색어</h4>
+            <div className={styles.list}>
+              {recentlyKeywords.map((item, i) => (
+                <Link key={i} to={`/trends/${item}`} onClick={handleSearch}>
+                  <div className={styles.item}>{item}</div>
+                </Link>
+              ))}
+            </div>
+          </>
+        ) : (
+          <ProgressIndicator mini />
+        )}
       </div>
     </>
   );

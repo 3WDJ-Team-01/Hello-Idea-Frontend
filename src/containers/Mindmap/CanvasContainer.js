@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-find-dom-node */
 /* eslint-disable no-shadow */
@@ -89,34 +87,15 @@ class CanvasContainer extends Component {
     e.stopPropagation();
     e.persist();
     const { getPointFromEvent } = this;
-    const { results } = this.props.explore;
-    const forkedIdeaId = e.dataTransfer.getData('text');
-    const forkedIdea = results.reduce((res, list) => {
-      const resultIndex = list.Idea.findIndex(
-        item => item.idea_id === parseInt(forkedIdeaId, 10),
-      );
-      if (resultIndex) return list.Idea[resultIndex];
-    });
+    const { ideas } = this.props.explore;
     const pointerPosition = getPointFromEvent(e);
+    const forkedIdeaId = e.dataTransfer.getData('text');
+    const forkedIdea =
+      ideas[
+        ideas.findIndex(idea => idea.idea_id === parseInt(forkedIdeaId, 10))
+      ];
+
     console.log(forkedIdea);
-    // const newNode = {
-    //   project_id: repositoryId,
-    //   user_id: userId,
-    //   childOf: 0,
-    //   isForked: 0,
-    //   isEditing: true,
-    //   color: '#ECF0F1',
-    //   location: {
-    //     x: pointer.prevLoc.x,
-    //     y: pointer.prevLoc.y,
-    //   },
-    //   size: {
-    //     width: 100,
-    //     height: 40,
-    //   },
-    //   head: '',
-    //   parentOf: [],
-    // };
   };
 
   render() {

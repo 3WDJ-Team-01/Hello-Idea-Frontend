@@ -7,6 +7,11 @@ import axios from 'axios';
 
 class TrendsContainer extends Component {
   state = {
+    state: {
+      attention: '',
+      log: '',
+      relate: '',
+    },
     attention: [],
     log: {
       Search_gender: {},
@@ -31,6 +36,7 @@ class TrendsContainer extends Component {
     axios.post('/api/keyword/attention/', { keyword }).then(res =>
       this.setState(
         produce(draft => {
+          draft.state.attention = 'success';
           draft.attention = res.data;
         }),
       ),
@@ -41,6 +47,7 @@ class TrendsContainer extends Component {
     axios.post('/api/search/log/view/', { keyword }).then(res =>
       this.setState(
         produce(draft => {
+          draft.state.log = 'success';
           draft.log = res.data;
         }),
       ),
@@ -51,6 +58,7 @@ class TrendsContainer extends Component {
     axios.post('/api/keyword/relate/', { idea_keyword }).then(res =>
       this.setState(
         produce(draft => {
+          draft.state.relate = 'success';
           draft.relate = res.data;
         }),
       ),
@@ -58,11 +66,12 @@ class TrendsContainer extends Component {
   };
 
   render() {
-    const { attention, log, relate } = this.state;
+    const { state, attention, log, relate } = this.state;
     const { searchTo } = this.props;
 
     return (
       <Results
+        state={state}
         keyword={searchTo}
         attention={attention}
         log={log}

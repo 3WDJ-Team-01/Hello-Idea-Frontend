@@ -62,10 +62,10 @@ const Overview = ({
                     repository.group_id === 0
                       ? `/user/${repository.user_id}/repositories/${
                           repository.project_id
-                        }/editor`
+                        }`
                       : `/group/${repository.group_id}/repositories/${
                           repository.project_id
-                        }/editor`
+                        }`
                   }
                   repository={repository}
                 />
@@ -92,10 +92,10 @@ const Item = ({ path, repository }) => (
       <div className={styles.idealabel}>
         <div className={styles.title}>{repository.project_topic}</div>
         <div className={styles.options}>
-          <Link className={styles.box} to={path}>
+          <Link className={styles.box} to={`${path}/editor`}>
             open
           </Link>
-          <Link to={path}>more+</Link>
+          <Link to={`${path}`}>more+</Link>
         </div>
       </div>
     </div>

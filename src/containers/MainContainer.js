@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import produce from 'immer';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import MainWrapper from 'components/main/MainWrapper';
 import Discover from 'components/main/Discover';
 import Repository from 'components/main/Repository';
@@ -57,37 +58,48 @@ class MainContainer extends Component {
   render() {
     const { handleFilter, handleSearchTo, handleChageUser } = this;
     const { searchTo, filter } = this.state;
-    const { userInfo, groups, repositories, tendencyRepo } = this.props;
-    return (
-      <MainWrapper>
-        {userInfo.user_id && (
-          <>
-            <Repository
-              userInfo={userInfo}
-              groups={groups}
-              repositories={repositories}
-              filter={filter}
-              searchTo={searchTo}
-              handleFilter={handleFilter}
-              handleSearchTo={handleSearchTo}
-              handleChageUser={handleChageUser}
-            />
-            <article>
-              <section>
-                <Wall />
-              </section>
-              <aside>
-                <Discover tendencyRepo={tendencyRepo} />
-              </aside>
-            </article>
-          </>
-        )}
-      </MainWrapper>
-    );
+    const {
+      userState,
+      recommendState,
+      userInfo,
+      groups,
+      repositories,
+      tendencyRepo,
+    } = this.props;
+    if (userState.group === 'success')
+      return (
+        <MainWrapper>
+          {userInfo.user_id && (
+            <>
+              <Repository
+                userState={userState}
+                userInfo={userInfo}
+                groups={groups}
+                repositories={repositories}
+                filter={filter}
+                searchTo={searchTo}
+                handleFilter={handleFilter}
+                handleSearchTo={handleSearchTo}
+                handleChageUser={handleChageUser}
+              />
+              <article>
+                <section>
+                  <Wall />
+                </section>
+                <aside>
+                  <Discover tendencyRepo={tendencyRepo} />
+                </aside>
+              </article>
+            </>
+          )}
+        </MainWrapper>
+      );
+    return <ProgressIndicator />;
   }
 }
 const mapStateToProps = state => ({
-  state: state.user.state,
+  userState: state.user.state,
+  recommendState: state.recommend.state,
   info: state.user.info,
   groups: state.user.groups,
   repositories: state.user.repositories,

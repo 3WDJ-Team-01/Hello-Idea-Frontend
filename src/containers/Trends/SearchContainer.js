@@ -7,6 +7,7 @@ import axios from 'axios';
 
 class SearchContainer extends Component {
   state = {
+    state: '',
     keyword: '',
     recentlyKeywords: [],
   };
@@ -21,6 +22,7 @@ class SearchContainer extends Component {
     axios.get('/api/keyword/recently/').then(res =>
       this.setState(
         produce(draft => {
+          draft.state = 'success';
           draft.recentlyKeywords = res.data;
         }),
       ),
@@ -57,10 +59,11 @@ class SearchContainer extends Component {
 
   render() {
     const { handleKeyword, handleSearch } = this;
-    const { keyword, recentlyKeywords } = this.state;
+    const { state, keyword, recentlyKeywords } = this.state;
 
     return (
       <Search
+        state={state}
         keyword={keyword}
         recentlyKeywords={recentlyKeywords}
         handleKeyword={handleKeyword}

@@ -117,7 +117,12 @@ export const removeRequest = project_id => dispatch => {
 };
 
 const initialState = {
-  state: '',
+  state: {
+    create: '',
+    read: '',
+    update: '',
+    delete: '',
+  },
   author: '',
   info: {
     project_id: null,
@@ -134,7 +139,12 @@ export default handleActions(
   {
     [INITIALIZE]: (state, action) =>
       produce(state, draft => {
-        draft.state = '';
+        draft.state = {
+          create: '',
+          read: '',
+          update: '',
+          delete: '',
+        };
         draft.author = '';
         draft.info = {
           project_id: null,
@@ -148,11 +158,11 @@ export default handleActions(
       }),
     [GET]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.read = 'pending';
       }),
     [GET_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.read = 'success';
         draft.author = action.payload.creater_name;
         draft.info = {
           ...action.payload.project,
@@ -165,7 +175,7 @@ export default handleActions(
       }),
     [GET_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.read = 'failure';
         draft.author = '';
         draft.info = null;
         draft.category = null;
@@ -174,42 +184,42 @@ export default handleActions(
       }),
     [CREATE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.create = 'pending';
       }),
     [CREATE_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.create = 'success';
         draft.info = {
           project_id: action.payload.project_id,
         };
       }),
     [CREATE_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.create = 'failure';
       }),
     [UPDATE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.update = 'pending';
       }),
     [UPDATE_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.update = 'success';
       }),
     [UPDATE_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.update = 'failure';
       }),
     [REMOVE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'pending';
+        draft.state.delete = 'pending';
       }),
     [REMOVE_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'success';
+        draft.state.delete = 'success';
       }),
     [REMOVE_FAILURE]: (state, action) =>
       produce(state, draft => {
-        draft.state = 'failure';
+        draft.state.delete = 'failure';
       }),
   },
   initialState,

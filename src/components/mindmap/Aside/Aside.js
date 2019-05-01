@@ -3,6 +3,7 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import styles from './Aside.module.scss';
 
 const Aside = ({ state, results, handleDragStart, handleDragEnd }) => {
@@ -50,16 +51,19 @@ const Aside = ({ state, results, handleDragStart, handleDragEnd }) => {
       ))}
     </div>
   );
-  const Loading = () => <div>로딩중</div>;
-  const Failure = () => <div>결과가 없습니다</div>;
+  const Loading = () => <ProgressIndicator mini />;
+  const Failure = () => (
+    <div className={styles.recommendBoxList}>결과가 없습니다</div>
+  );
+
   return (
     <div className={styles.bodyRight}>
-      {state === 'success' ? (
+      {results.length > 0 && state === 'success' ? (
         <Results />
-      ) : state === 'failure' ? (
-        <Failure />
-      ) : (
+      ) : state === 'pending' ? (
         <Loading />
+      ) : (
+        <Failure />
       )}
     </div>
   );

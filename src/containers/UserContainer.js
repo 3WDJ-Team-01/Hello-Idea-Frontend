@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import * as userActions from 'store/modules/user';
 import * as authActions from 'store/modules/auth';
 import axios from 'axios';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import UserWrapper from 'components/user/UserWrapper';
 import Header from 'components/user/Header';
 import Overview from 'components/user/Overview';
@@ -90,10 +91,12 @@ class UserContainer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { initialize } = this;
     const { user, UserActions } = this.props;
     const { isFollow } = this.state;
+
     if (prevProps.user !== user) {
-      UserActions.initialize().then(() => {
+      initialize().then(() => {
         UserActions.userRequest(user);
         UserActions.targetGroupsRequest(user);
         UserActions.repositoriesRequest(user, 0);
@@ -106,9 +109,9 @@ class UserContainer extends Component {
   }
 
   componentWillUnmount() {
-    const { UserActions } = this.props;
+    const { initialize } = this;
 
-    UserActions.initialize();
+    initialize();
 
     window.removeEventListener('scroll', () => {
       const { shownProfile } = this.state;
@@ -128,7 +131,12 @@ class UserContainer extends Component {
     });
   }
 
-  /* HEADER ACTIONS */
+  initialize = () =>
+    new Promise((res, rej) => {
+      const { UserActions } = this.props;
+      UserActions.initialize();
+      res();
+    });
 
   /* IMAGE CROPPER ACTIONS */
 
@@ -361,24 +369,30 @@ class UserContainer extends Component {
 
   render() {
     const { renderMenu, handleFollow } = this;
-    const { user, menu, info } = this.props;
+    const { state, user, menu, info } = this.props;
     const { userInfo, isFollow, shownProfile, modify } = this.state;
-
-    return (
-      <>
-        <Header
-          loggedUser={userInfo.user_id}
-          isFollow={isFollow}
-          menu={menu}
-          user={user}
-          info={info}
-          shownProfile={shownProfile}
-          modify={modify}
-          handleFollow={handleFollow}
-        />
-        <UserWrapper>{renderMenu(menu)}</UserWrapper>
-      </>
-    );
+    if (
+      state.info === 'success' &&
+      state.group === 'success' &&
+      state.repositories === 'success' &&
+      state.follower === 'success'
+    )
+      return (
+        <>
+          <Header
+            loggedUser={userInfo.user_id}
+            isFollow={isFollow}
+            menu={menu}
+            user={user}
+            info={info}
+            shownProfile={shownProfile}
+            modify={modify}
+            handleFollow={handleFollow}
+          />
+          <UserWrapper>{renderMenu(menu)}</UserWrapper>
+        </>
+      );
+    return <ProgressIndicator />;
   }
 }
 

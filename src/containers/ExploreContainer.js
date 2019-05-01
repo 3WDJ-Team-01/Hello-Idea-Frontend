@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import * as exploreActions from 'store/modules/explore';
 import * as recommendActions from 'store/modules/recommend';
 import produce from 'immer';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import ExploreWrapper from 'components/explore/ExploreWrapper';
 import List from 'components/explore/List';
 import Item from 'components/explore/Item';
@@ -66,41 +67,48 @@ class ExploreContainer extends Component {
   };
 
   render() {
+    const { exploreState, recommendState } = this.props;
     const { news, recommendsTendency, recommendsPopular } = this.state;
-    return (
-      <ExploreWrapper news={news}>
-        <List title="Your interest">
-          {recommendsTendency.map((item, i) => (
-            <Item
-              key={i}
-              user_id={item.user_id}
-              group_id={item.group_id}
-              project_img={item.project_img}
-              project_id={item.project_id}
-              project_topic={item.project_topic}
-            />
-          ))}
-        </List>
-        <List title="Recently Popular">
-          {recommendsPopular.map((item, i) => (
-            <Item
-              key={i}
-              user_id={item.user_id}
-              group_id={item.group_id}
-              project_img={item.project_img}
-              project_id={item.project_id}
-              project_topic={item.project_topic}
-            />
-          ))}
-        </List>
-      </ExploreWrapper>
-    );
+    if (
+      exploreState === 'success' &&
+      recommendState.tendency === 'success' &&
+      recommendState.popular === 'success'
+    )
+      return (
+        <ExploreWrapper news={news}>
+          <List title="Your interest">
+            {recommendsTendency.map((item, i) => (
+              <Item
+                key={i}
+                user_id={item.user_id}
+                group_id={item.group_id}
+                project_img={item.project_img}
+                project_id={item.project_id}
+                project_topic={item.project_topic}
+              />
+            ))}
+          </List>
+          <List title="Recently Popular">
+            {recommendsPopular.map((item, i) => (
+              <Item
+                key={i}
+                user_id={item.user_id}
+                group_id={item.group_id}
+                project_img={item.project_img}
+                project_id={item.project_id}
+                project_topic={item.project_topic}
+              />
+            ))}
+          </List>
+        </ExploreWrapper>
+      );
+    return <ProgressIndicator />;
   }
 }
 
 const mapStateToProps = state => ({
-  state: state.explore.state,
-  error: state.explore.error,
+  exploreState: state.explore.state,
+  recommendState: state.recommend.state,
   news: state.explore.news,
   recommendsTendency: state.recommend.tendency,
   recommendsPopular: state.recommend.popular,

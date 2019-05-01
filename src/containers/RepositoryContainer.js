@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 import * as repositoryActions from 'store/modules/repository';
 import axios from 'axios';
 import produce from 'immer';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import Header from 'components/repository/Header';
 import RepositoryWrapper from 'components/repository/RepositoryWrapper';
 import Overview from 'components/repository/Overview';
@@ -24,6 +25,7 @@ class RepositoryContainer extends Component {
   componentDidMount() {
     const { RepositoryActions, repositoryId } = this.props;
     const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
+
     axios
       .post('/api/project/hit/', {
         user_id,
@@ -45,10 +47,47 @@ class RepositoryContainer extends Component {
       });
   }
 
-  componentWillUnmount() {
-    const { RepositoryActions } = this.props;
-    RepositoryActions.initialize();
+  componentDidUpdate(prevProps, prevState) {
+    const { initialize } = this;
+    const { repositoryId, RepositoryActions } = this.props;
+    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (prevProps.repositoryId !== repositoryId) {
+      initialize().then(() => {
+        axios
+          .post('/api/project/hit/', {
+            user_id,
+            project_id: repositoryId,
+          })
+          .then(() => {
+            RepositoryActions.getRequest(repositoryId).then(() => {
+              const { repositoryInfo, likedUsers } = this.props;
+              this.setState(
+                produce(draft => {
+                  draft.name = repositoryInfo.project_topic;
+                  draft.description = repositoryInfo.project_intro;
+                  likedUsers.map(user => {
+                    if (user.user_id == user_id) draft.isLiked = true;
+                  });
+                }),
+              );
+            });
+          });
+      });
+    }
   }
+
+  componentWillUnmount() {
+    const { initialize } = this;
+    initialize();
+  }
+
+  initialize = () =>
+    new Promise((res, rej) => {
+      const { RepositoryActions } = this.props;
+      RepositoryActions.initialize();
+      res();
+    });
 
   handleStar = () => {
     const { RepositoryActions, repositoryId } = this.props;
@@ -169,26 +208,35 @@ class RepositoryContainer extends Component {
   render() {
     const { renderMenu, handleStar } = this;
     const { isLiked } = this.state;
-    const { url, menu, repositoryId, author, repositoryInfo } = this.props;
-
-    return (
-      <>
-        <Header
-          url={url}
-          menu={menu}
-          author={author}
-          isLiked={isLiked}
-          repositoryId={repositoryId}
-          repositoryInfo={repositoryInfo}
-          handleStar={handleStar}
-        />
-        <RepositoryWrapper>{renderMenu(menu)}</RepositoryWrapper>
-      </>
-    );
+    const {
+      url,
+      menu,
+      repositoryId,
+      state,
+      author,
+      repositoryInfo,
+    } = this.props;
+    if (state.read === 'success')
+      return (
+        <>
+          <Header
+            url={url}
+            menu={menu}
+            author={author}
+            isLiked={isLiked}
+            repositoryId={repositoryId}
+            repositoryInfo={repositoryInfo}
+            handleStar={handleStar}
+          />
+          <RepositoryWrapper>{renderMenu(menu)}</RepositoryWrapper>
+        </>
+      );
+    return <ProgressIndicator />;
   }
 }
 
 const mapStateToProps = state => ({
+  state: state.repository.state,
   groups: state.user.groups,
   userInfo: state.auth.userInfo,
   author: state.repository.author,

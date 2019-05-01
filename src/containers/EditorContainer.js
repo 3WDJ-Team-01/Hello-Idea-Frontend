@@ -10,6 +10,7 @@ import * as mindmapActions from 'store/modules/mindmap';
 import html2canvas from 'html2canvas';
 import produce from 'immer';
 import axios from 'axios';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import Path from 'components/mindmap/Path';
 import Header from 'components/mindmap/Header';
 import Footer from 'components/mindmap/Footer';
@@ -54,6 +55,7 @@ class App extends Component {
         isActivated: false,
         targetNode: null,
         results: [],
+        ideas: [],
       },
     };
   }
@@ -235,14 +237,24 @@ class App extends Component {
         };
       }),
     );
-    console.log(nodes[index].head);
+
     axios
-      .post('/api/idea/search/', { idea_cont: nodes[index].head })
+      .post('/api/idea/search/', {
+        idea_cont: nodes[index].head,
+        idea_id: nodes[index].id,
+      })
       .then(({ data }) => {
+        const ideas = [];
         this.setState(
           produce(draft => {
             draft.explore.state = 'success';
             draft.explore.results = data;
+            data.forEach(section => {
+              section.Idea.forEach(idea => {
+                ideas.push(idea);
+              });
+            });
+            draft.explore.ideas = ideas;
           }),
         );
       })
@@ -301,7 +313,7 @@ class App extends Component {
       handleCanvasZoom,
       handleMouseWheel,
     } = this;
-    const { paths, nodes, repositoryId } = this.props;
+    const { repoState, mindmapState, paths, nodes, repositoryId } = this.props;
     const {
       type,
       repositoryInfo,
@@ -311,13 +323,15 @@ class App extends Component {
       canvas,
     } = this.state;
     const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
-
     return (
       <div
         className="App"
         onContextMenu={preventEvent}
         style={{ overflow: 'hidden', maxHeight: '100vh' }}
       >
+        {repoState.read !== 'success' || mindmapState.read !== 'success' ? (
+          <ProgressIndicator />
+        ) : null}
         <Header
           exportMindmap={exportMindmap}
           type={type}
@@ -401,6 +415,8 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
+  repoState: state.repository.state,
+  mindmapState: state.mindmap.state,
   repository: state.repository.info,
   cavasPins: state.mindmap.cavasPins,
   paths: state.mindmap.paths,

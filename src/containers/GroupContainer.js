@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import produce from 'immer';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import Header from 'components/group/Header';
 import GroupWrapper from 'components/group/GroupWrapper';
 import Repositories from 'components/group/Repositories';
@@ -11,6 +12,11 @@ import People from 'components/group/People';
 
 class GroupContainer extends Component {
   state = {
+    state: {
+      info: '',
+      repositories: '',
+      people: '',
+    },
     info: {
       group_name: '',
       group_img: '',
@@ -39,6 +45,7 @@ class GroupContainer extends Component {
                 all.push(repo);
               });
             });
+            draft.state.repositories = 'success';
             draft.repositories = {
               ...res.data,
               all,
@@ -49,6 +56,7 @@ class GroupContainer extends Component {
     axios.post('/api/group_entry/', { group_id: groupId }).then(res => {
       this.setState(
         produce(draft => {
+          draft.state.people = 'success';
           draft.people = res.data;
         }),
       );
@@ -56,6 +64,7 @@ class GroupContainer extends Component {
     axios.post('/api/group/detail/', { group_id: groupId }).then(res => {
       this.setState(
         produce(draft => {
+          draft.state.info = 'success';
           draft.info = res.data;
         }),
       );
@@ -118,15 +127,20 @@ class GroupContainer extends Component {
 
   render() {
     const { renderMenu } = this;
-    const { info } = this.state;
+    const { state, info } = this.state;
     const { url, menu, groupId } = this.props;
-
-    return (
-      <>
-        <Header url={url} menu={menu} groupId={groupId} info={info} />
-        <GroupWrapper>{renderMenu(menu)}</GroupWrapper>
-      </>
-    );
+    if (
+      state.info === 'success' &&
+      state.repositories === 'success' &&
+      state.people === 'success'
+    )
+      return (
+        <>
+          <Header url={url} menu={menu} groupId={groupId} info={info} />
+          <GroupWrapper>{renderMenu(menu)}</GroupWrapper>
+        </>
+      );
+    return <ProgressIndicator />;
   }
 }
 
