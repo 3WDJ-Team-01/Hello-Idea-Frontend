@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import Header from '../components/base/Header';
-import * as authActions from '../store/modules/auth';
+import Header from 'components/base/Header';
+import * as authActions from 'store/modules/auth';
+import * as notificationActions from 'store/modules/notification';
 
 class HeaderContainer extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class HeaderContainer extends Component {
   }
 
   checkUser = () => {
-    const { history, AuthActions } = this.props;
+    const { history, AuthActions, NotificationActions } = this.props;
     if (localStorage.getItem('userInfo')) {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       AuthActions.setUserTemp({
@@ -36,12 +37,14 @@ class HeaderContainer extends Component {
         user_name: userInfo.user_name,
         token: userInfo.token,
       });
+      NotificationActions.connectToWebsocket(userInfo.user_id);
     } else {
       if (!window.location.pathname.includes('auth')) {
         history.push('/auth/login');
       }
       return;
     }
+
     AuthActions.userRequest();
   };
 
@@ -82,6 +85,7 @@ const mapStateToProps = state => ({
 
 const mapDisaptchToProps = dispatch => ({
   AuthActions: bindActionCreators(authActions, dispatch),
+  NotificationActions: bindActionCreators(notificationActions, dispatch),
 });
 
 export default withRouter(

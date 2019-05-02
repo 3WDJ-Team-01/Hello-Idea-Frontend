@@ -562,6 +562,7 @@ export default handleActions(
         if (state.nodes[index].parentOf.length > 0) {
           state.nodes[index].parentOf.map(child => {
             const childIndex = draft.nodes.findIndex(node => node.id === child);
+            console.log(childIndex);
             draft.nodes[childIndex].location.x -= gapX;
             draft.nodes[childIndex].location.y -= gapY;
             const pathIndex = draft.paths.findIndex(

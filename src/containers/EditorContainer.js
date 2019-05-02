@@ -220,13 +220,15 @@ class App extends Component {
   toggleContextMenu = event => {
     event.persist();
     const { pointer } = this.state;
-
+    console.log(event.target.id);
     this.setState(
       produce(draft => {
         if (event.button === 0) draft.contextMenu.mode = null;
         else if (event.button === 2) {
-          draft.contextMenu.mode =
-            event.target.className.baseVal && event.target.className.baseVal;
+          if (event.target.id === '0') draft.contextMenu.mode = 'root';
+          else
+            draft.contextMenu.mode =
+              event.target.className.baseVal && event.target.className.baseVal;
           draft.contextMenu.location = pointer.currLoc;
           draft.pointer.state.isDown = false;
           draft.pointer.state.isDrag = false;

@@ -189,6 +189,11 @@ class UserContainer extends Component {
           partner_id: user,
         })
         .then(() => {
+          axios.post('/api/notify/send/', {
+            send_id: userInfo.user_id,
+            receive_id: user,
+            notify_cont: 'following',
+          });
           this.setState(
             produce(draft => {
               draft.isFollow = true;

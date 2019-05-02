@@ -65,7 +65,7 @@ class ContextMenuContainer extends Component {
     });
   };
 
-  handleMenuClick = (mode, type) => {
+  handleMenuClick = type => {
     const { pointer, userId, repositoryId } = this.props;
     const { toggleContextMenu, toggleExplore, MindmapActions } = this.props;
 
@@ -173,46 +173,24 @@ class ContextMenuContainer extends Component {
     //   - EDIT: edit text content in node
     //   - STYLE: choose node's style
     //   - SEARCH: explore the other side's idea
-    if (mode === 'canvas')
-      switch (type) {
-        case 'ADD_NODE_FROM_CANVAS':
-          return addFromCanvas;
-        case 'SEARCH':
-          return explore;
-        default:
-          return null;
-      }
-    else if (mode === 'node')
-      switch (type) {
-        case 'ADD_NODE_FROM_NODE':
-          return addFromNode;
-        case 'EDIT':
-          return editNode;
-        case 'REMOVE':
-          return remove;
-        case 'SEARCH':
-          return explore;
-        case 'STYLE':
-          return changeColor;
-        default:
-          return null;
-      }
-    else if (mode === 'forked')
-      switch (type) {
-        case 'ADD_NODE_FROM_NODE':
-          return addFromNode;
-        case 'FORKED_IDEA_INFO':
-          return info;
-        case 'REMOVE':
-          return remove;
-        case 'SEARCH':
-          return explore;
-        case 'STYLE':
-          return changeColor;
-        default:
-          return null;
-      }
-    else return null;
+    switch (type) {
+      case 'ADD_NODE_FROM_CANVAS':
+        return addFromCanvas;
+      case 'ADD_NODE_FROM_NODE':
+        return addFromNode;
+      case 'SEARCH':
+        return explore;
+      case 'EDIT':
+        return editNode;
+      case 'STYLE':
+        return changeColor;
+      case 'FORKED_IDEA_INFO':
+        return info;
+      case 'REMOVE':
+        return remove;
+      default:
+        return null;
+    }
   };
 
   render() {
@@ -269,7 +247,7 @@ class ContextMenuContainer extends Component {
                     menuSpaceDegrees={menuSpaceDegrees}
                     innerRadius={innerRadius}
                     outerRadius={outerRadius}
-                    handleMenuClick={handleMenuClick(mode, item.type)}
+                    handleMenuClick={handleMenuClick(item.type)}
                     handleMouseOver={handleMouseOver}
                     handleMouseOut={handleMouseOut}
                   />

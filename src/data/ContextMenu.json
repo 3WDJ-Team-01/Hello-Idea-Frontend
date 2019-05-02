@@ -99,5 +99,27 @@
         "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/search.png"
       }
     ]
+  },
+  "root": {
+    "options": {
+      "bgColor": "rgba(41, 128, 185, 1.0)"
+    },
+    "list": [
+      {
+        "type": "ADD_NODE_FROM_NODE",
+        "label": "add Idea",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/add.png"
+      },
+      {
+        "type": "STYLE",
+        "label": "choose style",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/style.png"
+      },
+      {
+        "type": "SEARCH",
+        "label": "search ideas",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/search.png"
+      }
+    ]
   }
 }
