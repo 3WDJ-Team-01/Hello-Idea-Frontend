@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -8,7 +10,8 @@ import Header from 'components/group/Header';
 import GroupWrapper from 'components/group/GroupWrapper';
 import Repositories from 'components/group/Repositories';
 import People from 'components/group/People';
-// import Setting from 'components/group/Setting';
+import Setting from 'components/group/Setting';
+import getCroppedImg from 'tools/CropImage';
 
 class GroupContainer extends Component {
   state = {
@@ -30,6 +33,18 @@ class GroupContainer extends Component {
     people: [],
     filter: 'all',
     searchTo: '',
+    displayColorPicker: false,
+    cropper: {
+      imgSrc: '',
+      crop: { x: 0, y: 0 },
+      zoom: 1,
+      aspect: 1,
+      croppedAreaPixels: null,
+    },
+    modify: {
+      bgColor: '',
+      imgSrc: '',
+    },
   };
 
   componentDidMount() {
@@ -92,25 +107,139 @@ class GroupContainer extends Component {
     );
   };
 
+  /* IMAGE CROPPER ACTIONS */
+
+  onCropChange = crop => {
+    this.setState(
+      produce(draft => {
+        draft.cropper.crop = crop;
+      }),
+    );
+  };
+
+  onCropComplete = (croppedArea, croppedAreaPixels) => {
+    this.setState(
+      produce(draft => {
+        draft.cropper.croppedAreaPixels = croppedAreaPixels;
+      }),
+    );
+  };
+
+  onZoomChange = zoom => {
+    this.setState(
+      produce(draft => {
+        draft.cropper.zoom = zoom;
+      }),
+    );
+  };
+
+  showCroppedImage = async () => {
+    const { imgSrc, croppedAreaPixels } = this.state.cropper;
+    const croppedImage = await getCroppedImg(imgSrc, croppedAreaPixels);
+    this.setState(
+      produce(draft => {
+        draft.modify.imgSrc = croppedImage;
+      }),
+    );
+    console.log(croppedImage);
+    // axios.post('/api/user_img/update/', {})
+  };
+
+  /* COLOR PICKER ACTIONS */
+
+  handleClick = () => {
+    const { displayColorPicker } = this.state;
+
+    this.setState(
+      produce(this.state, draft => {
+        draft.displayColorPicker = !displayColorPicker;
+      }),
+    );
+  };
+
+  handleClose = () => {
+    this.setState(
+      produce(draft => {
+        draft.displayColorPicker = false;
+      }),
+    );
+  };
+
+  handleChange = e => {
+    if (!e.target) {
+      this.setState(
+        produce(draft => {
+          draft.modify.bgColor = e.hex;
+        }),
+      );
+    } else if (e.target.name === 'imgSrc') {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.setState(
+          produce(draft => {
+            draft.cropper.imgSrc = reader.result;
+          }),
+        );
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    } else if (e.target.name === 'range') {
+      e.persist();
+      this.setState(
+        produce(draft => {
+          draft.cropper.zoom = e.target.value;
+        }),
+      );
+    } else {
+      e.persist();
+      this.setState(draft => {
+        draft.modify[e.target.name] = e.target.value;
+      });
+    }
+  };
+
   renderMenu = menu => {
-    const { handleFilter, handleSearchTo } = this;
+    const {
+      handleFilter,
+      handleSearchTo,
+      onCropChange,
+      onCropComplete,
+      onZoomChange,
+      showCroppedImage,
+      handleChange,
+      handleClick,
+      handleClose,
+    } = this;
     const { groupId } = this.props;
-    const { repositories, people, filter, searchTo } = this.state;
+    const {
+      repositories,
+      people,
+      filter,
+      modify,
+      searchTo,
+      cropper,
+      displayColorPicker,
+    } = this.state;
+    const loggedUser = JSON.parse(localStorage.getItem('userInfo')).user_id;
 
     switch (menu) {
       case 'people':
         return <People list={people} />;
-      // case 'settings':
-      //   return (
-      //     <Setting
-      //       repositoryId={repositoryId}
-      //       name={name}
-      //       description={description}
-      //       handleChange={handleChange}
-      //       handleSubmit={handleSubmit}
-      //       handleRemove={handleRemove}
-      //     />
-      //   );
+      case 'settings':
+        return (
+          <Setting
+            loggedUser={loggedUser}
+            cropper={cropper}
+            modify={modify}
+            displayColorPicker={displayColorPicker}
+            onCropChange={onCropChange}
+            onCropComplete={onCropComplete}
+            onZoomChange={onZoomChange}
+            showCroppedImage={showCroppedImage}
+            handleChange={handleChange}
+            handleClick={handleClick}
+            handleClose={handleClose}
+          />
+        );
       default:
         return (
           <Repositories

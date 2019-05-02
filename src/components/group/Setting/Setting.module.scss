@@ -1,47 +1,70 @@
 @import '~styles/utils.scss';
 
-.modify {
+.setting {
   max-width: $app_width / 1.5;
   margin: 0 auto;
   @include media('<medium') {
-    width: 90%;
+    max-width: 768px;
   }
 }
 .section {
+  box-shadow: $shadow2dp;
+  padding: 1rem;
+
   button {
     background-color: lighten($gray, 10%) !important;
     font-weight: 600;
     color: black !important;
     border-radius: 5px;
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 1rem;
-    height: 2.5rem;
     margin: 0;
-
-    margin-top: 1.2rem;
+    margin-top: 2.5rem;
     &:not([disabled]):not(.disabled):active {
       background-color: lighten($gray, 0%) !important;
     }
   }
-  > div {
+  .submit {
+    margin: 2rem 0;
+    button {
+      color: white !important;
+      background-color: lighten($primary, 0%) !important;
+      &:not([disabled]):not(.disabled):active {
+        background-color: darken($primary, 20%) !important;
+      }
+    }
+  }
+  .paragraphWrapper {
+    display: flex;
+    justify-content: space-between;
+    @include media('<medium') {
+      display: block;
+    }
+    > div {
+      width: 48%;
+      @include media('<medium') {
+        margin-top: 10%;
+        width: 90%;
+      }
+    }
+  }
+  .item {
     font-weight: 500;
+    button {
+      width: 225px;
+      margin: 0.5rem 0;
+    }
+  }
+  .item + .item {
+    margin-top: 2rem;
   }
   .title {
     font-size: 1.5rem;
     font-weight: 600;
+    @include media('<medium') {
+      margin-top: 5%;
+    }
   }
   hr {
     border-color: $gray;
-  }
-
-  .input + .input {
-    margin-top: 2rem;
-  }
-  label {
-    height: 100%;
-    display: block;
-    margin: 0;
   }
   input,
   textarea {
@@ -51,30 +74,61 @@
     line-height: 2rem;
     padding: 0 0.5rem;
     width: 20rem;
-    margin-top: 0.2rem;
-    margin-right: 5rem;
   }
   input {
     @include media('<medium') {
-      max-width: 290px;
-    }
-    @media (max-width: 325px) {
-      max-width: 240px;
+      min-width: 50px;
+      max-width: 300px;
+      @media (max-width: 325px) {
+        max-width: 250px;
+      }
     }
   }
   textarea {
-    width: 40rem;
     @include media('<medium') {
-      max-width: 290px;
+      min-width: 50px;
+      max-width: 300px;
     }
     @media (max-width: 325px) {
-      max-width: 240px;
+      max-width: 250px;
     }
   }
   .caution {
     color: darken(red, 10%) !important;
+    margin-bottom: 2rem;
   }
 }
 .section + .section {
-  margin-top: 3rem;
+  margin-top: 4rem;
+}
+
+.colorPicker {
+  z-index: 2;
+  .cover {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+  }
+}
+
+.cropper {
+  width: 100%;
+  height: 225px;
+  .controls {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+    input {
+      flex: 1;
+    }
+    button {
+      padding: 0.7rem 0;
+      margin-left: 0.7rem;
+      width: 100px;
+      border-radius: 10px;
+    }
+  }
 }
