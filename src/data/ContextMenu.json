@@ -62,5 +62,42 @@
         "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/search.png"
       }
     ]
+  },
+  "forked": {
+    "options": {
+      "bgColor": "rgba(41, 128, 185, 1.0)"
+    },
+    "list": [
+      {
+        "type": "REMOVE",
+        "label": "remove idea",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/remove.png"
+      },
+      {
+        "type": "ATTACH_FILE",
+        "label": "attach files",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/attachment.png"
+      },
+      {
+        "type": "ADD_NODE_FROM_NODE",
+        "label": "add Idea",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/add.png"
+      },
+      {
+        "type": "STYLE",
+        "label": "choose style",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/style.png"
+      },
+      {
+        "type": "FORKED_IDEA_INFO",
+        "label": "info",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/info.png"
+      },
+      {
+        "type": "SEARCH",
+        "label": "search ideas",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/search.png"
+      }
+    ]
   }
 }

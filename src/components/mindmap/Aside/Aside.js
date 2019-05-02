@@ -6,7 +6,14 @@ import React from 'react';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import styles from './Aside.module.scss';
 
-const Aside = ({ state, results, handleDragStart, handleDragEnd }) => {
+const Aside = ({
+  isActivated,
+  state,
+  data,
+  results,
+  handleDragStart,
+  handleDragEnd,
+}) => {
   const Results = () => (
     <div className={styles.recommendBoxList}>
       {results.map((node, i) => (
@@ -27,7 +34,7 @@ const Aside = ({ state, results, handleDragStart, handleDragEnd }) => {
                   <a
                     href={`/user/${idea.user_id}/repositories/${
                       idea.project_id
-                    }/`}
+                    }`}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -37,7 +44,7 @@ const Aside = ({ state, results, handleDragStart, handleDragEnd }) => {
                   <a
                     href={`/group/${idea.group_id}/repositories/${
                       idea.project_id
-                    }/`}
+                    }`}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -55,11 +62,69 @@ const Aside = ({ state, results, handleDragStart, handleDragEnd }) => {
   const Failure = () => (
     <div className={styles.recommendBoxList}>결과가 없습니다</div>
   );
-
+  const Info = () => (
+    <div className={styles.recommendBoxList}>
+      <div className={styles.section}>
+        <div className={styles.keyword}>{data.idea_cont}</div>
+        <p>
+          <span>
+            <b>소유자</b>
+          </span>
+          <span>{data.user_name}</span>
+        </p>
+        <p>
+          <span>
+            <b>주제</b>
+          </span>
+          <span>{data.project_topic}</span>
+        </p>
+        <p>
+          <span>
+            <b>URL</b>
+          </span>
+          <span>
+            {data.user_id !== 0 ? (
+              <a
+                href={`/user/${data.user_id}/repositories/${data.project_id}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {`${window.location.origin}/user/${data.user_id}/repositories/${
+                  data.project_id
+                }`}
+              </a>
+            ) : (
+              <a
+                href={`/group/${data.group_id}/repositories/${data.project_id}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {`${window.location.origin}/group/${
+                  data.group_id
+                }/repositories/${data.project_id}`}
+              </a>
+            )}
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+  if (results)
+    return (
+      <div className={styles.bodyRight}>
+        {results.length > 0 && state === 'success' ? (
+          <Results />
+        ) : state === 'pending' ? (
+          <Loading />
+        ) : (
+          <Failure />
+        )}
+      </div>
+    );
   return (
     <div className={styles.bodyRight}>
-      {results.length > 0 && state === 'success' ? (
-        <Results />
+      {state === 'success' ? (
+        <Info />
       ) : state === 'pending' ? (
         <Loading />
       ) : (

@@ -1,4 +1,3 @@
-/* eslint-disable no-else-return */
 /* eslint-disable no-plusplus */
 /* eslint-disable object-shorthand */
 /* eslint-disable array-callback-return */
@@ -8,6 +7,7 @@ import axios from 'axios';
 import { getPathEndPoint } from 'tools/Path';
 
 // initialize Actions
+const INITIALIZE = 'mindmap/INITIALIZE';
 const SET_SOURCE_NODE = 'mindmap/SET_SOURCE_NODE';
 const GET_NODES = 'mindmap/GET_NODES';
 const GET_NODES_SUCCESS = 'mindmap/GET_NODES_SUCCESS';
@@ -24,6 +24,7 @@ const TOGGLE_NODE_EDITING = 'mindmap/TOGGLE_NODE_EDITING';
 const SET_NODE_DATA = 'mindmap/SET_NODE_DATA';
 const SET_NODE_LOCATION = 'mindmap/SET_NODE_LOCATION'; // Node & Path ReLocation
 
+export const initialize = createAction(INITIALIZE);
 export const setSourceNode = createAction(SET_SOURCE_NODE);
 export const getNodes = createAction(GET_NODES);
 export const getNodesSuccess = createAction(GET_NODES_SUCCESS);
@@ -55,6 +56,37 @@ export const loadIdeasRequest = project_id => dispatch => {
 };
 export const createIdeaRequest = data => dispatch => {
   dispatch(addNode());
+  if (data.isForked > 0) {
+    return axios
+      .post('/api/idea/fork/create/', {
+        user_id: data.user_id,
+        idea_id: data.isForked,
+        project_id: data.project_id,
+        parent_id: data.childOf,
+        is_forked: data.isForked,
+      })
+      .then(res => {
+        const { idea_id } = res.data;
+        const node = { ...data, id: idea_id };
+        dispatch(addNodeSuccess(node));
+        dispatch(addPath({ start: data.childOf, end: node }));
+        axios.post('/api/idea/fork/history/', {
+          user_id: data.user_id,
+          idea_id: data.isForked,
+        });
+        axios.post('/api/idea/loc/create/', {
+          idea_id,
+          idea_x: data.location.x,
+          idea_y: data.location.y,
+          idea_width: data.size.width,
+          idea_height: data.size.height,
+        });
+        axios.post('/api/idea/child/create/', {
+          idea_id: data.childOf,
+          child_id: res.data.idea_id,
+        });
+      });
+  }
   return axios
     .post('/api/idea/create/', {
       project_id: data.project_id,
@@ -93,14 +125,31 @@ export const updateIdeaRequest = data => dispatch => {
   dispatch(setNodeData(data));
   dispatch(setNodeLocation(data));
   const project_id = window.location.pathname.split('/')[4];
-  if (data.id === 0)
+  if (data.id === 0) {
     return axios.post('/api/idea/root/update/', {
       idea_cont: data.head,
       idea_color: data.color,
-      idea_height: data.size.width,
-      idea_width: data.size.height,
+      idea_width: data.size.width,
+      idea_height: data.size.height,
       project_id,
     });
+  }
+  if (data.isForked > 0)
+    return axios
+      .post('/api/idea/update/', {
+        idea_id: data.id,
+        idea_cont: data.head,
+        idea_color: data.color,
+      })
+      .then(res => {
+        axios.post('/api/idea/loc/update/', {
+          idea_id: data.id,
+          idea_x: data.location.x,
+          idea_y: data.location.y,
+          idea_width: data.size.width,
+          idea_height: data.size.height,
+        });
+      });
   if (data.head)
     return axios
       .post('/api/idea/update/', {
@@ -109,15 +158,13 @@ export const updateIdeaRequest = data => dispatch => {
         idea_color: data.color,
       })
       .then(res => {
-        axios
-          .post('/api/idea/loc/update/', {
-            idea_id: data.id,
-            idea_x: data.location.x,
-            idea_y: data.location.y,
-            idea_width: data.size.width,
-            idea_height: data.size.height,
-          })
-          .then(() => {});
+        axios.post('/api/idea/loc/update/', {
+          idea_id: data.id,
+          idea_x: data.location.x,
+          idea_y: data.location.y,
+          idea_width: data.size.width,
+          idea_height: data.size.height,
+        });
         axios
           .post('/api/idea/keyword/create/', {
             idea_id: data.id,
@@ -130,18 +177,17 @@ export const updateIdeaRequest = data => dispatch => {
             });
           });
       });
-  else
-    return axios
-      .post('/api/idea/loc/update/', {
-        idea_id: data.id,
-        idea_x: data.location.x,
-        idea_y: data.location.y,
-        idea_width: data.size.width,
-        idea_height: data.size.height,
-      })
-      .then(() => {
-        dispatch(setNodeLocation(data));
-      });
+  return axios
+    .post('/api/idea/loc/update/', {
+      idea_id: data.id,
+      idea_x: data.location.x,
+      idea_y: data.location.y,
+      idea_width: data.size.width,
+      idea_height: data.size.height,
+    })
+    .then(() => {
+      dispatch(setNodeLocation(data));
+    });
 };
 
 const initialState = {
@@ -183,6 +229,21 @@ const initialState = {
 
 export default handleActions(
   {
+    [INITIALIZE]: state =>
+      produce(state, draft => {
+        draft.state = {
+          create: '',
+          read: '',
+          update: '',
+          delete: '',
+        };
+        draft.cavasPins = {
+          leftTop: { x: -window.innerWidth / 2, y: -window.innerHeight / 2 },
+          rightBottom: { x: 0, y: 0 },
+        };
+        draft.nodes = [];
+        draft.paths = [];
+      }),
     [SET_SOURCE_NODE]: (state, action) =>
       produce(state, draft => {
         const { data, list } = action.payload;

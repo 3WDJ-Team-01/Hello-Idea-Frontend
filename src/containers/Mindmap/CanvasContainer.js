@@ -1,9 +1,15 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-bitwise */
+/* eslint-disable no-multi-assign */
+/* eslint-disable no-cond-assign */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-find-dom-node */
 /* eslint-disable no-shadow */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import axios from 'axios';
 import * as mindmapActions from 'store/modules/mindmap';
 import Canvas from 'components/mindmap/Canvas';
 
@@ -47,7 +53,10 @@ class CanvasContainer extends Component {
         x: pointerPosition.x - pointer.prevLoc.x,
         y: pointerPosition.y - pointer.prevLoc.y,
       });
-    } else if (pointer.target.nodeId !== 0 && pointer.target.class === 'node') {
+    } else if (
+      pointer.target.nodeId !== 0 &&
+      (pointer.target.class === 'node' || pointer.target.class === 'forked')
+    ) {
       MindmapActions.setNodeLocation({
         id: pointer.target.nodeId,
         location: {
@@ -66,7 +75,7 @@ class CanvasContainer extends Component {
     if (
       pointer.target.nodeId !== 0 &&
       pointer.state.isDrag &&
-      pointer.target.class === 'node'
+      (pointer.target.class === 'node' || pointer.target.class === 'forked')
     ) {
       const index = nodes.findIndex(node => node.id === pointer.target.nodeId);
 
@@ -87,6 +96,8 @@ class CanvasContainer extends Component {
     e.stopPropagation();
     e.persist();
     const { getPointFromEvent } = this;
+    const { nodes, pointer, MindmapActions, userId, repositoryId } = this.props;
+    const targetNodeId = pointer.target.nodeId;
     const { ideas } = this.props.explore;
     const pointerPosition = getPointFromEvent(e);
     const forkedIdeaId = e.dataTransfer.getData('text');
@@ -95,7 +106,35 @@ class CanvasContainer extends Component {
         ideas.findIndex(idea => idea.idea_id === parseInt(forkedIdeaId, 10))
       ];
 
-    console.log(forkedIdea);
+    const strByteLength = (s, b, i, c) => {
+      for (
+        b = i = 0;
+        (c = s.charCodeAt(i++));
+        b += c >> 11 ? 3 : c >> 7 ? 2 : 1
+      );
+      return b;
+    };
+
+    const newNode = {
+      project_id: repositoryId,
+      user_id: userId,
+      childOf: targetNodeId,
+      isForked: forkedIdea.idea_id,
+      isEditing: false,
+      color: nodes[nodes.findIndex(item => item.id === targetNodeId)].color,
+      location: {
+        x: pointerPosition.x,
+        y: pointerPosition.y,
+      },
+      size: {
+        width: strByteLength(forkedIdea.idea_cont) * 8 + 30,
+        height: 40,
+      },
+      head: forkedIdea.idea_cont,
+      parentOf: [],
+    };
+
+    MindmapActions.createIdeaRequest(newNode);
   };
 
   render() {

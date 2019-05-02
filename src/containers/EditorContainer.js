@@ -50,6 +50,11 @@ class App extends Component {
           y: 0,
         },
       },
+      info: {
+        state: 'pending',
+        isActivated: false,
+        data: {},
+      },
       explore: {
         state: 'pending',
         isActivated: false,
@@ -80,6 +85,12 @@ class App extends Component {
     setSVG(svg);
     createSVGPoint(svg);
     setViewBoxBaseVal(svg);
+  }
+
+  componentWillUnmount() {
+    const { RepositoryActions, MindmapActions } = this.props;
+    RepositoryActions.initialize();
+    MindmapActions.initialize();
   }
 
   /* Canvas initial Actions */
@@ -169,15 +180,16 @@ class App extends Component {
 
   pointerDown = event => {
     event.persist();
-
     this.setState(
       produce(draft => {
         draft.pointer.state.isDown = true;
         draft.explore.isActivated = false;
+        draft.info.isActivated = false;
         draft.pointer.target.class =
           event.target.className.baseVal && event.target.className.baseVal;
         draft.pointer.target.nodeId =
-          event.target.className.baseVal === 'node' &&
+          (event.target.className.baseVal === 'node' ||
+            event.target.className.baseVal === 'forked') &&
           parseInt(event.target.id, 10);
       }),
     );
@@ -223,10 +235,43 @@ class App extends Component {
     );
   };
 
+  toggleInfo = forkedId => {
+    this.setState(
+      produce(draft => {
+        draft.info = {
+          state: 'pending',
+          isActivated: true,
+          data: {},
+        };
+      }),
+    );
+    axios
+      .post('/api/idea/info/', { is_forked: forkedId })
+      .then(({ data }) => {
+        this.setState(
+          produce(draft => {
+            draft.info = {
+              state: 'success',
+              isActivated: true,
+              data,
+            };
+          }),
+        );
+      })
+      .catch(() => {
+        this.setState(
+          produce(draft => {
+            draft.explore.state = 'failure';
+          }),
+        );
+      });
+  };
+
   toggleExplore = (id = 0) => {
     const nodeId = id || 0;
-    const { nodes } = this.props;
+    const { nodes, repositoryId } = this.props;
     const index = nodes.findIndex(node => node.id === nodeId);
+
     this.setState(
       produce(draft => {
         draft.explore = {
@@ -241,7 +286,7 @@ class App extends Component {
     axios
       .post('/api/idea/search/', {
         idea_cont: nodes[index].head,
-        idea_id: nodes[index].id,
+        project_id: parseInt(repositoryId, 10),
       })
       .then(({ data }) => {
         const ideas = [];
@@ -308,6 +353,7 @@ class App extends Component {
       pointerDown,
       pointerMove,
       toggleContextMenu,
+      toggleInfo,
       toggleExplore,
       exportMindmap,
       handleCanvasZoom,
@@ -319,10 +365,12 @@ class App extends Component {
       repositoryInfo,
       pointer,
       contextMenu,
+      info,
       explore,
       canvas,
     } = this.state;
     const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
+
     return (
       <div
         className="App"
@@ -338,6 +386,8 @@ class App extends Component {
           info={repositoryInfo}
         />
         <CanvasContainer
+          userId={user_id}
+          repositoryId={repositoryId}
           pointer={pointer}
           setSVG={setSVG}
           createSVGPoint={createSVGPoint}
@@ -400,10 +450,12 @@ class App extends Component {
             userId={user_id}
             repositoryId={repositoryId}
             toggleContextMenu={toggleContextMenu}
+            toggleInfo={toggleInfo}
             toggleExplore={toggleExplore}
           />
         )}
         {explore.isActivated && <AsideContainer explore={explore} />}
+        {info.isActivated && <AsideContainer info={info} />}
         <Footer
           type={type}
           zoom={canvas.zoom}

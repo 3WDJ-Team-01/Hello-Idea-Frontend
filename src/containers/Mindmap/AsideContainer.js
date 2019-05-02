@@ -28,12 +28,21 @@ class AsideContainer extends Component {
 
   render() {
     const { handleDragStart, handleDragEnd } = this;
-    const { explore } = this.props;
+    const { explore, info } = this.props;
 
+    if (explore)
+      return (
+        <Aside
+          state={explore.state}
+          results={explore.results}
+          handleDragStart={handleDragStart}
+          handleDragEnd={handleDragEnd}
+        />
+      );
     return (
       <Aside
-        state={explore.state}
-        results={explore.results}
+        state={info.state}
+        data={info.data}
         handleDragStart={handleDragStart}
         handleDragEnd={handleDragEnd}
       />

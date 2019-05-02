@@ -15,9 +15,11 @@ $boxWidth: 300px;
   bottom: 0;
   right: 0;
   box-shadow: $shadow2dp;
-  background-color: rgba(#f2f9f8, 0.7); /*99bddc  c5e6ef   baabcf */
+  background-color: rgba(white, 0.9); /*99bddc  c5e6ef   baabcf */
 }
 .recommendBoxList {
+  position: relative;
+  width: 100%;
   padding: 1.4rem;
 }
 .section {
@@ -27,6 +29,17 @@ $boxWidth: 300px;
     font-weight: 500;
     font-size: 1.1rem;
     padding: 0.3rem 0;
+  }
+  p {
+    font-size: 0.95rem;
+    b {
+      font-weight: 600;
+    }
+    span {
+      display: block;
+      width: 100%;
+      word-break: break-all;
+    }
   }
 }
 .section + .section {

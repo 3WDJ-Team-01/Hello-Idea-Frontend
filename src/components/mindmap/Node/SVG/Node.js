@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Node.module.scss';
 
-const Node = ({ head, index, location, size, color, pointer }) => {
+const Node = ({ head, index, location, size, color, pointer, isForked }) => {
   return (
     <g>
       <rect
@@ -12,7 +12,11 @@ const Node = ({ head, index, location, size, color, pointer }) => {
         width={size.width}
         height={size.height}
         filter={pointer.state.isDrag ? '' : 'url(#shadow-2dp)'}
-        style={{ fill: color, stroke: color, strokeWidth: 2 }}
+        style={
+          isForked > 0
+            ? { fill: 'white', stroke: color, strokeWidth: 3 }
+            : { fill: color, stroke: color, strokeWidth: 2 }
+        }
       />
       <foreignObject
         x={location.x - size.width / 2}
@@ -48,7 +52,7 @@ const Node = ({ head, index, location, size, color, pointer }) => {
 
       <rect
         id={index}
-        className="node"
+        className={isForked > 0 ? 'forked' : 'node'}
         x={location.x - size.width / 2}
         y={location.y - size.height / 2}
         rx="10"

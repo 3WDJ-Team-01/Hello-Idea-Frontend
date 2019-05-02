@@ -61,9 +61,10 @@ class NewContainer extends Component {
   render() {
     const { handleChange, handleSubmit } = this;
     const { name, desc } = this.state;
-    const { groups, userInfo } = this.props;
+    const { state, groups, userInfo } = this.props;
     return (
       <New
+        state={state}
         groups={groups}
         userInfo={userInfo}
         name={name}
@@ -76,6 +77,7 @@ class NewContainer extends Component {
 }
 
 const mapStateToProps = state => ({
+  state: state.repository.state,
   groups: state.user.groups,
   userInfo: state.auth.userInfo,
   project_id: state.repository.info.project_id,

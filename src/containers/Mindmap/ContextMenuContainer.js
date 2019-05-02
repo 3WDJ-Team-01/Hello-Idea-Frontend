@@ -152,6 +152,15 @@ class ContextMenuContainer extends Component {
       );
     };
 
+    const info = e => {
+      const { targetNodeId } = this.state;
+      const { nodes, toggleInfo } = this.props;
+      const index = nodes.findIndex(node => node.id === targetNodeId);
+
+      toggleInfo(nodes[index].isForked);
+      toggleContextMenu(e);
+    };
+
     // menu types
     // * canvas
     //   - ADD_NODE_FROM_CANVAS: add new idea from canvas
@@ -179,6 +188,21 @@ class ContextMenuContainer extends Component {
           return addFromNode;
         case 'EDIT':
           return editNode;
+        case 'REMOVE':
+          return remove;
+        case 'SEARCH':
+          return explore;
+        case 'STYLE':
+          return changeColor;
+        default:
+          return null;
+      }
+    else if (mode === 'forked')
+      switch (type) {
+        case 'ADD_NODE_FROM_NODE':
+          return addFromNode;
+        case 'FORKED_IDEA_INFO':
+          return info;
         case 'REMOVE':
           return remove;
         case 'SEARCH':

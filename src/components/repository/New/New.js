@@ -3,11 +3,21 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import { MDBBtn } from 'mdbreact';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import styles from './New.module.scss';
 
-const New = ({ groups, userInfo, name, desc, handleChange, handleSubmit }) => {
+const New = ({
+  state,
+  groups,
+  userInfo,
+  name,
+  desc,
+  handleChange,
+  handleSubmit,
+}) => {
   return (
     <div className={styles.new}>
+      {state.create === 'pending' ? <ProgressIndicator /> : null}
       <div className={styles.title}>Create a new repository</div>
       <hr />
       <div className={styles.article}>

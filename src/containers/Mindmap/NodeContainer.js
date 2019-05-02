@@ -145,6 +145,7 @@ class NodeContainer extends Component {
           size={node.size}
           color={node.color}
           pointer={pointer}
+          isForked={node.isForked}
         />
       );
     else if (mode === 'Edit')
