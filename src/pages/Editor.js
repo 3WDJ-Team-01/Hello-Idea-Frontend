@@ -7,9 +7,9 @@ const Main = ({ match, history }) => {
     <PageTemplate isHidden>
       <EditorContainer
         history={history}
-        author={match.params.author}
+        author={parseInt(match.params.author, 10)}
         url={match.url}
-        repositoryId={match.params.repository}
+        repositoryId={parseInt(match.params.repository, 10)}
       />
     </PageTemplate>
   );

@@ -85,7 +85,6 @@ class MainContainer extends Component {
       userState.group === 'success' &&
       userState.follower === 'success'
     ) {
-      console.log(feeds);
       return (
         <MainWrapper>
           {userInfo.user_id && (
@@ -105,7 +104,11 @@ class MainContainer extends Component {
                 <section>
                   <Wall>
                     {feeds.map((notify, i) => (
-                      <Notification key={i} notify={notify} />
+                      <Notification
+                        key={i}
+                        loggedUserId={userInfo.user_id}
+                        notify={notify}
+                      />
                     ))}
                   </Wall>
                 </section>

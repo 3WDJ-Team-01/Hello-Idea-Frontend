@@ -7,9 +7,8 @@ import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import styles from './Notification.module.scss';
 
 const formatter = buildFormatter(koreanStrings);
-const loggedUserId = JSON.parse(localStorage.getItem('userInfo')).user_id;
 
-const Notification = ({ notify }) => {
+const Notification = ({ notify, loggedUserId }) => {
   const { notify_cont, created_at, send_id, send, target_id, target } = notify;
   const sendingUser = {
     send_id,
@@ -29,20 +28,26 @@ const Notification = ({ notify }) => {
           <Link to={`/user/${send_id}`}>
             <b>{send.user_name}</b>
           </Link>
-          {notification(notify_cont, sendingUser, notifyData).label}
+          {
+            notification(notify_cont, loggedUserId, sendingUser, notifyData)
+              .label
+          }
         </div>
         <div className={styles.date}>
           <TimeAgo date={created_at} formatter={formatter} />
         </div>
       </div>
       <div className={styles.detail}>
-        {notification(notify_cont, sendingUser, notifyData).component}
+        {
+          notification(notify_cont, loggedUserId, sendingUser, notifyData)
+            .component
+        }
       </div>
     </div>
   );
 };
 
-const notification = (type, sendingUser, notifyData) => {
+const notification = (type, loggedUserId, sendingUser, notifyData) => {
   const {
     target_id,
     // user follow

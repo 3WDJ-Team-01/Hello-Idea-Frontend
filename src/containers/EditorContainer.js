@@ -288,7 +288,7 @@ class App extends Component {
     axios
       .post('/api/idea/search/', {
         idea_cont: nodes[index].head,
-        project_id: parseInt(repositoryId, 10),
+        project_id: repositoryId,
       })
       .then(({ data }) => {
         const ideas = [];

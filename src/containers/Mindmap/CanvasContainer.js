@@ -106,7 +106,7 @@ class CanvasContainer extends Component {
       userId,
       repositoryId,
     } = this.props;
-    const targetNodeId = pointer.target.nodeId;
+    const targetNodeId = pointer.target.nodeId ? pointer.target.nodeId : 0;
     const { ideas } = this.props.explore;
     const pointerPosition = getPointFromEvent(e);
     const forkedIdeaId = e.dataTransfer.getData('text');
@@ -124,13 +124,15 @@ class CanvasContainer extends Component {
       return b;
     };
 
+    const nodeIndex = nodes.findIndex(item => item.id === targetNodeId);
+
     const newNode = {
       project_id: repositoryId,
       user_id: userId,
       childOf: targetNodeId,
       isForked: forkedIdea.idea_id,
       isEditing: false,
-      color: nodes[nodes.findIndex(item => item.id === targetNodeId)].color,
+      color: nodes[nodeIndex > 0 ? nodeIndex : 0].color,
       location: {
         x: pointerPosition.x,
         y: pointerPosition.y,
@@ -142,7 +144,7 @@ class CanvasContainer extends Component {
       head: forkedIdea.idea_cont,
       parentOf: [],
     };
-
+    console.log(newNode);
     MindmapActions.createIdeaRequest(newNode);
     AlertActions.sendNotify({
       type: 'fork',
