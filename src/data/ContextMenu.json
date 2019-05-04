@@ -111,6 +111,11 @@
         "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/add.png"
       },
       {
+        "type": "EDIT",
+        "label": "edit",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/edit.png"
+      },
+      {
         "type": "STYLE",
         "label": "choose style",
         "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/style.png"

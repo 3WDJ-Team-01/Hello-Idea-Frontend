@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as repositoryActions from 'store/modules/repository';
+import * as alertActions from 'store/modules/alert';
 import axios from 'axios';
 import produce from 'immer';
 import ProgressIndicator from 'components/base/ProgressIndicator';
@@ -90,9 +91,16 @@ class RepositoryContainer extends Component {
     });
 
   handleStar = () => {
-    const { RepositoryActions, repositoryId } = this.props;
+    const {
+      RepositoryActions,
+      AlertActions,
+      authorId,
+      repositoryId,
+      loggedUserFollowers,
+    } = this.props;
     const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
     const { isLiked } = this.state;
+
     if (isLiked) {
       axios
         .post('/api/project/like/delete/', {
@@ -115,6 +123,12 @@ class RepositoryContainer extends Component {
           project_id: repositoryId,
         })
         .then(() => {
+          AlertActions.sendNotify({
+            type: 'like',
+            send_id: user_id,
+            receive_id: [parseInt(authorId, 10), ...loggedUserFollowers],
+            target_id: repositoryId,
+          });
           RepositoryActions.getRequest(repositoryId).then(() => {
             this.setState(
               produce(draft => {
@@ -237,6 +251,7 @@ class RepositoryContainer extends Component {
 
 const mapStateToProps = state => ({
   state: state.repository.state,
+  loggedUserFollowers: state.auth.relation.followersId,
   groups: state.user.groups,
   userInfo: state.auth.userInfo,
   author: state.repository.author,
@@ -248,6 +263,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   RepositoryActions: bindActionCreators(repositoryActions, dispatch),
+  AlertActions: bindActionCreators(alertActions, dispatch),
 });
 
 export default withRouter(

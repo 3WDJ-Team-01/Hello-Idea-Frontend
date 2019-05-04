@@ -50,6 +50,7 @@ export const createRequest = ({
   project_topic,
   project_intro,
   history,
+  notify,
 }) => dispatch => {
   dispatch(create());
   return axios
@@ -79,6 +80,7 @@ export const createRequest = ({
         })
         .then(() => {
           dispatch(createSuccess(res.data));
+          notify(project_id);
           if (group_id === 0)
             history.push(`/user/${user_id}/repositories/${project_id}/editor`);
           else

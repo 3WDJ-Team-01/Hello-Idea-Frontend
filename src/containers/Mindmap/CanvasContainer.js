@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import * as mindmapActions from 'store/modules/mindmap';
+import * as alertActions from 'store/modules/alert';
 import Canvas from 'components/mindmap/Canvas';
 
 class CanvasContainer extends Component {
@@ -96,7 +97,15 @@ class CanvasContainer extends Component {
     e.stopPropagation();
     e.persist();
     const { getPointFromEvent } = this;
-    const { nodes, pointer, MindmapActions, userId, repositoryId } = this.props;
+    const {
+      nodes,
+      pointer,
+      MindmapActions,
+      AlertActions,
+      loggedUserFollowers,
+      userId,
+      repositoryId,
+    } = this.props;
     const targetNodeId = pointer.target.nodeId;
     const { ideas } = this.props.explore;
     const pointerPosition = getPointFromEvent(e);
@@ -135,6 +144,12 @@ class CanvasContainer extends Component {
     };
 
     MindmapActions.createIdeaRequest(newNode);
+    AlertActions.sendNotify({
+      type: 'fork',
+      send_id: userId,
+      receive_id: [forkedIdea.user_id],
+      target_id: repositoryId,
+    });
   };
 
   render() {
@@ -164,11 +179,12 @@ class CanvasContainer extends Component {
 const mapStateToProps = state => ({
   cavasPins: state.mindmap.cavasPins,
   nodes: state.mindmap.nodes,
+  loggedUserFollowers: state.auth.relation.followersId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  // mindmap modules
   MindmapActions: bindActionCreators(mindmapActions, dispatch),
+  AlertActions: bindActionCreators(alertActions, dispatch),
 });
 
 export default connect(

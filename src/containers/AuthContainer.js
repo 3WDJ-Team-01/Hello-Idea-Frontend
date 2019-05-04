@@ -4,7 +4,10 @@ import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import produce from 'immer';
 import AuthWrapper from 'components/auth/AuthWrapper';
+import LoginForm from 'components/auth/AuthForm/LoginForm';
+import RegisterForm from 'components/auth/AuthForm/RegisterForm';
 import * as authActions from 'store/modules/auth';
+import * as alertActions from 'store/modules/alert';
 
 class AuthContainer extends Component {
   state = {
@@ -31,19 +34,21 @@ class AuthContainer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { history, kind, logged, userInfo } = this.props;
+    const { history, kind, logged, userInfo, AlertActions } = this.props;
     if (prevProps.kind !== kind) {
       this.initialize();
     }
     if (prevProps.logged !== logged && logged) {
+      const { user_id, user_name, token } = userInfo;
       localStorage.setItem(
         'userInfo',
         JSON.stringify({
-          user_id: userInfo.user_id,
-          user_name: userInfo.user_name,
-          token: userInfo.token,
+          user_id,
+          user_name,
+          token,
         }),
       );
+      AlertActions.connectToWebsocket(user_id);
       history.push('/');
     }
   }
@@ -69,10 +74,10 @@ class AuthContainer extends Component {
     );
   };
 
-  changeInput = ({ name, value, id }) => {
-    const { state } = this;
+  changeInput = e => {
+    const { name, value } = e.target;
     this.setState(
-      produce(state, draft => {
+      produce(draft => {
         switch (name) {
           case 'user_birth_YYYY':
             const d = new Date();
@@ -122,19 +127,29 @@ class AuthContainer extends Component {
     const { changeInput, handleLogin, handleRegister } = this;
 
     return (
-      <AuthWrapper
-        kind={kind}
-        user_email={form.user_email}
-        password={form.password}
-        user_name={form.user_name}
-        user_birth_YYYY={form.user_birth_YYYY}
-        user_birth_MM={form.user_birth_MM}
-        user_birth_DD={form.user_birth_DD}
-        onChangeInput={changeInput}
-        onLogin={handleLogin}
-        onRegister={handleRegister}
-        error={error}
-      />
+      <AuthWrapper head="Hello Idea !">
+        {kind === 'login' ? (
+          <LoginForm
+            user_email={form.user_email}
+            password={form.password}
+            changeInput={changeInput}
+            handleLogin={handleLogin}
+            error={error}
+          />
+        ) : (
+          <RegisterForm
+            user_email={form.user_email}
+            password={form.password}
+            user_name={form.user_name}
+            user_birth_YYYY={form.user_birth_YYYY}
+            user_birth_MM={form.user_birth_MM}
+            user_birth_DD={form.user_birth_DD}
+            changeInput={changeInput}
+            handleRegister={handleRegister}
+            error={error}
+          />
+        )}
+      </AuthWrapper>
     );
   }
 }
@@ -147,6 +162,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   AuthActions: bindActionCreators(authActions, dispatch),
+  AlertActions: bindActionCreators(alertActions, dispatch),
 });
 
 export default withRouter(

@@ -17,24 +17,14 @@ class PageTemplate extends Component {
   };
 
   render() {
-    const {
-      history,
-      children,
-      isHidden = false,
-      bgColor = 'white',
-    } = this.props;
+    const { history, children, bgColor = 'white' } = this.props;
     const { handleDropdown } = this;
     return (
       <div
         className={styles.App}
-        style={
-          isHidden
-            ? { backgroundColor: bgColor, padding: 0 }
-            : { backgroundColor: bgColor }
-        }
+        style={{ backgroundColor: bgColor }}
         onClick={handleDropdown}
       >
-        <HeaderContainer isHidden={isHidden} history={history} />
         {children}
       </div>
     );

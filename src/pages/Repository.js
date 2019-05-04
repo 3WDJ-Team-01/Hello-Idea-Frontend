@@ -6,10 +6,10 @@ const Main = ({ match, history }) => {
   return (
     <PageTemplate history={history}>
       <RepositoryContainer
-        author={match.params.author}
+        authorId={parseInt(match.params.author, 10)}
         menu={match.params.menu}
         url={match.url}
-        repositoryId={match.params.repository}
+        repositoryId={parseInt(match.params.repository, 10)}
         history={history}
       />
     </PageTemplate>

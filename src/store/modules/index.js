@@ -5,7 +5,7 @@ import mindmap from './mindmap';
 import explore from './explore';
 import recommend from './recommend';
 import repository from './repository';
-import notification from './notification';
+import alert from './alert';
 
 export default combineReducers({
   auth,
@@ -14,5 +14,5 @@ export default combineReducers({
   explore,
   recommend,
   repository,
-  notification,
+  alert,
 });

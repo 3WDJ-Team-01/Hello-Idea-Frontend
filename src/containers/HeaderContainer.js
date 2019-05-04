@@ -1,35 +1,45 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import produce from 'immer';
 import Header from 'components/base/Header';
 import * as authActions from 'store/modules/auth';
-import * as notificationActions from 'store/modules/notification';
+import * as alertActions from 'store/modules/alert';
 
 class HeaderContainer extends Component {
   constructor(props) {
     super(props);
+    const targetURL = /(auth|editor)/;
     this.state = {
+      isHidden: targetURL.test(props.history.location),
       searchTo: '',
     };
     this.checkUser();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { searchTo } = this.state;
-    return (
-      (nextProps.state !== 'pending' && nextProps.state !== 'success') ||
-      nextState.searchTo !== searchTo
-    );
+  componentDidMount() {
+    const { AlertActions } = this.props;
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo) {
+      AlertActions.connectToWebsocket(userInfo.user_id);
+    }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { searchTo } = this.state;
-    if (searchTo === '') this.checkUser();
+  componentDidUpdate(prevProps, prevState) {}
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    const { pathname } = this.props.history.location;
+    const targetURL = /(auth|editor)/;
+    if (prevProps.history.location.pathname !== pathname) this.checkUser();
+    return produce(draft => {
+      draft.isHidden = targetURL.test(pathname);
+    });
   }
 
   checkUser = () => {
-    const { history, AuthActions, NotificationActions } = this.props;
+    const { history, AuthActions } = this.props;
     if (localStorage.getItem('userInfo')) {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       AuthActions.setUserTemp({
@@ -37,9 +47,8 @@ class HeaderContainer extends Component {
         user_name: userInfo.user_name,
         token: userInfo.token,
       });
-      NotificationActions.connectToWebsocket(userInfo.user_id);
     } else {
-      if (!window.location.pathname.includes('auth')) {
+      if (!history.location.pathname.includes('auth')) {
         history.push('/auth/login');
       }
       return;
@@ -49,8 +58,10 @@ class HeaderContainer extends Component {
   };
 
   handleLogout = () => {
+    const { checkUser } = this;
     const { AuthActions } = this.props;
-    AuthActions.logoutRequest();
+
+    AuthActions.logoutRequest().then(() => this.checkUser());
   };
 
   handleSearch = e => {
@@ -58,14 +69,13 @@ class HeaderContainer extends Component {
   };
 
   render() {
-    const { isHidden, history } = this.props;
-    const { searchTo } = this.state;
+    const { history } = this.props;
+    const { isHidden, searchTo } = this.state;
     const { handleLogout, handleSearch } = this;
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-
-    return !userInfo && isHidden ? null : (
+    if (isHidden || !userInfo) return null;
+    return (
       <Header
-        isHidden={isHidden}
         history={history}
         searchTo={searchTo}
         onLogout={handleLogout}
@@ -85,7 +95,7 @@ const mapStateToProps = state => ({
 
 const mapDisaptchToProps = dispatch => ({
   AuthActions: bindActionCreators(authActions, dispatch),
-  NotificationActions: bindActionCreators(notificationActions, dispatch),
+  AlertActions: bindActionCreators(alertActions, dispatch),
 });
 
 export default withRouter(

@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as userActions from 'store/modules/user';
 import * as authActions from 'store/modules/auth';
+import * as alertActions from 'store/modules/alert';
 import axios from 'axios';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import UserWrapper from 'components/user/UserWrapper';
@@ -179,7 +180,7 @@ class UserContainer extends Component {
   /* HEADER ACTIONS */
   handleFollow = e => {
     e.persist();
-    const { user, AuthActions } = this.props;
+    const { user, loggedUserFollowers, AuthActions, AlertActions } = this.props;
     const { isFollow, userInfo } = this.state;
 
     if (!isFollow) {
@@ -189,10 +190,11 @@ class UserContainer extends Component {
           partner_id: user,
         })
         .then(() => {
-          axios.post('/api/notify/send/', {
+          AlertActions.sendNotify({
+            type: 'follow',
             send_id: userInfo.user_id,
-            receive_id: user,
-            notify_cont: 'following',
+            receive_id: [user, ...loggedUserFollowers],
+            target_id: user,
           });
           this.setState(
             produce(draft => {
@@ -402,6 +404,7 @@ class UserContainer extends Component {
 }
 
 const mapStateToProps = state => ({
+  loggedUserFollowers: state.auth.relation.followersId,
   state: state.user.state,
   info: state.user.info,
   groups: state.user.groups,
@@ -412,8 +415,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  UserActions: bindActionCreators(userActions, dispatch),
   AuthActions: bindActionCreators(authActions, dispatch),
+  UserActions: bindActionCreators(userActions, dispatch),
+  AlertActions: bindActionCreators(alertActions, dispatch),
 });
 
 export default withRouter(

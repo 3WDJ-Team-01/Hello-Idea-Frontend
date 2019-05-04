@@ -18,7 +18,7 @@ const SET_USER_TEMP = 'auth/SET_USER_TEMP';
 const LOGOUT = 'auth/LOGOUT';
 const LOGOUT_SUCCESS = 'auth/LOGOUT_SUCCESS';
 const LOGOUT_FAILURE = 'auth/LOGOUT_FAILURE';
-const GET_FOLLOWINGS = 'auth/GET_FOLLOWINGS';
+const GET_FOLLOW = 'auth/GET_FOLLOW';
 const GET_GROUPS = 'auth/GET_GROUPS';
 
 export const initializeInput = createAction(INITIALIZE_INPUT);
@@ -37,7 +37,7 @@ export const setUserTemp = createAction(SET_USER_TEMP);
 export const logout = createAction(LOGOUT);
 export const logoutSuccess = createAction(LOGOUT_SUCCESS);
 export const logoutFailure = createAction(LOGOUT_FAILURE);
-export const getFollowings = createAction(GET_FOLLOWINGS);
+export const getFollow = createAction(GET_FOLLOW);
 export const getGroups = createAction(GET_GROUPS);
 
 export const registerRequest = data => dispatch => {
@@ -98,7 +98,7 @@ export const userRequest = () => dispatch => {
         .then(({ data }) => dispatch(getGroups(data)));
       axios
         .post('/api/follow/', { user_id })
-        .then(({ data }) => dispatch(getFollowings(data)));
+        .then(({ data }) => dispatch(getFollow(data)));
     })
     .catch(err => {
       axios.defaults.headers.common.Authorization = '';
@@ -120,6 +120,7 @@ const initialState = {
     token: null,
   },
   relation: {
+    followersId: [],
     followings: [],
     groups: [],
   },
@@ -222,9 +223,11 @@ export default handleActions(
           token: null,
         };
       }),
-    [GET_FOLLOWINGS]: (state, action) =>
+    [GET_FOLLOW]: (state, action) =>
       produce(state, draft => {
-        draft.relation.followings = action.payload.following;
+        const { follower, following } = action.payload;
+        draft.relation.followersId = follower.map(({ user_id }) => user_id);
+        draft.relation.followings = following;
       }),
     [GET_GROUPS]: (state, action) =>
       produce(state, draft => {

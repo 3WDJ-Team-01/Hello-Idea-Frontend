@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as userActions from 'store/modules/user';
 import * as repositoryActions from 'store/modules/repository';
+import * as alertActions from 'store/modules/alert';
 
 class NewContainer extends Component {
   state = {
@@ -37,8 +38,24 @@ class NewContainer extends Component {
   };
 
   handleSubmit = () => {
-    const { RepositoryActions, history } = this.props;
+    const {
+      RepositoryActions,
+      AlertActions,
+      loggedUserFollowers,
+      history,
+    } = this.props;
     const { author_id, name, desc } = this.state;
+    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
+
+    const notify = repositoryId => {
+      AlertActions.sendNotify({
+        type: 'create',
+        send_id: user_id,
+        receive_id: loggedUserFollowers,
+        target_id: repositoryId,
+      });
+    };
+
     if (typeof author_id === 'string' && author_id.includes('G')) {
       RepositoryActions.createRequest({
         user_id: 0,
@@ -46,6 +63,7 @@ class NewContainer extends Component {
         project_topic: name,
         project_intro: desc,
         history,
+        notify,
       });
     } else {
       RepositoryActions.createRequest({
@@ -54,6 +72,7 @@ class NewContainer extends Component {
         project_topic: name,
         project_intro: desc,
         history,
+        notify,
       });
     }
   };
@@ -81,11 +100,13 @@ const mapStateToProps = state => ({
   groups: state.user.groups,
   userInfo: state.auth.userInfo,
   project_id: state.repository.info.project_id,
+  loggedUserFollowers: state.auth.relation.followersId,
 });
 
 const mapDispatchToProps = dispatch => ({
   UserActions: bindActionCreators(userActions, dispatch),
   RepositoryActions: bindActionCreators(repositoryActions, dispatch),
+  AlertActions: bindActionCreators(alertActions, dispatch),
 });
 
 export default withRouter(

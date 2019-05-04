@@ -14,8 +14,8 @@ const RegisterForm = ({
   user_birth_YYYY,
   user_birth_MM,
   user_birth_DD,
-  handleChange,
-  handleOnClick,
+  changeInput,
+  handleRegister,
   error,
 }) => (
   <div className={styles.form_wrapper}>
@@ -28,7 +28,7 @@ const RegisterForm = ({
           type="email"
           name="user_email"
           value={email}
-          onChange={handleChange}
+          onChange={changeInput}
           error={error.message}
         />
       </div>
@@ -40,7 +40,7 @@ const RegisterForm = ({
           type="password"
           name="password"
           value={password}
-          onChange={handleChange}
+          onChange={changeInput}
           error={error.message}
         />
       </div>
@@ -52,7 +52,7 @@ const RegisterForm = ({
           type="text"
           name="user_name"
           value={user_name}
-          onChange={handleChange}
+          onChange={changeInput}
           error={error.message}
         />
       </div>
@@ -67,7 +67,7 @@ const RegisterForm = ({
             name="user_birth_YYYY"
             placeholder="Year"
             value={user_birth_YYYY}
-            onChange={handleChange}
+            onChange={changeInput}
             error={error.message}
           />
           <MDBInput
@@ -79,7 +79,7 @@ const RegisterForm = ({
             name="user_birth_MM"
             placeholder="Month"
             value={user_birth_MM}
-            onChange={handleChange}
+            onChange={changeInput}
             error={error.message}
           />
           <MDBInput
@@ -91,7 +91,7 @@ const RegisterForm = ({
             name="user_birth_DD"
             placeholder="Day"
             value={user_birth_DD}
-            onChange={handleChange}
+            onChange={changeInput}
             error={error.message}
           />
         </div>
@@ -103,7 +103,7 @@ const RegisterForm = ({
               type="radio"
               name="user_gender"
               value="male"
-              onChange={handleChange}
+              onChange={changeInput}
             />
             <div className={styles.button_row}>남성</div>
           </label>
@@ -112,13 +112,13 @@ const RegisterForm = ({
               type="radio"
               name="user_gender"
               value="female"
-              onChange={handleChange}
+              onChange={changeInput}
             />
             <div className={styles.button_row}>여성</div>
           </label>
         </div>
       </div>
-      <MDBBtn size="lg" color="primary" onClick={handleOnClick}>
+      <MDBBtn size="lg" color="primary" onClick={handleRegister}>
         회원가입
       </MDBBtn>
       <Link to="/auth/login" className={styles.description}>

@@ -1,5 +1,6 @@
+@import '~styles/utils.scss';
+
 .App {
-  padding-bottom: 5%;
-  min-height: 100vh;
+  min-height: calc(100vh - $headerHeight);
   height: 100%;
 }

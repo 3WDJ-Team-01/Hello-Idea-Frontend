@@ -22,6 +22,7 @@ const Header = ({
   history,
   isHidden,
   searchTo,
+  onClick,
   onLogout,
   onChange,
   userInfo,
@@ -29,12 +30,8 @@ const Header = ({
   const onKeyPress = e => {
     if (e.key === 'Enter') history.push(`/search/${searchTo}`);
   };
-  if (!userInfo) return <></>;
   return (
-    <div
-      style={isHidden ? { display: 'none' } : { display: 'block' }}
-      className={styles.header_wrapper}
-    >
+    <div className={styles.header_wrapper} onClick={onClick}>
       <div className={styles.header}>
         <div
           className={styles.mobileMenu}
@@ -166,7 +163,7 @@ const Header = ({
                 <DropdownMenu path={`/user/${userInfo.user_id}/modify`}>
                   <div className={styles.item}>Settings</div>
                 </DropdownMenu>
-                <DropdownMenu path="/auth/login">
+                <DropdownMenu>
                   <div className={styles.item} onClick={onLogout}>
                     Sign out
                   </div>

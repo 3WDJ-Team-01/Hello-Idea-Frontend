@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -8,6 +9,7 @@ import MainWrapper from 'components/main/MainWrapper';
 import Discover from 'components/main/Discover';
 import Repository from 'components/main/Repository';
 import Wall from 'components/main/Wall';
+import Notification from 'components/base/Card/Notification';
 import * as userActions from 'store/modules/user';
 import * as recommendActions from 'store/modules/recommend';
 
@@ -15,16 +17,26 @@ class MainContainer extends Component {
   state = {
     searchTo: '',
     filter: 'all',
+    feeds: [],
   };
 
   componentDidMount() {
     const { UserActions, RecommendActions } = this.props;
     if (localStorage.getItem('userInfo')) {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      UserActions.targetGroupsRequest(userInfo.user_id);
-      UserActions.repositoriesRequest(userInfo.user_id, 0);
-      RecommendActions.withTendencyRequest(userInfo.user_id);
+      const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
+      UserActions.targetGroupsRequest(user_id);
+      UserActions.repositoriesRequest(user_id, 0);
+      UserActions.followerRequest(user_id);
+      RecommendActions.withTendencyRequest(user_id);
     }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.feeds !== nextProps.alert.notifications) {
+      return { feeds: nextProps.alert.notifications };
+    }
+
+    return null;
   }
 
   handleFilter = e => {
@@ -57,16 +69,23 @@ class MainContainer extends Component {
 
   render() {
     const { handleFilter, handleSearchTo, handleChageUser } = this;
-    const { searchTo, filter } = this.state;
+    const { searchTo, filter, feeds } = this.state;
     const {
+      alert,
       userState,
       recommendState,
       userInfo,
+      followings,
       groups,
       repositories,
       tendencyRepo,
     } = this.props;
-    if (userState.group === 'success')
+    if (
+      alert.state === 'success' &&
+      userState.group === 'success' &&
+      userState.follower === 'success'
+    ) {
+      console.log(feeds);
       return (
         <MainWrapper>
           {userInfo.user_id && (
@@ -84,7 +103,11 @@ class MainContainer extends Component {
               />
               <article>
                 <section>
-                  <Wall />
+                  <Wall>
+                    {feeds.map((notify, i) => (
+                      <Notification key={i} notify={notify} />
+                    ))}
+                  </Wall>
                 </section>
                 <aside>
                   <Discover tendencyRepo={tendencyRepo} />
@@ -94,17 +117,20 @@ class MainContainer extends Component {
           )}
         </MainWrapper>
       );
+    }
     return <ProgressIndicator />;
   }
 }
 const mapStateToProps = state => ({
+  userInfo: state.auth.userInfo,
   userState: state.user.state,
-  recommendState: state.recommend.state,
   info: state.user.info,
+  followings: state.user.following,
   groups: state.user.groups,
   repositories: state.user.repositories,
-  userInfo: state.auth.userInfo,
+  recommendState: state.recommend.state,
   tendencyRepo: state.recommend.tendency,
+  alert: state.alert,
 });
 
 const mapDispatchToProps = dispatch => ({
