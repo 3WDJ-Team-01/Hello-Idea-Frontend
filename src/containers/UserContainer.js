@@ -22,8 +22,6 @@ import getCroppedImg from 'tools/CropImage';
 
 class UserContainer extends Component {
   state = {
-    userInfo: JSON.parse(localStorage.getItem('userInfo')),
-    isOwner: false,
     isFollow: false,
     repositoriesFilter: 'all',
     repositoriesSearchTo: '',
@@ -39,20 +37,25 @@ class UserContainer extends Component {
     modify: {
       bgColor: '',
       imgSrc: '',
+      name: '',
+      bio: '',
     },
   };
 
   componentDidMount() {
     const { user } = this.props;
     const { UserActions } = this.props;
-    const { userInfo } = this.state;
-    this.setState(
-      produce(this.state, draft => {
-        draft.isOwner = user == userInfo.user_id;
-      }),
-    );
+
     UserActions.userRequest(user);
-    UserActions.targetGroupsRequest(user);
+    UserActions.targetGroupsRequest(user).then(() => {
+      const { User_detail } = this.props.info;
+      this.setState(
+        produce(draft => {
+          draft.modify.name = User_detail.user_name;
+          draft.modify.bio = User_detail.user_intro;
+        }),
+      );
+    });
     UserActions.repositoriesRequest(user, 0);
     UserActions.followerRequest(user);
 
@@ -72,10 +75,6 @@ class UserContainer extends Component {
         );
       }
     });
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return !!JSON.parse(localStorage.getItem('userInfo'));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -180,19 +179,25 @@ class UserContainer extends Component {
   /* HEADER ACTIONS */
   handleFollow = e => {
     e.persist();
-    const { user, loggedUserFollowers, AuthActions, AlertActions } = this.props;
-    const { isFollow, userInfo } = this.state;
+    const {
+      user,
+      loggedUserId,
+      loggedUserFollowers,
+      AuthActions,
+      AlertActions,
+    } = this.props;
+    const { isFollow } = this.state;
 
     if (!isFollow) {
       axios
         .post('/api/follow/insert/', {
-          user_id: userInfo.user_id,
+          user_id: loggedUserId,
           partner_id: user,
         })
         .then(() => {
           AlertActions.sendNotify({
             type: 'follow',
-            send_id: userInfo.user_id,
+            send_id: loggedUserId,
             receive_id: [user, ...loggedUserFollowers],
             target_id: user,
           });
@@ -205,7 +210,7 @@ class UserContainer extends Component {
     } else {
       axios
         .post('/api/follow/delete/', {
-          user_id: userInfo.user_id,
+          user_id: loggedUserId,
           partner_id: user,
         })
         .then(() => {
@@ -306,7 +311,6 @@ class UserContainer extends Component {
       handleSearchTo,
     } = this;
     const {
-      userInfo,
       cropper,
       modify,
       displayColorPicker,
@@ -314,6 +318,7 @@ class UserContainer extends Component {
       repositoriesSearchTo,
     } = this.state;
     const {
+      loggedUserId,
       info,
       groups,
       repositories,
@@ -326,7 +331,7 @@ class UserContainer extends Component {
       case 'repositories':
         return (
           <Repositories
-            loggedUser={userInfo.user_id}
+            loggedUser={loggedUserId}
             user={info.User_detail}
             repositories={repositories}
             filter={repositoriesFilter}
@@ -356,7 +361,7 @@ class UserContainer extends Component {
       case 'modify':
         return (
           <Modify
-            loggedUser={userInfo.user_id}
+            loggedUser={loggedUserId}
             cropper={cropper}
             modify={modify}
             displayColorPicker={displayColorPicker}
@@ -370,24 +375,25 @@ class UserContainer extends Component {
           />
         );
       default:
-        return <Overview loggedUser={userInfo.user_id} info={info} />;
+        return <Overview loggedUser={loggedUserId} info={info} />;
     }
   };
 
   render() {
     const { renderMenu, handleFollow } = this;
-    const { state, user, menu, info } = this.props;
-    const { userInfo, isFollow, shownProfile, modify } = this.state;
+    const { authState, userState, loggedUserId, user, menu, info } = this.props;
+    const { isFollow, shownProfile, modify } = this.state;
     if (
-      state.info === 'success' &&
-      state.group === 'success' &&
-      state.repositories === 'success' &&
-      state.follower === 'success'
+      authState === 'success' &&
+      userState.info === 'success' &&
+      userState.group === 'success' &&
+      userState.repositories === 'success' &&
+      userState.follower === 'success'
     )
       return (
         <>
           <Header
-            loggedUser={userInfo.user_id}
+            loggedUser={loggedUserId}
             isFollow={isFollow}
             menu={menu}
             user={user}
@@ -404,8 +410,10 @@ class UserContainer extends Component {
 }
 
 const mapStateToProps = state => ({
+  authState: state.auth.state,
+  loggedUserId: state.auth.userInfo.user_id,
+  userState: state.user.state,
   loggedUserFollowers: state.auth.relation.followersId,
-  state: state.user.state,
   info: state.user.info,
   groups: state.user.groups,
   repositories: state.user.repositories,

@@ -11,10 +11,11 @@ import * as alertActions from 'store/modules/alert';
 class HeaderContainer extends Component {
   constructor(props) {
     super(props);
-    const targetURL = /(auth|editor)/;
+
     this.state = {
-      isHidden: targetURL.test(props.history.location),
       searchTo: '',
+      isNewMessage: false,
+      notifications: [],
     };
     this.checkUser();
   }
@@ -29,13 +30,21 @@ class HeaderContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {}
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.notifications !== nextProps.notifications) {
+      return {
+        isNewMessage: nextProps.isNewMessage,
+        notifications: nextProps.notifications,
+      };
+    }
+
+    return null;
+  }
+
   getSnapshotBeforeUpdate(prevProps, prevState) {
     const { pathname } = this.props.history.location;
-    const targetURL = /(auth|editor)/;
     if (prevProps.history.location.pathname !== pathname) this.checkUser();
-    return produce(draft => {
-      draft.isHidden = targetURL.test(pathname);
-    });
+    return null;
   }
 
   checkUser = () => {
@@ -68,19 +77,49 @@ class HeaderContainer extends Component {
     this.setState({ searchTo: e.currentTarget.value });
   };
 
+  handleDropdown = e => {
+    const dropdown = document.querySelectorAll('details');
+    dropdown.forEach(dom => {
+      dom.open = false;
+    });
+  };
+
+  handleReadAlerts = () => {
+    const { AlertActions } = this.props;
+    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
+    AlertActions.readAllNotificationsRequest(user_id);
+    this.setState(
+      produce(draft => {
+        draft.isNewMessage = false;
+      }),
+    );
+  };
+
   render() {
-    const { history } = this.props;
-    const { isHidden, searchTo } = this.state;
-    const { handleLogout, handleSearch } = this;
+    const { history, AlertActions } = this.props;
+    const { isHidden, searchTo, isNewMessage, notifications } = this.state;
+    const {
+      handleLogout,
+      handleSearch,
+      handleDropdown,
+      handleReadAlerts,
+    } = this;
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    if (isHidden || !userInfo) return null;
+    const { pathname } = history.location;
+    const targetURL = /(auth|editor)/;
+
+    if (targetURL.test(pathname) || !userInfo) return null;
     return (
       <Header
         history={history}
         searchTo={searchTo}
+        onClick={handleDropdown}
         onLogout={handleLogout}
         onChange={handleSearch}
         userInfo={userInfo}
+        notifications={notifications}
+        isNewMessage={isNewMessage}
+        handleReadAlerts={handleReadAlerts}
       />
     );
   }
@@ -91,6 +130,8 @@ const mapStateToProps = state => ({
   error: state.auth.error,
   logged: state.auth.logged,
   userInfo: state.auth.userInfo,
+  isNewMessage: state.alert.newMessage,
+  notifications: state.alert.notifications,
 });
 
 const mapDisaptchToProps = dispatch => ({

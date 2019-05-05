@@ -8,6 +8,9 @@
   > div {
     margin-top: 2%;
   }
+  &:last-child {
+    // border-bottom: 1px solid $gray;
+  }
 }
 .section + .section {
   margin-top: 5%;

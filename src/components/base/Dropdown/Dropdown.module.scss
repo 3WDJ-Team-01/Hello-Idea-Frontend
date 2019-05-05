@@ -21,23 +21,50 @@
     vertical-align: middle;
     width: 0;
   }
+  .message {
+    margin-left: 0.5rem;
+    border-radius: 0.5rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    position: relative;
+    top: -0.7rem;
+    right: 0.7rem;
+    display: inline-block;
+    background-color: darken(red, 3%);
+    vertical-align: middle;
+  }
+  .toggle {
+    margin-left: 0.5rem;
+    border-radius: 0.5rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    position: relative;
+    top: -0.7rem;
+    right: 0.7rem;
+    display: inline-block;
+    vertical-align: middle;
+  }
   .wrapper {
+    margin-top: 1rem;
     position: absolute;
-    top: 55px;
-    right: auto;
+    left: auto;
+    right: 0;
     &::before {
+      float: right;
       border-top: 0 solid transparent;
       border-left: 0.6rem solid transparent;
       border-right: 0.6rem solid transparent;
       border-bottom-style: solid;
       border-bottom-width: 0.8rem;
       content: '';
-      display: inline-block;
-      vertical-align: middle;
-      position: absolute;
-      top: -8px;
+      display: block;
+      position: relative;
+      top: -10px;
+      left: auto;
+      right: 1rem;
     }
     .menu {
+      min-width: 150px;
       padding: 5px 0;
       position: relative;
       z-index: 999;
@@ -46,7 +73,7 @@
       background-color: #fff;
       color: black;
       font-size: 0.9rem;
-      div {
+      .item {
         padding: 0.3rem 0.5rem;
         cursor: pointer;
       }
@@ -56,6 +83,12 @@
       .item:hover {
         background-color: $primary;
         color: white;
+        a {
+          color: white;
+        }
+        time {
+          color: white;
+        }
       }
       .head {
         color: darken($gray, 15%);

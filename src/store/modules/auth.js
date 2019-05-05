@@ -235,6 +235,7 @@ export default handleActions(
       }),
     [SET_USER_TEMP]: (state, action) =>
       produce(state, draft => {
+        draft.state = 'success';
         draft.logged = true;
         draft.userInfo = {
           user_id: action.payload.user_id,
@@ -248,21 +249,21 @@ export default handleActions(
       }),
     [LOGOUT_SUCCESS]: state =>
       produce(state, draft => {
+        draft.state = 'success';
         draft.logged = false;
         draft.userInfo = {
           user_id: null,
           user_name: '',
           token: null,
         };
-        draft.state = 'success';
       }),
     [LOGOUT_FAILURE]: state =>
       produce(state, draft => {
+        draft.state = 'failure';
         draft.error = {
           triggered: true,
           message: 'LOGOUT ERROR, PLEASE TRY AGAIN',
         };
-        draft.state = 'failure';
       }),
   },
   initialState,

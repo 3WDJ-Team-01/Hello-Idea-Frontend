@@ -6,6 +6,7 @@ import HeaderContainer from 'containers/HeaderContainer';
 import {
   Main,
   Auth,
+  Alert,
   User,
   Group,
   NotFound,
@@ -24,6 +25,7 @@ const Root = () => (
         <Route path="/" component={HeaderContainer} />
         <Switch>
           <Route path="/" exact component={Main} />
+          <Route path="/alert" exact component={Alert} />
           <Route path="/search/:searchTo" exact component={Search} />
           <Route path="/auth/:kind" exact component={Auth} />
           <Route path="/trends/:searchTo" exact component={Trends} />

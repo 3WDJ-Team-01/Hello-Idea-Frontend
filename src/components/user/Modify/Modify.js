@@ -60,13 +60,21 @@ const Profile = ({
         <div className={styles.item}>
           <label>
             <div>Name</div>
-            <input type="text" />
+            <input
+              type="text"
+              value={modify.name}
+              handleChange={handleChange}
+            />
           </label>
         </div>
         <div className={styles.item}>
           <label>
             <div>bio</div>
-            <textarea type="text" />
+            <textarea
+              type="text"
+              value={modify.bio}
+              handleChange={handleChange}
+            />
           </label>
         </div>
         <div className={styles.item}>

@@ -46,7 +46,7 @@ const Header = ({
             {info.User_detail.user_intro}
           </div>
         </div>
-        {user === `${loggedUser}` ? (
+        {user === loggedUser ? (
           <Link to={`/user/${user}/modify`}>
             {menu === 'modify' ? (
               <MDBBtn color="elegant">EDIT</MDBBtn>

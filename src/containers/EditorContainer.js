@@ -93,7 +93,9 @@ class App extends Component {
     MindmapActions.initialize();
   }
 
-  /* Canvas initial Actions */
+  /* === Actions start === */
+  /* initial action */
+
   preventEvent = () => {
     window.event.returnValue = false;
   };
@@ -220,7 +222,7 @@ class App extends Component {
   toggleContextMenu = event => {
     event.persist();
     const { pointer } = this.state;
-    console.log(event.target.id);
+
     this.setState(
       produce(draft => {
         if (event.button === 0) draft.contextMenu.mode = null;
@@ -343,6 +345,8 @@ class App extends Component {
     });
   };
 
+  /* === Actions end === */
+
   render() {
     const {
       preventEvent,
@@ -361,7 +365,15 @@ class App extends Component {
       handleCanvasZoom,
       handleMouseWheel,
     } = this;
-    const { repoState, mindmapState, paths, nodes, repositoryId } = this.props;
+    const {
+      authState,
+      repoState,
+      mindmapState,
+      loggedUserId,
+      paths,
+      nodes,
+      repositoryId,
+    } = this.props;
     const {
       type,
       repositoryInfo,
@@ -371,15 +383,15 @@ class App extends Component {
       explore,
       canvas,
     } = this.state;
-    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
-
     return (
       <div
         className="App"
         onContextMenu={preventEvent}
         style={{ overflow: 'hidden', maxHeight: '100vh' }}
       >
-        {repoState.read !== 'success' || mindmapState.read !== 'success' ? (
+        {authState !== 'success' ||
+        repoState.read !== 'success' ||
+        mindmapState.read !== 'success' ? (
           <ProgressIndicator />
         ) : null}
         <Header
@@ -388,7 +400,7 @@ class App extends Component {
           info={repositoryInfo}
         />
         <CanvasContainer
-          userId={user_id}
+          userId={loggedUserId}
           repositoryId={repositoryId}
           pointer={pointer}
           setSVG={setSVG}
@@ -449,7 +461,7 @@ class App extends Component {
             pointer={pointer}
             mode={contextMenu.mode}
             location={contextMenu.location}
-            userId={user_id}
+            userId={loggedUserId}
             repositoryId={repositoryId}
             toggleContextMenu={toggleContextMenu}
             toggleInfo={toggleInfo}
@@ -469,7 +481,9 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
+  authState: state.auth.state,
   repoState: state.repository.state,
+  loggedUserId: state.auth.userInfo.user_id,
   mindmapState: state.mindmap.state,
   repository: state.repository.info,
   cavasPins: state.mindmap.cavasPins,

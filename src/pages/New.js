@@ -6,7 +6,7 @@ const Main = ({ match, history }) => {
   return (
     <PageTemplate history={history}>
       <NewContainer
-        user={match.params.user}
+        user={parseInt(match.params.user, 10)}
         url={match.url}
         history={history}
       />

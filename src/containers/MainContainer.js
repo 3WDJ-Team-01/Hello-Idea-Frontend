@@ -17,17 +17,45 @@ class MainContainer extends Component {
   state = {
     searchTo: '',
     filter: 'all',
+    recommends: [],
     feeds: [],
   };
 
   componentDidMount() {
-    const { UserActions, RecommendActions } = this.props;
-    if (localStorage.getItem('userInfo')) {
-      const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
-      UserActions.targetGroupsRequest(user_id);
-      UserActions.repositoriesRequest(user_id, 0);
-      UserActions.followerRequest(user_id);
-      RecommendActions.withTendencyRequest(user_id);
+    const { userInfo, UserActions, RecommendActions } = this.props;
+
+    if (userInfo.user_id) {
+      UserActions.targetGroupsRequest(userInfo.user_id);
+      UserActions.repositoriesRequest(userInfo.user_id, 0);
+      UserActions.followerRequest(userInfo.user_id);
+      RecommendActions.withTendencyRequest(userInfo.user_id).then(() => {
+        const { shuffleRepo } = this;
+        const { tendencyRepo } = this.props;
+        this.setState(
+          produce(draft => {
+            draft.recommends = shuffleRepo(tendencyRepo);
+          }),
+        );
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { userInfo, UserActions, RecommendActions } = this.props;
+
+    if (prevProps.userInfo.user_id !== userInfo.user_id) {
+      UserActions.targetGroupsRequest(userInfo.user_id);
+      UserActions.repositoriesRequest(userInfo.user_id, 0);
+      UserActions.followerRequest(userInfo.user_id);
+      RecommendActions.withTendencyRequest(userInfo.user_id).then(() => {
+        const { shuffleRepo } = this;
+        const { tendencyRepo } = this.props;
+        this.setState(
+          produce(draft => {
+            draft.recommends = shuffleRepo(tendencyRepo);
+          }),
+        );
+      });
     }
   }
 
@@ -38,6 +66,21 @@ class MainContainer extends Component {
 
     return null;
   }
+
+  shuffleRepo = repositories => {
+    let count = 0;
+    const randomRepo = [];
+    repositories.forEach((repository, index) => {
+      if (count !== 3 && index - count > 2) {
+        count += 1;
+        randomRepo.push(repository);
+      } else if (count !== 3 && Math.random() < 0.5) {
+        count += 1;
+        randomRepo.push(repository);
+      }
+    });
+    return randomRepo;
+  };
 
   handleFilter = e => {
     e.persist();
@@ -57,8 +100,7 @@ class MainContainer extends Component {
   };
 
   handleChageUser = e => {
-    const { UserActions } = this.props;
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const { UserActions, userInfo } = this.props;
 
     if (e.target.value === 'personal') {
       UserActions.repositoriesRequest(userInfo.user_id, 0);
@@ -69,9 +111,10 @@ class MainContainer extends Component {
 
   render() {
     const { handleFilter, handleSearchTo, handleChageUser } = this;
-    const { searchTo, filter, feeds } = this.state;
+    const { searchTo, filter, recommends, feeds } = this.state;
     const {
       alert,
+      authState,
       userState,
       recommendState,
       userInfo,
@@ -81,6 +124,7 @@ class MainContainer extends Component {
       tendencyRepo,
     } = this.props;
     if (
+      authState === 'success' &&
       alert.state === 'success' &&
       userState.group === 'success' &&
       userState.follower === 'success'
@@ -113,7 +157,7 @@ class MainContainer extends Component {
                   </Wall>
                 </section>
                 <aside>
-                  <Discover tendencyRepo={tendencyRepo} />
+                  <Discover tendencyRepo={recommends} />
                 </aside>
               </article>
             </>
@@ -125,6 +169,7 @@ class MainContainer extends Component {
   }
 }
 const mapStateToProps = state => ({
+  authState: state.auth.state,
   userInfo: state.auth.userInfo,
   userState: state.user.state,
   info: state.user.info,

@@ -209,7 +209,7 @@ class GroupContainer extends Component {
       handleClick,
       handleClose,
     } = this;
-    const { groupId } = this.props;
+    const { groupId, loggedUserId } = this.props;
     const {
       repositories,
       people,
@@ -219,7 +219,6 @@ class GroupContainer extends Component {
       cropper,
       displayColorPicker,
     } = this.state;
-    const loggedUser = JSON.parse(localStorage.getItem('userInfo')).user_id;
 
     switch (menu) {
       case 'people':
@@ -227,7 +226,7 @@ class GroupContainer extends Component {
       case 'settings':
         return (
           <Setting
-            loggedUser={loggedUser}
+            loggedUser={loggedUserId}
             cropper={cropper}
             modify={modify}
             displayColorPicker={displayColorPicker}
@@ -257,8 +256,9 @@ class GroupContainer extends Component {
   render() {
     const { renderMenu } = this;
     const { state, info } = this.state;
-    const { url, menu, groupId } = this.props;
+    const { url, menu, authState, groupId } = this.props;
     if (
+      authState === 'success' &&
       state.info === 'success' &&
       state.repositories === 'success' &&
       state.people === 'success'
@@ -273,7 +273,10 @@ class GroupContainer extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  authState: state.auth.state,
+  loggedUserId: state.auth.userInfo.user_id,
+});
 
 const mapDispatchToProps = dispatch => ({});
 

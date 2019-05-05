@@ -34,22 +34,18 @@ export const DropdownMenu = ({
     </div>
   );
 
-export const DropdownMenuList = ({
-  children,
-  posRight = '80%',
-  minWidth = '140px',
-}) => (
+export const DropdownMenuList = ({ children }) => (
   <div className={styles.wrapper}>
-    <div className={styles.menu} style={{ right: posRight, minWidth }}>
-      {children}
-    </div>
+    <div className={styles.menu}>{children}</div>
   </div>
 );
 
-export const DropdownTrigger = ({ caret, children }) => (
+export const DropdownTrigger = ({ caret, message, children }) => (
   <summary>
     {children}
     {caret && <span className={styles.carrot} />}
+    {message && <span className={styles.message} />}
+    {!caret && !message && <span className={styles.toggle} />}
   </summary>
 );
 

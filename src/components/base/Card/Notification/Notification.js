@@ -32,9 +32,9 @@ const Notification = ({ notify, loggedUserId }) => {
             notification(notify_cont, loggedUserId, sendingUser, notifyData)
               .label
           }
-        </div>
-        <div className={styles.date}>
-          <TimeAgo date={created_at} formatter={formatter} />
+          <div className={styles.date}>
+            <TimeAgo date={created_at} formatter={formatter} />
+          </div>
         </div>
       </div>
       <div className={styles.detail}>
@@ -73,7 +73,7 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
           ) : (
             <span>
               님이 <Link to={`/user/${target_id}`}>{notifyData.user_name}</Link>
-              을 팔로우하고 있습니다.
+              사용자를 팔로우하고 있습니다.
             </span>
           ),
         component:
@@ -98,6 +98,14 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
               <div>{`${follower} followers`}</div>
             </Detail>
           ),
+        path:
+          loggedUserId === notifyData.target_id
+            ? `/user/${sendingUser.send_id}`
+            : `/user/${target_id}`,
+        string:
+          loggedUserId === notifyData.target_id
+            ? `님이 당신을 팔로우하고 있습니다.`
+            : `님이 ${notifyData.user_name} 사용자를 팔로우하고 있습니다.`,
       };
     case 'create':
       return {
@@ -120,6 +128,8 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
             <div>{`${project_hits} hits`}</div>
           </Detail>
         ),
+        path: `/user/${user_id}/repositories/${target_id}`,
+        string: `님이 ${project_topic} 주제로 생각하고 있습니다.`,
       };
     case 'like':
       return {
@@ -142,6 +152,8 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
             <div>{`${project_hits} hits`}</div>
           </Detail>
         ),
+        path: `/user/${user_id}/repositories/${target_id}`,
+        string: `님이 ${project_topic} 주제를 좋아합니다.`,
       };
     case 'fork':
       return {
@@ -164,6 +176,8 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
             <div>{`${project_hits} hits`}</div>
           </Detail>
         ),
+        path: `/user/${user_id}/repositories/${target_id}`,
+        string: `님이 ${project_topic}에서 당신의 생각을 참조하였습니다.`,
       };
     default:
       return null;
@@ -196,6 +210,43 @@ const Detail = ({ thumbnail, path, name, intro, children }) => {
       <div className={styles.intro}>{intro}</div>
       <div className={styles.option}>{children}</div>
     </div>
+  );
+};
+
+export const HeaderNotify = ({ notify, loggedUserId }) => {
+  const { notify_cont, created_at, send_id, send, target_id, target } = notify;
+  const sendingUser = {
+    send_id,
+    ...send,
+  };
+  const notifyData = {
+    target_id,
+    ...target,
+  };
+  return (
+    <Link
+      to={notification(notify_cont, loggedUserId, sendingUser, notifyData).path}
+    >
+      <div className={styles.headerNotify}>
+        <div className={styles.header}>
+          <div className={styles.img}>
+            <img src={send.user_img} alt={send.user_name} />
+          </div>
+          <div className={styles.activity}>
+            <b>{send.user_name}</b>
+            <span>
+              {
+                notification(notify_cont, loggedUserId, sendingUser, notifyData)
+                  .string
+              }
+            </span>
+            <div className={styles.date}>
+              <TimeAgo date={created_at} formatter={formatter} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
 

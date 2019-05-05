@@ -144,7 +144,6 @@ class CanvasContainer extends Component {
       head: forkedIdea.idea_cont,
       parentOf: [],
     };
-    console.log(newNode);
     MindmapActions.createIdeaRequest(newNode);
     AlertActions.sendNotify({
       type: 'fork',

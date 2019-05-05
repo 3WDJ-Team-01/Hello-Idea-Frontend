@@ -20,7 +20,7 @@ class ExploreContainer extends Component {
   };
 
   componentDidMount() {
-    const { ExploreActions, RecommendActions } = this.props;
+    const { loggedUserId, ExploreActions, RecommendActions } = this.props;
     const { shuffleNews } = this;
     ExploreActions.crawlingRequest().then(() => {
       this.setState(
@@ -30,9 +30,32 @@ class ExploreContainer extends Component {
         }),
       );
     });
-    if (localStorage.getItem('userInfo')) {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      RecommendActions.withTendencyRequest(userInfo.user_id).then(() => {
+
+    if (loggedUserId) {
+      RecommendActions.withTendencyRequest(loggedUserId).then(() => {
+        this.setState(
+          produce(draft => {
+            const { recommendsTendency } = this.props;
+            draft.recommendsTendency = recommendsTendency;
+          }),
+        );
+      });
+      RecommendActions.withPopularRequest().then(() => {
+        this.setState(
+          produce(draft => {
+            const { recommendsPopular } = this.props;
+            draft.recommendsPopular = recommendsPopular;
+          }),
+        );
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { loggedUserId, RecommendActions } = this.props;
+
+    if (prevProps.loggedUserId !== loggedUserId) {
+      RecommendActions.withTendencyRequest(loggedUserId).then(() => {
         this.setState(
           produce(draft => {
             const { recommendsTendency } = this.props;
@@ -67,9 +90,10 @@ class ExploreContainer extends Component {
   };
 
   render() {
-    const { exploreState, recommendState } = this.props;
+    const { authState, exploreState, recommendState } = this.props;
     const { news, recommendsTendency, recommendsPopular } = this.state;
     if (
+      authState === 'success' &&
       exploreState === 'success' &&
       recommendState.tendency === 'success' &&
       recommendState.popular === 'success'
@@ -107,6 +131,8 @@ class ExploreContainer extends Component {
 }
 
 const mapStateToProps = state => ({
+  authState: state.auth.state,
+  loggedUserId: state.auth.userInfo.user_id,
   exploreState: state.explore.state,
   recommendState: state.recommend.state,
   news: state.explore.news,

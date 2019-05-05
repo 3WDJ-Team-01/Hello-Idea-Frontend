@@ -1,0 +1,15 @@
+@import '~styles/utils.scss';
+
+.alertWrapper {
+  max-width: $app_width;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 3rem;
+  display: flex;
+  @include media('<medium') {
+    max-width: 768px;
+    margin-top: 2rem;
+    width: 95%;
+    display: block;
+  }
+}

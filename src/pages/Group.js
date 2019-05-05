@@ -6,7 +6,7 @@ const Main = ({ match, history }) => {
   return (
     <PageTemplate history={history}>
       <GroupContainer
-        groupId={match.params.group}
+        groupId={parseInt(match.params.group, 10)}
         menu={match.params.menu}
         url={match.url}
       />

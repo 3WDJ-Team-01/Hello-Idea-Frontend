@@ -145,9 +145,26 @@
     }
   }
 }
-
+.menus {
+  font-size: 1.5rem;
+  color: white;
+  .more {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    a {
+      color: $primary;
+    }
+  }
+}
+.dropdown {
+  position: relative;
+  .item {
+    padding: 0.5rem;
+  }
+}
 .dropdown + .dropdown {
-  margin-left: 1.5rem;
+  margin-left: 1rem;
 }
 .logout {
   margin-left: auto;

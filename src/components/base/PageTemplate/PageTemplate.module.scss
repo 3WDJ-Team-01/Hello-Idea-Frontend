@@ -1,6 +1,6 @@
 @import '~styles/utils.scss';
 
 .App {
-  min-height: calc(100vh - $headerHeight);
+  min-height: calc(100vh - 4rem);
   height: 100%;
 }

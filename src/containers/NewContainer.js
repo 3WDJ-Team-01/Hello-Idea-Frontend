@@ -1,10 +1,12 @@
+/* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
-import New from 'components/repository/New';
 import produce from 'immer';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import New from 'components/repository/New';
+import ProgressIndicator from 'components/base/ProgressIndicator';
 import * as userActions from 'store/modules/user';
 import * as repositoryActions from 'store/modules/repository';
 import * as alertActions from 'store/modules/alert';
@@ -17,9 +19,21 @@ class NewContainer extends Component {
   };
 
   componentDidMount() {
-    const { UserActions } = this.props;
-    if (localStorage.getItem('userInfo')) {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const { userInfo, UserActions } = this.props;
+    if (userInfo.user_id) {
+      UserActions.targetGroupsRequest(userInfo.user_id);
+      this.setState(
+        produce(draft => {
+          draft.author_id = userInfo.user_id;
+        }),
+      );
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { userInfo, UserActions } = this.props;
+
+    if (prevProps.userInfo.user_id !== userInfo.user_id) {
       UserActions.targetGroupsRequest(userInfo.user_id);
       this.setState(
         produce(draft => {
@@ -39,18 +53,18 @@ class NewContainer extends Component {
 
   handleSubmit = () => {
     const {
+      userInfo,
       RepositoryActions,
       AlertActions,
       loggedUserFollowers,
       history,
     } = this.props;
     const { author_id, name, desc } = this.state;
-    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
 
     const notify = repositoryId => {
       AlertActions.sendNotify({
         type: 'create',
-        send_id: user_id,
+        send_id: userInfo.user_id,
         receive_id: loggedUserFollowers,
         target_id: repositoryId,
       });
@@ -80,23 +94,27 @@ class NewContainer extends Component {
   render() {
     const { handleChange, handleSubmit } = this;
     const { name, desc } = this.state;
-    const { state, groups, userInfo } = this.props;
-    return (
-      <New
-        state={state}
-        groups={groups}
-        userInfo={userInfo}
-        name={name}
-        desc={desc}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />
-    );
+    const { state, authState, groups, userInfo } = this.props;
+
+    if (authState === 'success')
+      return (
+        <New
+          state={state}
+          groups={groups}
+          userInfo={userInfo}
+          name={name}
+          desc={desc}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
+      );
+    return <ProgressIndicator />;
   }
 }
 
 const mapStateToProps = state => ({
   state: state.repository.state,
+  authState: state.auth.state,
   groups: state.user.groups,
   userInfo: state.auth.userInfo,
   project_id: state.repository.info.project_id,

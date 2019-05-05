@@ -23,7 +23,7 @@ const Overview = ({
         </div>
         <div className={styles.tendency}>
           {Object.keys(repositoryCategory).map((category, i) => {
-            if (repositoryCategory[category] > 0)
+            if (repositoryCategory[category] > 5)
               return (
                 <div key={i} className={styles.category}>
                   <MDBIcon

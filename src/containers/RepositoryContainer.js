@@ -24,12 +24,44 @@ class RepositoryContainer extends Component {
   };
 
   componentDidMount() {
-    const { RepositoryActions, repositoryId } = this.props;
-    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
+    const { viewRepository } = this;
+    const { loggedUserId, RepositoryActions, repositoryId } = this.props;
 
+    if (loggedUserId) viewRepository(loggedUserId);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { initialize, viewRepository } = this;
+    const { loggedUserId, repositoryId, RepositoryActions } = this.props;
+
+    if (prevProps.loggedUserId !== loggedUserId) viewRepository(loggedUserId);
+
+    if (prevProps.repositoryId !== repositoryId) {
+      initialize().then(() => {
+        viewRepository(loggedUserId);
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    const { initialize } = this;
+    initialize();
+  }
+
+  /* === Actions start === */
+
+  initialize = () =>
+    new Promise((res, rej) => {
+      const { RepositoryActions } = this.props;
+      RepositoryActions.initialize();
+      res();
+    });
+
+  viewRepository = loggedUserId => {
+    const { RepositoryActions, repositoryId } = this.props;
     axios
       .post('/api/project/hit/', {
-        user_id,
+        user_id: loggedUserId,
         project_id: repositoryId,
       })
       .then(() => {
@@ -40,55 +72,13 @@ class RepositoryContainer extends Component {
               draft.name = repositoryInfo.project_topic;
               draft.description = repositoryInfo.project_intro;
               likedUsers.map(user => {
-                if (user.user_id == user_id) draft.isLiked = true;
+                if (user.user_id == loggedUserId) draft.isLiked = true;
               });
             }),
           );
         });
       });
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { initialize } = this;
-    const { repositoryId, RepositoryActions } = this.props;
-    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
-
-    if (prevProps.repositoryId !== repositoryId) {
-      initialize().then(() => {
-        axios
-          .post('/api/project/hit/', {
-            user_id,
-            project_id: repositoryId,
-          })
-          .then(() => {
-            RepositoryActions.getRequest(repositoryId).then(() => {
-              const { repositoryInfo, likedUsers } = this.props;
-              this.setState(
-                produce(draft => {
-                  draft.name = repositoryInfo.project_topic;
-                  draft.description = repositoryInfo.project_intro;
-                  likedUsers.map(user => {
-                    if (user.user_id == user_id) draft.isLiked = true;
-                  });
-                }),
-              );
-            });
-          });
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    const { initialize } = this;
-    initialize();
-  }
-
-  initialize = () =>
-    new Promise((res, rej) => {
-      const { RepositoryActions } = this.props;
-      RepositoryActions.initialize();
-      res();
-    });
+  };
 
   handleStar = () => {
     const {
@@ -96,15 +86,15 @@ class RepositoryContainer extends Component {
       AlertActions,
       authorId,
       repositoryId,
+      loggedUserId,
       loggedUserFollowers,
     } = this.props;
-    const { user_id } = JSON.parse(localStorage.getItem('userInfo'));
     const { isLiked } = this.state;
 
     if (isLiked) {
       axios
         .post('/api/project/like/delete/', {
-          user_id,
+          user_id: loggedUserId,
           project_id: repositoryId,
         })
         .then(() => {
@@ -119,13 +109,13 @@ class RepositoryContainer extends Component {
     } else {
       axios
         .post('/api/project/like/', {
-          user_id,
+          user_id: loggedUserId,
           project_id: repositoryId,
         })
         .then(() => {
           AlertActions.sendNotify({
             type: 'like',
-            send_id: user_id,
+            send_id: loggedUserId,
             receive_id: [parseInt(authorId, 10), ...loggedUserFollowers],
             target_id: repositoryId,
           });
@@ -185,6 +175,8 @@ class RepositoryContainer extends Component {
     } else return;
   };
 
+  /* === Actions end === */
+
   renderMenu = menu => {
     const { handleChange, handleSubmit, handleRemove } = this;
     const {
@@ -226,11 +218,12 @@ class RepositoryContainer extends Component {
       url,
       menu,
       repositoryId,
+      authState,
       state,
       author,
       repositoryInfo,
     } = this.props;
-    if (state.read === 'success')
+    if (authState === 'success' && state.read === 'success')
       return (
         <>
           <Header
@@ -251,9 +244,10 @@ class RepositoryContainer extends Component {
 
 const mapStateToProps = state => ({
   state: state.repository.state,
+  authState: state.auth.state,
+  loggedUserId: state.auth.userInfo.user_id,
   loggedUserFollowers: state.auth.relation.followersId,
   groups: state.user.groups,
-  userInfo: state.auth.userInfo,
   author: state.repository.author,
   repositoryInfo: state.repository.info,
   repositoryCategory: state.repository.category,

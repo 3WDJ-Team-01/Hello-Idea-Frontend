@@ -6,7 +6,7 @@ const Auth = ({ match, history }) => {
   return (
     <PageTemplate history={history}>
       <UserContainer
-        user={match.params.user}
+        user={parseInt(match.params.user, 10)}
         menu={match.params.menu}
         url={match.url}
       />

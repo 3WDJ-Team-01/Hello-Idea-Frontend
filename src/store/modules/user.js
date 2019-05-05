@@ -200,15 +200,10 @@ export default handleActions(
       }),
     [REPOSITORIES_SUCCESS]: (state, action) =>
       produce(state, draft => {
-        const all = [];
-        for (const category in action.payload) {
-          for (const repository in action.payload[category])
-            all.push(action.payload[category][repository]);
-        }
         draft.state.repositories = 'success';
         draft.repositories = {
-          ...action.payload,
-          all,
+          ...action.payload.category_project,
+          all: action.payload.all_project,
         };
       }),
     [REPOSITORIES_FAILURE]: (state, action) =>

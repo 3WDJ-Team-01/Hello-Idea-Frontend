@@ -14,6 +14,7 @@ const WS_SEND = 'alert/WS_SEND';
 const CHECK_ALERTS = 'alert/CHECK_ALERTS';
 const ADD_NOTIFICATIONS = 'alert/ADD_NOTIFICATIONS';
 const ADD_REQUESTS = 'alert/ADD_REQUESTS';
+const READ_ALL_NOTIFICATIONS = 'alert/READ_ALL_NOTIFICATIONS';
 
 export const wsOpen = createAction(WS_OPEN);
 export const wsMessage = createAction(WS_MESSAGE);
@@ -22,6 +23,7 @@ export const wsSend = createAction(WS_SEND);
 export const checkAlerts = createAction(CHECK_ALERTS);
 export const addNotifications = createAction(ADD_NOTIFICATIONS);
 export const addRequests = createAction(ADD_REQUESTS);
+export const readAllNotifications = createAction(READ_ALL_NOTIFICATIONS);
 
 export const connectToWebsocket = user_id => dispatch => {
   const ws = new WebSocket(`${url}/${user_id}/`);
@@ -33,7 +35,6 @@ export const connectToWebsocket = user_id => dispatch => {
   };
   ws.onmessage = receive => {
     const { id, message } = JSON.parse(receive.data);
-
     axios.post('/api/check/', { user_id }).then(({ data }) => {
       if (message === 'notifications') {
         const { notifications } = data;
@@ -50,6 +51,15 @@ export const connectToWebsocket = user_id => dispatch => {
   };
 
   // dispatch(wsOnmessage(onMessage));
+};
+
+export const readAllNotificationsRequest = user_id => dispatch => {
+  axios.post('/api/notify/all/read/', { user_id }).then(() => {
+    dispatch(readAllNotifications());
+    axios.post('/api/check/', { user_id }).then(({ data }) => {
+      dispatch(checkAlerts(data));
+    });
+  });
 };
 
 /**
@@ -72,7 +82,6 @@ export const sendNotify = ({
   const receive_list = receive_id.filter(
     (item, index) => receive_id.indexOf(item) === index,
   );
-
   axios.post('/api/notify/send/', {
     send_id,
     receive_id: receive_list,
@@ -84,6 +93,7 @@ export const sendNotify = ({
 const initialState = {
   state: '',
   websocket: null,
+  newMessage: false,
   notifications: [],
   requests: [],
 };
@@ -101,12 +111,21 @@ export default handleActions(
         draft.state = 'success';
         notifications.map(notify => {
           draft.notifications.push(notify);
+          if (!notify.read_at) draft.newMessage = true;
         });
         draft.requests = action.payload.requests;
       }),
     [ADD_NOTIFICATIONS]: (state, action) =>
       produce(state, draft => {
-        draft.notifications.unshift(action.payload);
+        const notify = action.payload;
+
+        draft.notifications.unshift(notify);
+        if (!notify.read_at) draft.newMessage = true;
+        else draft.newMessage = false;
+      }),
+    [READ_ALL_NOTIFICATIONS]: state =>
+      produce(state, draft => {
+        draft.newMessage = false;
       }),
   },
   initialState,
