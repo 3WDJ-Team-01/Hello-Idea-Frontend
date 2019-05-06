@@ -42,7 +42,6 @@ class CanvasContainer extends Component {
       MindmapActions,
       setViewBoxLocation,
     } = this.props;
-
     if (!pointer.state.isDown || e.target.contentEditable) return;
 
     e.preventDefault();
@@ -72,7 +71,6 @@ class CanvasContainer extends Component {
     const { getPointFromEvent } = this;
     const { pointer, nodes, pointerUp, MindmapActions } = this.props;
     const pointerPosition = getPointFromEvent(e);
-
     if (
       pointer.target.nodeId !== 0 &&
       pointer.state.isDrag &&

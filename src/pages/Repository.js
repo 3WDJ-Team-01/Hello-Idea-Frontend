@@ -7,7 +7,7 @@ const Main = ({ match, history }) => {
     <PageTemplate history={history}>
       <RepositoryContainer
         authorId={parseInt(match.params.author, 10)}
-        menu={match.params.menu}
+        menu={match.url.split('/')[5]}
         url={match.url}
         repositoryId={parseInt(match.params.repository, 10)}
         history={history}

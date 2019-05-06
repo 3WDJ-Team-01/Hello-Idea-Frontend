@@ -7,8 +7,8 @@ const Node = ({ head, index, location, size, color, pointer, isForked }) => {
       <rect
         x={location.x - size.width / 2}
         y={location.y - size.height / 2}
-        rx="10"
-        ry="10"
+        rx={index > 0 ? '10' : 0}
+        ry={index > 0 ? '10' : 0}
         width={size.width}
         height={size.height}
         filter={pointer.state.isDrag ? '' : 'url(#shadow-2dp)'}
@@ -55,8 +55,8 @@ const Node = ({ head, index, location, size, color, pointer, isForked }) => {
         className={isForked > 0 ? 'forked' : 'node'}
         x={location.x - size.width / 2}
         y={location.y - size.height / 2}
-        rx="10"
-        ry="10"
+        rx={index > 0 ? '10' : 0}
+        ry={index > 0 ? '10' : 0}
         width={size.width}
         height={size.height}
         filter={pointer.state.isDrag ? '' : 'url(#shadow-2dp)'}

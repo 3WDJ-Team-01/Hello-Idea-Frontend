@@ -217,10 +217,12 @@ class RepositoryContainer extends Component {
     const {
       url,
       menu,
+      loggedUserId,
       repositoryId,
       authState,
       state,
       author,
+      authorId,
       repositoryInfo,
     } = this.props;
     if (authState === 'success' && state.read === 'success')
@@ -230,6 +232,8 @@ class RepositoryContainer extends Component {
             url={url}
             menu={menu}
             author={author}
+            authorId={authorId}
+            loggedUserId={loggedUserId}
             isLiked={isLiked}
             repositoryId={repositoryId}
             repositoryInfo={repositoryInfo}

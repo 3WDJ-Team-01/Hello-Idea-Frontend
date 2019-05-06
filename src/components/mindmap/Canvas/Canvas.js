@@ -30,6 +30,7 @@ const Canvas = ({
           width,
           height,
           overflow: 'visible',
+          touchAction: 'none',
         }}
         onDragOver={e => {
           e.preventDefault();

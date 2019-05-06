@@ -4,7 +4,7 @@ export { default as User } from './User';
 export { default as Group } from './Group';
 export { default as New } from './New';
 export { default as Repository } from './Repository';
-export { default as Editor } from './Editor';
+export { default as Mindmap } from './Mindmap';
 export { default as Search } from './Search';
 export { default as Explore } from './Explore';
 export { default as Trends } from './Trends';

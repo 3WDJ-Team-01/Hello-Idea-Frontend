@@ -34,111 +34,107 @@ const Header = ({
   const onKeyPress = e => {
     if (e.key === 'Enter') history.push(`/search/${searchTo}`);
   };
-  const Mobile = () => (
-    <div
-      className={styles.mobileMenu}
-      style={{ fontSize: '1.5rem', color: 'white' }}
-    >
-      <MobileWrapper>
-        <MobileTrigger>
-          <MDBIcon icon="bars" />
-        </MobileTrigger>
-        <MobileMenuList posRight="0">
-          <MobileMenu>
-            <div className={styles.item}>
-              <input
-                type="search"
-                className="form-control"
-                placeholder="Search..."
-                className="mobile"
-                value={searchTo}
-                onChange={onChange}
-                onKeyPress={onKeyPress}
-              />
-              <div className={styles.searchResult}>
-                {searchTo && (
-                  <Link to={`/search/${searchTo}`}>
-                    <div>
-                      <MDBIcon icon="search" />
-                      <span>{searchTo}</span>
-                    </div>
-                  </Link>
-                )}
-              </div>
-            </div>
-          </MobileMenu>
-          <MobileMenu isDivider />
-          <MobileMenu path="/trends">
-            <div className={styles.item}>Trends</div>
-          </MobileMenu>
-          <MobileMenu path="/explore">
-            <div className={styles.item}>Explore</div>
-          </MobileMenu>
-          <MobileMenu isDivider />
-          <MobileMenu path={`/user/${userInfo.user_id}`}>
-            <div className={styles.item}>Your profile</div>
-          </MobileMenu>
-          <MobileMenu path={`/user/${userInfo.user_id}/repositories`}>
-            <div className={styles.item}>Your repositories</div>
-          </MobileMenu>
-          <MobileMenu>
-            <div className={styles.item} onClick={onLogout}>
-              Sign out
-            </div>
-          </MobileMenu>
-        </MobileMenuList>
-      </MobileWrapper>
-    </div>
-  );
-  const Main = () => (
-    <div>
-      <Link to="/" className={styles.logo}>
-        <img
-          src="https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/global/logo.png"
-          alt=""
-        />
-
-        <span>HelloIdea</span>
-      </Link>
-
-      <span className={styles.search}>
-        <input
-          type="search"
-          className="form-control"
-          placeholder="Search..."
-          value={searchTo}
-          onChange={onChange}
-          onKeyPress={onKeyPress}
-        />
-        <div className={styles.searchResult}>
-          {searchTo && (
-            <Link to={`/search/${searchTo}`}>
-              <div>
-                <MDBIcon icon="search" />
-                <span>{searchTo}</span>
-              </div>
-            </Link>
-          )}
-        </div>
-      </span>
-
-      <div className={styles.link}>
-        <Link to="/trends" className="headLink">
-          <span>Trends</span>
-        </Link>
-        <Link to="/explore" className="headLink">
-          <span>Explore</span>
-        </Link>
-      </div>
-    </div>
-  );
 
   return (
     <div className={styles.header_wrapper} onClick={onClick}>
       <div className={styles.header}>
-        <Mobile />
-        <Main />
+        {/* Mobile env */}
+        <div
+          className={styles.mobileMenu}
+          style={{ fontSize: '1.5rem', color: 'white' }}
+        >
+          <MobileWrapper>
+            <MobileTrigger>
+              <MDBIcon icon="bars" />
+            </MobileTrigger>
+            <MobileMenuList posRight="0">
+              <MobileMenu>
+                <div className={styles.item}>
+                  <input
+                    type="search"
+                    className="form-control"
+                    placeholder="Search..."
+                    className="mobile"
+                    value={searchTo}
+                    onChange={onChange}
+                    onKeyPress={onKeyPress}
+                  />
+                  <div className={styles.searchResult}>
+                    {searchTo && (
+                      <Link to={`/search/${searchTo}`}>
+                        <div>
+                          <MDBIcon icon="search" />
+                          <span>{searchTo}</span>
+                        </div>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </MobileMenu>
+              <MobileMenu isDivider />
+              <MobileMenu path="/trends">
+                <div className={styles.item}>Trends</div>
+              </MobileMenu>
+              <MobileMenu path="/explore">
+                <div className={styles.item}>Explore</div>
+              </MobileMenu>
+              <MobileMenu isDivider />
+              <MobileMenu path={`/user/${userInfo.user_id}`}>
+                <div className={styles.item}>Your profile</div>
+              </MobileMenu>
+              <MobileMenu path={`/user/${userInfo.user_id}/repositories`}>
+                <div className={styles.item}>Your repositories</div>
+              </MobileMenu>
+              <MobileMenu>
+                <div className={styles.item} onClick={onLogout}>
+                  Sign out
+                </div>
+              </MobileMenu>
+            </MobileMenuList>
+          </MobileWrapper>
+        </div>
+        {/* Desktop env */}
+        <div>
+          <Link to="/" className={styles.logo}>
+            <img
+              src="https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/global/logo.png"
+              alt=""
+            />
 
+            <span>HelloIdea</span>
+          </Link>
+
+          <span className={styles.search}>
+            <input
+              type="search"
+              className="form-control"
+              placeholder="Search..."
+              value={searchTo}
+              onChange={onChange}
+              onKeyPress={onKeyPress}
+            />
+            <div className={styles.searchResult}>
+              {searchTo && (
+                <Link to={`/search/${searchTo}`}>
+                  <div>
+                    <MDBIcon icon="search" />
+                    <span>{searchTo}</span>
+                  </div>
+                </Link>
+              )}
+            </div>
+          </span>
+
+          <div className={styles.link}>
+            <Link to="/trends" className="headLink">
+              <span>Trends</span>
+            </Link>
+            <Link to="/explore" className="headLink">
+              <span>Explore</span>
+            </Link>
+          </div>
+        </div>
+        {/* Dropdown menus */}
         <div className={styles.menus}>
           <div className={styles.dropdown} onClick={handleReadAlerts}>
             <DropdownWrapper>

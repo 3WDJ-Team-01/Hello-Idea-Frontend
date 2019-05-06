@@ -28,7 +28,10 @@ class HeaderContainer extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {}
+  componentDidUpdate(prevProps, prevState) {
+    const { url } = this.props.match;
+    if (prevProps.match.url !== url) this.checkUser();
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.notifications !== nextProps.notifications) {
@@ -41,12 +44,6 @@ class HeaderContainer extends Component {
     return null;
   }
 
-  getSnapshotBeforeUpdate(prevProps, prevState) {
-    const { pathname } = this.props.history.location;
-    if (prevProps.history.location.pathname !== pathname) this.checkUser();
-    return null;
-  }
-
   checkUser = () => {
     const { history, AuthActions } = this.props;
     if (localStorage.getItem('userInfo')) {
@@ -56,11 +53,8 @@ class HeaderContainer extends Component {
         user_name: userInfo.user_name,
         token: userInfo.token,
       });
-    } else {
-      if (!history.location.pathname.includes('auth')) {
-        history.push('/auth/login');
-      }
-      return;
+    } else if (!history.location.pathname.includes('auth')) {
+      history.push('/auth/login');
     }
 
     AuthActions.userRequest();
@@ -74,7 +68,13 @@ class HeaderContainer extends Component {
   };
 
   handleSearch = e => {
-    this.setState({ searchTo: e.currentTarget.value });
+    e.persist();
+
+    this.setState(
+      produce(draft => {
+        draft.searchTo = e.target.value;
+      }),
+    );
   };
 
   handleDropdown = e => {
@@ -106,7 +106,7 @@ class HeaderContainer extends Component {
     } = this;
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     const { pathname } = history.location;
-    const targetURL = /(auth|editor)/;
+    const targetURL = /(auth|editor|viewer)/;
 
     if (targetURL.test(pathname) || !userInfo) return null;
     return (

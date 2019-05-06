@@ -54,7 +54,7 @@ const LoginForm = ({
           아직 계정이 없으신가요?
         </Link>
       </div>
-      <div className={styles.divider_wrapper}>
+      {/* <div className={styles.divider_wrapper}>
         <div className={styles.divider} />
         <div>or</div>
         <div className={styles.divider} />
@@ -66,7 +66,7 @@ const LoginForm = ({
         <Link to="/*" className={styles.button}>
           <GoogleLoginButton />
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

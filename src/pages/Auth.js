@@ -5,7 +5,7 @@ import AuthContainer from 'containers/AuthContainer';
 const Auth = ({ match }) => {
   return (
     <PageTemplate isHidden>
-      <AuthContainer kind={match.params.kind} />
+      <AuthContainer kind={match.url.split('/')[2]} />
     </PageTemplate>
   );
 };

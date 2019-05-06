@@ -30,7 +30,7 @@ export const connectToWebsocket = user_id => dispatch => {
   ws.onopen = () => {
     dispatch(wsOpen(ws));
     axios.post('/api/check/', { user_id }).then(({ data }) => {
-      dispatch(checkAlerts(data));
+      dispatch(checkAlerts({ data, user_id }));
     });
   };
   ws.onmessage = receive => {
@@ -42,8 +42,7 @@ export const connectToWebsocket = user_id => dispatch => {
           ({ notify_id }) => notify_id === id,
         );
         const notify = notifications[notifyIndex];
-
-        dispatch(addNotifications(notify));
+        if (notify.send_id !== user_id) dispatch(addNotifications(notify));
       } else if (message === 'requests') {
         // dispatch(addRequests(request));
       }
@@ -57,7 +56,7 @@ export const readAllNotificationsRequest = user_id => dispatch => {
   axios.post('/api/notify/all/read/', { user_id }).then(() => {
     dispatch(readAllNotifications());
     axios.post('/api/check/', { user_id }).then(({ data }) => {
-      dispatch(checkAlerts(data));
+      dispatch(checkAlerts({ data, user_id }));
     });
   });
 };
@@ -107,12 +106,16 @@ export default handleActions(
       }),
     [CHECK_ALERTS]: (state, action) =>
       produce(state, draft => {
-        const { notifications, requests } = action.payload;
+        console.log(action.payload.data);
+        const { user_id } = action.payload;
+        const { notifications, requests } = action.payload.data;
         draft.state = 'success';
-        notifications.map(notify => {
-          draft.notifications.push(notify);
-          if (!notify.read_at) draft.newMessage = true;
-        });
+        notifications
+          .filter(item => item.send_id !== user_id)
+          .map(notify => {
+            draft.notifications.push(notify);
+            if (!notify.read_at) draft.newMessage = true;
+          });
         draft.requests = action.payload.requests;
       }),
     [ADD_NOTIFICATIONS]: (state, action) =>

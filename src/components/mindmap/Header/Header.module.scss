@@ -3,7 +3,7 @@
 .brainHeader {
   margin: 0 auto;
   padding: 0 3%;
-  height: 4rem;
+  min-height: 4rem;
   width: 100%;
   position: absolute;
   top: 0;
@@ -15,7 +15,6 @@
   > div {
     display: flex;
     align-items: center;
-    line-height: 1rem;
   }
 }
 .brainLeftHeader {
@@ -28,10 +27,7 @@
     color: white;
     font-size: 1.5rem;
     @include media('<medium') {
-      font-size: 1.3rem;
-    }
-    @media (max-width: 325px) {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
   }
   .groupName {
@@ -52,16 +48,19 @@
 /**/
 .brainRightHeader {
   font-size: 2rem;
+
+  @include media('<medium') {
+    position: absolute;
+    right: 3%;
+    top: 5rem;
+  }
   button {
     margin: 0;
     padding: 0.7rem 1.7rem;
+    width: 100%;
     @include media('<medium') {
       padding: 0.5rem 1.3rem;
-      width: 50px;
-    }
-    @media (max-width: 325px) {
-      padding: 0.5rem 0.7rem;
-      width: 30px;
+      width: 7.5rem;
     }
   }
   span {

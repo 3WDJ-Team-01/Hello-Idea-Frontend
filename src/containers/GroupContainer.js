@@ -29,6 +29,12 @@ class GroupContainer extends Component {
     },
     repositories: {
       all: [],
+      Economy: [],
+      It: [],
+      Life: [],
+      Politics: [],
+      Society: [],
+      Sport: [],
     },
     people: [],
     filter: 'all',
@@ -54,16 +60,10 @@ class GroupContainer extends Component {
       .then(res => {
         this.setState(
           produce(draft => {
-            const all = [];
-            Object.keys(res.data).map(category => {
-              res.data[category].map(repo => {
-                all.push(repo);
-              });
-            });
             draft.state.repositories = 'success';
             draft.repositories = {
-              ...res.data,
-              all,
+              ...res.data.category_project,
+              all: res.data.all_project,
             };
           }),
         );

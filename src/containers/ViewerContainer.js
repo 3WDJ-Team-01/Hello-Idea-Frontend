@@ -1,6 +1,4 @@
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable no-shadow */
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -14,10 +12,8 @@ import ProgressIndicator from 'components/base/ProgressIndicator';
 import Path from 'components/mindmap/Path';
 import Header from 'components/mindmap/Header';
 import Footer from 'components/mindmap/Footer';
-import AsideContainer from './Editor/AsideContainer';
-import CanvasContainer from './Editor/CanvasContainer';
-import ContextMenuContainer from './Editor/ContextMenuContainer';
-import NodeContainer from './Editor/NodeContainer';
+import CanvasContainer from './Viewer/CanvasContainer';
+import NodeContainer from './Viewer/NodeContainer';
 
 class App extends Component {
   constructor(props) {
@@ -85,17 +81,6 @@ class App extends Component {
     setSVG(svg);
     createSVGPoint(svg);
     setViewBoxBaseVal(svg);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { repositoryInfo } = this.state;
-    const { loggedUserId, history } = this.props;
-    if (repositoryInfo.user_id && loggedUserId)
-      if (repositoryInfo.user_id !== loggedUserId) {
-        const { origin } = window.location;
-        const { pathname } = history.location;
-        history.replace('viewer');
-      }
   }
 
   componentWillUnmount() {
@@ -229,104 +214,6 @@ class App extends Component {
     );
   };
 
-  /* Toggle Actions */
-  toggleContextMenu = event => {
-    event.persist();
-    const { pointer } = this.state;
-
-    this.setState(
-      produce(draft => {
-        if (event.button === 0) draft.contextMenu.mode = null;
-        else if (event.button === 2) {
-          if (event.target.id === '0') draft.contextMenu.mode = 'root';
-          else
-            draft.contextMenu.mode =
-              event.target.className.baseVal && event.target.className.baseVal;
-          draft.contextMenu.location = pointer.currLoc;
-          draft.pointer.state.isDown = false;
-          draft.pointer.state.isDrag = false;
-        }
-      }),
-    );
-  };
-
-  toggleInfo = forkedId => {
-    this.setState(
-      produce(draft => {
-        draft.info = {
-          state: 'pending',
-          isActivated: true,
-          data: {},
-        };
-      }),
-    );
-    axios
-      .post('/api/idea/info/', { is_forked: forkedId })
-      .then(({ data }) => {
-        this.setState(
-          produce(draft => {
-            draft.info = {
-              state: 'success',
-              isActivated: true,
-              data,
-            };
-          }),
-        );
-      })
-      .catch(() => {
-        this.setState(
-          produce(draft => {
-            draft.explore.state = 'failure';
-          }),
-        );
-      });
-  };
-
-  toggleExplore = (id = 0) => {
-    const nodeId = id || 0;
-    const { nodes, repositoryId } = this.props;
-    const index = nodes.findIndex(node => node.id === nodeId);
-
-    this.setState(
-      produce(draft => {
-        draft.explore = {
-          state: 'pending',
-          isActivated: true,
-          targetNode: nodes[index],
-          results: [],
-        };
-      }),
-    );
-
-    axios
-      .post('/api/idea/search/', {
-        idea_cont: nodes[index].head,
-        project_id: repositoryId,
-      })
-      .then(({ data }) => {
-        const ideas = [];
-        this.setState(
-          produce(draft => {
-            draft.explore.state = 'success';
-            draft.explore.results = data;
-            data.forEach(section => {
-              section.Idea.forEach(idea => {
-                ideas.push(idea);
-              });
-            });
-            draft.explore.ideas = ideas;
-          }),
-        );
-      })
-      .catch(() => {
-        this.setState(
-          produce(draft => {
-            draft.explore.state = 'failure';
-          }),
-        );
-      });
-  };
-
   /* Export Mindmap PNG Image   */
   exportMindmap = targetDOM => {
     const { cavasPins } = this.props;
@@ -369,9 +256,6 @@ class App extends Component {
       pointerUp,
       pointerDown,
       pointerMove,
-      toggleContextMenu,
-      toggleInfo,
-      toggleExplore,
       exportMindmap,
       handleCanvasZoom,
       handleMouseWheel,
@@ -422,7 +306,6 @@ class App extends Component {
           pointerUp={pointerUp}
           pointerDown={pointerDown}
           pointerMove={pointerMove}
-          toggleContextMenu={toggleContextMenu}
           handleMouseWheel={handleMouseWheel}
           explore={explore}
           zoom={canvas.zoom}
@@ -467,20 +350,6 @@ class App extends Component {
             </g>
           </g>
         </CanvasContainer>
-        {contextMenu.mode && (
-          <ContextMenuContainer
-            pointer={pointer}
-            mode={contextMenu.mode}
-            location={contextMenu.location}
-            userId={loggedUserId}
-            repositoryId={repositoryId}
-            toggleContextMenu={toggleContextMenu}
-            toggleInfo={toggleInfo}
-            toggleExplore={toggleExplore}
-          />
-        )}
-        {explore.isActivated && <AsideContainer explore={explore} />}
-        {info.isActivated && <AsideContainer info={info} />}
         <Footer
           type={type}
           zoom={canvas.zoom}

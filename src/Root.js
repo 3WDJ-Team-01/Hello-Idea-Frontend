@@ -12,7 +12,7 @@ import {
   NotFound,
   New,
   Repository,
-  Editor,
+  Mindmap,
   Search,
   Explore,
   Trends,
@@ -24,23 +24,55 @@ const Root = () => (
       <>
         <Route path="/" component={HeaderContainer} />
         <Switch>
+          {/* Main page */}
           <Route path="/" exact component={Main} />
+          {/* Alert page */}
           <Route path="/alert" exact component={Alert} />
+          {/* Search page */}
           <Route path="/search/:searchTo" exact component={Search} />
-          <Route path="/auth/:kind" exact component={Auth} />
+          {/* Auth page */}
+          <Route path="/auth/login" exact component={Auth} />
+          <Route path="/auth/register" exact component={Auth} />
+          {/* Trends page */}
           <Route path="/trends/:searchTo" exact component={Trends} />
           <Route path="/trends" exact component={Trends} />
+          {/* Explore page */}
           <Route path="/explore" exact component={Explore} />
-          <Route path="/user/:user/new" exact component={New} />
-          <Route path="/user/:user/:menu" exact component={User} />
+          {/* User page */}
+          <Route path="/user/:user/repositories" exact component={User} />
+          <Route path="/user/:user/followers" exact component={User} />
+          <Route path="/user/:user/followings" exact component={User} />
+          <Route path="/user/:user/groups" exact component={User} />
+          <Route path="/user/:user/modify" exact component={User} />
           <Route path="/user/:user" exact component={User} />
+          {/* Group page */}
+          <Route path="/group/:group/people" exact component={Group} />
+          <Route path="/group/:group/settings" exact component={Group} />
+          <Route path="/group/:group" exact component={Group} />
+          {/* Mindmap page */}
           <Route
             path="/user/:author/repositories/:repository/editor"
             exact
-            component={Editor}
+            component={Mindmap}
           />
           <Route
-            path="/user/:author/repositories/:repository/:menu"
+            path="/user/:author/repositories/:repository/viewer"
+            exact
+            component={Mindmap}
+          />
+          <Route
+            path="/group/:author/repositories/:repository/editor"
+            exact
+            component={Mindmap}
+          />
+          <Route
+            path="/group/:author/repositories/:repository/viewer"
+            exact
+            component={Mindmap}
+          />
+          {/* Repository page */}
+          <Route
+            path="/user/:author/repositories/:repository/settings"
             exact
             component={Repository}
           />
@@ -49,15 +81,8 @@ const Root = () => (
             exact
             component={Repository}
           />
-          <Route path="/group/:group/:menu" exact component={Group} />
-          <Route path="/group/:group" exact component={Group} />
           <Route
-            path="/group/:author/repositories/:repository/editor"
-            exact
-            component={Editor}
-          />
-          <Route
-            path="/group/:author/repositories/:repository/:menu"
+            path="/group/:author/repositories/:repository/settings"
             exact
             component={Repository}
           />
@@ -66,6 +91,9 @@ const Root = () => (
             exact
             component={Repository}
           />
+          {/* New page */}
+          <Route path="/user/:user/new" exact component={New} />
+          {/* NotFound page */}
           <Route component={NotFound} />
         </Switch>
       </>

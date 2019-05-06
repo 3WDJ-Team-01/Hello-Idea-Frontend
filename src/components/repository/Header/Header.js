@@ -9,6 +9,8 @@ const Header = ({
   url,
   menu,
   author,
+  authorId,
+  loggedUserId,
   isLiked,
   repositoryId,
   repositoryInfo,
@@ -81,23 +83,25 @@ const Header = ({
             >
               <div className={styles.MyPageOverview}>Overview</div>
             </Link>
-            <Link
-              to={`/user/${
-                repositoryInfo.user_id
-              }/repositories/${repositoryId}/settings`}
-              style={
-                menu === 'settings'
-                  ? {
-                      borderTop: `3px solid #4285f4`,
-                      borderBottom: 'none',
-                      backgroundColor: 'white',
-                      fontWeight: 500,
-                    }
-                  : { border: 'none' }
-              }
-            >
-              <div className={styles.MyPageRepositories}>Settings</div>
-            </Link>
+            {authorId === loggedUserId ? (
+              <Link
+                to={`/user/${
+                  repositoryInfo.user_id
+                }/repositories/${repositoryId}/settings`}
+                style={
+                  menu === 'settings'
+                    ? {
+                        borderTop: `3px solid #4285f4`,
+                        borderBottom: 'none',
+                        backgroundColor: 'white',
+                        fontWeight: 500,
+                      }
+                    : { border: 'none' }
+                }
+              >
+                <div className={styles.MyPageRepositories}>Settings</div>
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>

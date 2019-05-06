@@ -7,7 +7,7 @@ const Main = ({ match, history }) => {
     <PageTemplate history={history}>
       <GroupContainer
         groupId={parseInt(match.params.group, 10)}
-        menu={match.params.menu}
+        menu={match.url.split('/')[3]}
         url={match.url}
       />
     </PageTemplate>

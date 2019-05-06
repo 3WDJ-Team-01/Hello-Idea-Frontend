@@ -35,6 +35,8 @@ class AuthContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { history, kind, logged, userInfo, AlertActions } = this.props;
+    const validate = /(login|register)/;
+
     if (prevProps.kind !== kind) {
       this.initialize();
     }
@@ -50,7 +52,7 @@ class AuthContainer extends Component {
       );
       AlertActions.connectToWebsocket(user_id);
       history.push('/');
-    }
+    } else if (!validate.test(kind)) history.push('/auth/login');
   }
 
   initialize = () => {
