@@ -198,7 +198,7 @@ const initialState = {
     update: '',
     delete: '',
   },
-  cavasPins: {
+  canvasPins: {
     leftTop: { x: -window.innerWidth / 2, y: -window.innerHeight / 2 },
     rightBottom: { x: 0, y: 0 },
   },
@@ -238,7 +238,7 @@ export default handleActions(
           update: '',
           delete: '',
         };
-        draft.cavasPins = {
+        draft.canvasPins = {
           leftTop: { x: -window.innerWidth / 2, y: -window.innerHeight / 2 },
           rightBottom: { x: 0, y: 0 },
         };
@@ -315,7 +315,7 @@ export default handleActions(
         draft.nodes = nodes;
 
         // Get Path List
-        const prevCanvasPins = state.cavasPins;
+        const prevCanvasPins = state.canvasPins;
         draft.paths = [];
         for (let i = nodes.length - 1; i > -1; i--) {
           const parentIndex = nodes.findIndex(
@@ -325,15 +325,15 @@ export default handleActions(
           const start = nodes[parentIndex];
           const end = nodes[i];
           if (end.location.x < prevCanvasPins.leftTop.x) {
-            prevCanvasPins.leftTop.x = end.location.x;
+            prevCanvasPins.leftTop.x = end.location.x - 40;
           } else if (end.location.x > prevCanvasPins.rightBottom.x) {
-            prevCanvasPins.rightBottom.x = end.location.x;
+            prevCanvasPins.rightBottom.x = end.location.x + 200;
           }
 
           if (end.location.y < prevCanvasPins.leftTop.y) {
-            prevCanvasPins.leftTop.y = end.location.y;
+            prevCanvasPins.leftTop.y = end.location.y - 40;
           } else if (end.location.y > prevCanvasPins.rightBottom.y) {
-            prevCanvasPins.rightBottom.y = end.location.y;
+            prevCanvasPins.rightBottom.y = end.location.y + 40;
           }
 
           if (parentIndex > -1) {
@@ -388,7 +388,7 @@ export default handleActions(
       }),
     [GET_PATHS]: (state, action) =>
       produce(state, draft => {
-        const prevCanvasPins = state.cavasPins;
+        const prevCanvasPins = state.canvasPins;
         draft.paths = [];
         for (let i = action.payload.length - 1; i > -1; i--) {
           const parentIndex = action.payload.findIndex(
@@ -579,17 +579,17 @@ export default handleActions(
         draft.nodes[index].location.y = action.payload.location.y;
 
         // adjust canvas horizontal size
-        if (action.payload.location.x < state.cavasPins.leftTop.x) {
-          draft.cavasPins.leftTop.x = action.payload.location.x;
-        } else if (action.payload.location.x > state.cavasPins.rightBottom.x) {
-          draft.cavasPins.rightBottom.x = action.payload.location.x;
+        if (action.payload.location.x < state.canvasPins.leftTop.x) {
+          draft.canvasPins.leftTop.x = action.payload.location.x;
+        } else if (action.payload.location.x > state.canvasPins.rightBottom.x) {
+          draft.canvasPins.rightBottom.x = action.payload.location.x;
         }
 
         // adjust canvas vertical size
-        if (action.payload.location.y < state.cavasPins.leftTop.y) {
-          draft.cavasPins.leftTop.y = action.payload.location.y;
-        } else if (action.payload.location.y > state.cavasPins.rightBottom.y) {
-          draft.cavasPins.rightBottom.y = action.payload.location.y;
+        if (action.payload.location.y < state.canvasPins.leftTop.y) {
+          draft.canvasPins.leftTop.y = action.payload.location.y;
+        } else if (action.payload.location.y > state.canvasPins.rightBottom.y) {
+          draft.canvasPins.rightBottom.y = action.payload.location.y;
         }
         // reset location of the path
         draft.paths.map((path, i) => {

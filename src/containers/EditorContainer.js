@@ -329,12 +329,12 @@ class App extends Component {
 
   /* Export Mindmap PNG Image   */
   exportMindmap = targetDOM => {
-    const { cavasPins } = this.props;
+    const { canvasPins } = this.props;
     const svg = document.querySelector(targetDOM);
     const wrapper = document.querySelector('#canvasFrame');
 
-    svg.viewBox.baseVal.x = cavasPins.leftTop.x - 100;
-    svg.viewBox.baseVal.y = cavasPins.leftTop.y - 100;
+    svg.viewBox.baseVal.x = canvasPins.leftTop.x;
+    svg.viewBox.baseVal.y = canvasPins.leftTop.y;
 
     html2canvas(wrapper).then(canvas => {
       const imgURI = canvas
@@ -394,6 +394,7 @@ class App extends Component {
       explore,
       canvas,
     } = this.state;
+
     return (
       <div
         className="App"
@@ -497,7 +498,7 @@ const mapStateToProps = state => ({
   loggedUserId: state.auth.userInfo.user_id,
   mindmapState: state.mindmap.state,
   repository: state.repository.info,
-  cavasPins: state.mindmap.cavasPins,
+  canvasPins: state.mindmap.canvasPins,
   paths: state.mindmap.paths,
   nodes: state.mindmap.nodes,
 });

@@ -10,11 +10,60 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
+import produce from 'immer';
 import * as mindmapActions from 'store/modules/mindmap';
 import * as alertActions from 'store/modules/alert';
 import Canvas from 'components/mindmap/Canvas';
 
 class CanvasContainer extends Component {
+  constructor(props) {
+    super(props);
+    const { canvasPins } = props;
+    const width =
+      canvasPins.rightBottom.x - canvasPins.leftTop.x < window.screen.width
+        ? window.screen.width
+        : canvasPins.rightBottom.x - canvasPins.leftTop.x;
+    const height =
+      canvasPins.rightBottom.y - canvasPins.leftTop.y < window.screen.height
+        ? window.screen.height
+        : canvasPins.rightBottom.y - canvasPins.leftTop.y;
+    this.state = {
+      originSize: {
+        width: window.screen.width,
+        height: window.screen.height,
+      },
+      changedSize: {
+        width: 0,
+        height: 0,
+      },
+      pins: canvasPins,
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { canvasPins } = nextProps;
+    const { originSize } = prevState;
+    const changedWidth = canvasPins.rightBottom.x - canvasPins.leftTop.x;
+    const changedHeight = canvasPins.rightBottom.y - canvasPins.leftTop.y;
+
+    if (prevState.canvasPins !== nextProps.canvasPins) {
+      return {
+        originSize: {
+          width:
+            changedWidth > window.screen.width
+              ? changedWidth
+              : originSize.width,
+          height:
+            changedHeight > window.screen.height
+              ? changedHeight
+              : originSize.height,
+        },
+      };
+    }
+
+    return null;
+  }
+
   getPointFromEvent = e => {
     e.persist();
 
@@ -48,11 +97,22 @@ class CanvasContainer extends Component {
     pointerMove();
 
     const pointerPosition = getPointFromEvent(e);
+    const changedLocX = pointerPosition.x - pointer.prevLoc.x;
+    const changedLocY = pointerPosition.y - pointer.prevLoc.y;
+
     if (pointer.target.class === 'canvas') {
       setViewBoxLocation({
-        x: pointerPosition.x - pointer.prevLoc.x,
-        y: pointerPosition.y - pointer.prevLoc.y,
+        x: changedLocX,
+        y: changedLocY,
       });
+      this.setState(
+        produce(draft => {
+          draft.changedSize.width += changedLocX;
+          draft.changedSize.height += changedLocY;
+          draft.pins.leftTop.x -= changedLocX;
+          draft.pins.leftTop.y -= changedLocY;
+        }),
+      );
     } else if (
       pointer.target.nodeId !== 0 &&
       (pointer.target.class === 'node' || pointer.target.class === 'forked')
@@ -69,8 +129,20 @@ class CanvasContainer extends Component {
 
   handlePointerUp = e => {
     const { getPointFromEvent } = this;
+    const { changedSize } = this.state;
     const { pointer, nodes, pointerUp, MindmapActions } = this.props;
     const pointerPosition = getPointFromEvent(e);
+
+    if (pointer.target.class === 'canvas') {
+      const { width, height } = changedSize;
+      this.setState(
+        produce(draft => {
+          draft.originSize.width += Math.abs(width);
+          draft.originSize.height += Math.abs(height);
+        }),
+      );
+    }
+
     if (
       pointer.target.nodeId !== 0 &&
       pointer.state.isDrag &&
@@ -152,16 +224,21 @@ class CanvasContainer extends Component {
   };
 
   render() {
-    const { cavasPins, children, zoom, handleMouseWheel } = this.props;
     const {
       handlePointerDown,
       handlePointerUp,
       handlePointerMove,
       handleIdeaDrop,
     } = this;
+    const { children, zoom, handleMouseWheel } = this.props;
+    const { originSize, changedSize, pins } = this.state;
+    console.log(pins);
+    console.log(originSize);
     return (
       <Canvas
-        cavasPins={cavasPins}
+        originSize={originSize}
+        changedSize={changedSize}
+        pins={pins}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerMove={handlePointerMove}
@@ -176,7 +253,7 @@ class CanvasContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  cavasPins: state.mindmap.cavasPins,
+  canvasPins: state.mindmap.canvasPins,
   nodes: state.mindmap.nodes,
   loggedUserFollowers: state.auth.relation.followersId,
 });

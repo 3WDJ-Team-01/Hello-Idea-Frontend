@@ -2,7 +2,9 @@
 import React from 'react';
 
 const Canvas = ({
-  cavasPins,
+  originSize,
+  changedSize,
+  pins,
   style,
   onPointerDown,
   onPointerUp,
@@ -12,15 +14,7 @@ const Canvas = ({
   children,
   zoom,
 }) => {
-  const width =
-    cavasPins.rightBottom.x - cavasPins.leftTop.x < window.screen.width
-      ? window.screen.width
-      : cavasPins.rightBottom.x - cavasPins.leftTop.x;
-  const height =
-    cavasPins.rightBottom.y - cavasPins.leftTop.y < window.screen.height
-      ? window.screen.height
-      : cavasPins.rightBottom.y - cavasPins.leftTop.y;
-
+  const { width, height } = originSize;
   // If browser supports pointer events
   if (window.PointerEvent) {
     return (
@@ -40,7 +34,13 @@ const Canvas = ({
         <svg
           id="canvas"
           className="canvas"
-          viewBox={`${cavasPins.leftTop.x} ${cavasPins.leftTop.y}
+          viewBox={`${
+            pins.leftTop.x
+            // -
+          } ${
+            pins.leftTop.y
+            // -
+          }
           ${width / zoom} ${height / zoom}`}
           width={width}
           height={height}
