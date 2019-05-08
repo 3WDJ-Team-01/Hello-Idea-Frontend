@@ -20,8 +20,12 @@ const ADD_NODE_SUCCESS = 'mindmap/ADD_NODE_SUCCESS';
 const ADD_NODE_FAILURE = 'mindmap/ADD_NODE_FAILURE';
 const ADD_PATH = 'mindmap/ADD_PATH';
 const REMOVE_NODE = 'mindmap/REMOVE_NODE';
+const REMOVE_NODE_SUCCESS = 'mindmap/REMOVE_NODE_SUCCESS';
+const REMOVE_NODE_FAILURE = 'mindmap/REMOVE_NODE_FAILURE';
 const TOGGLE_NODE_EDITING = 'mindmap/TOGGLE_NODE_EDITING';
 const SET_NODE_DATA = 'mindmap/SET_NODE_DATA';
+const SET_NODE_DATA_SUCCESS = 'mindmap/SET_NODE_DATA_SUCCESS';
+const SET_NODE_DATA_FAILURE = 'mindmap/SET_NODE_DATA_FAILURE';
 const SET_NODE_LOCATION = 'mindmap/SET_NODE_LOCATION'; // Node & Path ReLocation
 
 export const initialize = createAction(INITIALIZE);
@@ -35,8 +39,12 @@ export const addNodeSuccess = createAction(ADD_NODE_SUCCESS);
 export const addNodeFailure = createAction(ADD_NODE_FAILURE);
 export const addPath = createAction(ADD_PATH);
 export const removeNode = createAction(REMOVE_NODE);
+export const removeNodeSuccess = createAction(REMOVE_NODE_SUCCESS);
+export const removeNodeFailure = createAction(REMOVE_NODE_FAILURE);
 export const toggleNodeEditing = createAction(TOGGLE_NODE_EDITING);
 export const setNodeData = createAction(SET_NODE_DATA);
+export const setNodeDataSuccess = createAction(SET_NODE_DATA_SUCCESS);
+export const setNodeDataFailure = createAction(SET_NODE_DATA_FAILURE);
 export const setNodeLocation = createAction(SET_NODE_LOCATION);
 
 // Communication
@@ -119,21 +127,35 @@ export const createIdeaRequest = data => dispatch => {
     });
 };
 export const removeIdeaRequest = idea_id => dispatch => {
-  dispatch(removeNode(idea_id));
-  return axios.post('/api/idea/delete/', { idea_id });
+  dispatch(removeNode());
+  return axios
+    .post('/api/idea/delete/', { idea_id })
+    .then(res => {
+      dispatch(removeNodeSuccess(idea_id));
+    })
+    .catch(err => {
+      dispatch(removeNodeFailure());
+    });
 };
 export const updateIdeaRequest = data => dispatch => {
   dispatch(setNodeData(data));
   dispatch(setNodeLocation(data));
   const project_id = window.location.pathname.split('/')[4];
   if (data.id === 0) {
-    return axios.post('/api/idea/root/update/', {
-      idea_cont: data.head,
-      idea_color: data.color,
-      idea_width: data.size.width,
-      idea_height: data.size.height,
-      project_id,
-    });
+    return axios
+      .post('/api/idea/root/update/', {
+        idea_cont: data.head,
+        idea_color: data.color,
+        idea_width: data.size.width,
+        idea_height: data.size.height,
+        project_id,
+      })
+      .then(res => {
+        dispatch(setNodeDataSuccess());
+      })
+      .catch(err => {
+        dispatch(setNodeDataFailure());
+      });
   }
   if (data.isForked > 0)
     return axios
@@ -143,6 +165,7 @@ export const updateIdeaRequest = data => dispatch => {
         idea_color: data.color,
       })
       .then(res => {
+        dispatch(setNodeDataSuccess());
         axios.post('/api/idea/loc/update/', {
           idea_id: data.id,
           idea_x: data.location.x,
@@ -150,6 +173,9 @@ export const updateIdeaRequest = data => dispatch => {
           idea_width: data.size.width,
           idea_height: data.size.height,
         });
+      })
+      .catch(err => {
+        dispatch(setNodeDataFailure());
       });
   if (data.head)
     return axios
@@ -159,6 +185,7 @@ export const updateIdeaRequest = data => dispatch => {
         idea_color: data.color,
       })
       .then(res => {
+        dispatch(setNodeDataSuccess());
         axios.post('/api/idea/loc/update/', {
           idea_id: data.id,
           idea_x: data.location.x,
@@ -177,6 +204,9 @@ export const updateIdeaRequest = data => dispatch => {
               idea_cont: keyword.data,
             });
           });
+      })
+      .catch(err => {
+        dispatch(setNodeDataFailure());
       });
   return axios
     .post('/api/idea/loc/update/', {
@@ -187,7 +217,10 @@ export const updateIdeaRequest = data => dispatch => {
       idea_height: data.size.height,
     })
     .then(() => {
-      dispatch(setNodeLocation(data));
+      dispatch(setNodeDataSuccess());
+    })
+    .catch(err => {
+      dispatch(setNodeDataFailure());
     });
 };
 
@@ -398,15 +431,15 @@ export default handleActions(
           const start = action.payload[parentIndex];
           const end = action.payload[i];
           if (end.location.x < prevCanvasPins.leftTop.x) {
-            prevCanvasPins.leftTop.x = end.location.x;
+            prevCanvasPins.leftTop.x = end.location.x - 40;
           } else if (end.location.x > prevCanvasPins.rightBottom.x) {
-            prevCanvasPins.rightBottom.x = end.location.x;
+            prevCanvasPins.rightBottom.x = end.location.x + 200;
           }
 
           if (end.location.y < prevCanvasPins.leftTop.y) {
-            prevCanvasPins.leftTop.y = end.location.y;
+            prevCanvasPins.leftTop.y = end.location.y - 40;
           } else if (end.location.y > prevCanvasPins.rightBottom.y) {
-            prevCanvasPins.rightBottom.y = end.location.y;
+            prevCanvasPins.rightBottom.y = end.location.y + 40;
           }
 
           if (parentIndex > -1) {
@@ -479,7 +512,7 @@ export default handleActions(
         // add relation to parent node
         addChildNode(action.payload);
       }),
-    [ADD_NODE_FAILURE]: (state, action) =>
+    [ADD_NODE_FAILURE]: state =>
       produce(state, draft => {
         draft.state.create = 'failure';
       }),
@@ -513,7 +546,11 @@ export default handleActions(
           },
         });
       }),
-    [REMOVE_NODE]: (state, action) =>
+    [REMOVE_NODE]: state =>
+      produce(state, draft => {
+        draft.state.delete = 'pending';
+      }),
+    [REMOVE_NODE_SUCCESS]: (state, action) =>
       produce(state, draft => {
         draft.state.delete = 'success';
         action.payload.map(nodeId => {
@@ -525,8 +562,25 @@ export default handleActions(
           draft.nodes.splice(nodeIndex, 1);
           draft.paths.splice(pathIndex, 1);
         });
-      }),
+        const prevCanvasPins = state.canvasPins;
+        draft.nodes.forEach(node => {
+          if (node.location.x < prevCanvasPins.leftTop.x) {
+            prevCanvasPins.leftTop.x = node.location.x - 40;
+          } else if (node.location.x > prevCanvasPins.rightBottom.x) {
+            prevCanvasPins.rightBottom.x = node.location.x + 200;
+          }
 
+          if (node.location.y < prevCanvasPins.leftTop.y) {
+            prevCanvasPins.leftTop.y = node.location.y - 40;
+          } else if (node.location.y > prevCanvasPins.rightBottom.y) {
+            prevCanvasPins.rightBottom.y = node.location.y + 40;
+          }
+        });
+      }),
+    [REMOVE_NODE_FAILURE]: state =>
+      produce(state, draft => {
+        draft.state.delete = 'failure';
+      }),
     [TOGGLE_NODE_EDITING]: (state, action) =>
       produce(state, draft => {
         const index = draft.nodes.findIndex(node => node.id === action.payload);
@@ -538,7 +592,7 @@ export default handleActions(
         const { id, color } = action.payload;
         const index = draft.nodes.findIndex(node => node.id === id);
 
-        draft.state.update = 'success';
+        draft.state.update = 'pending';
         draft.nodes[index] = {
           ...state.nodes[index],
           ...action.payload,
@@ -548,17 +602,23 @@ export default handleActions(
             draft.paths[i].options.color = color;
         });
       }),
-
+    [SET_NODE_DATA_SUCCESS]: state =>
+      produce(state, draft => {
+        draft.state.update = 'success';
+      }),
+    [SET_NODE_DATA_FAILURE]: state =>
+      produce(state, draft => {
+        draft.state.update = 'failure';
+      }),
     [SET_NODE_LOCATION]: (state, action) =>
       produce(state, draft => {
         const index = draft.nodes.findIndex(
           node => node.id === action.payload.id,
         );
-
+        draft.state.update = 'pending';
         const gapX = state.nodes[index].location.x - action.payload.location.x;
         const gapY = state.nodes[index].location.y - action.payload.location.y;
 
-        draft.state.update = 'success';
         // reset location all of the child path
         if (state.nodes[index].parentOf.length > 0) {
           state.nodes[index].parentOf.map(child => {
@@ -579,18 +639,21 @@ export default handleActions(
         draft.nodes[index].location.y = action.payload.location.y;
 
         // adjust canvas horizontal size
-        if (action.payload.location.x < state.canvasPins.leftTop.x) {
-          draft.canvasPins.leftTop.x = action.payload.location.x;
-        } else if (action.payload.location.x > state.canvasPins.rightBottom.x) {
-          draft.canvasPins.rightBottom.x = action.payload.location.x;
-        }
+        const prevCanvasPins = state.canvasPins;
+        draft.nodes.forEach(node => {
+          if (node.location.x < prevCanvasPins.leftTop.x) {
+            prevCanvasPins.leftTop.x = node.location.x - 40;
+          } else if (node.location.x > prevCanvasPins.rightBottom.x) {
+            prevCanvasPins.rightBottom.x = node.location.x + 400;
+          }
 
-        // adjust canvas vertical size
-        if (action.payload.location.y < state.canvasPins.leftTop.y) {
-          draft.canvasPins.leftTop.y = action.payload.location.y;
-        } else if (action.payload.location.y > state.canvasPins.rightBottom.y) {
-          draft.canvasPins.rightBottom.y = action.payload.location.y;
-        }
+          if (node.location.y < prevCanvasPins.leftTop.y) {
+            prevCanvasPins.leftTop.y = node.location.y - 40;
+          } else if (node.location.y > prevCanvasPins.rightBottom.y) {
+            prevCanvasPins.rightBottom.y = node.location.y + 40;
+          }
+        });
+
         // reset location of the path
         draft.paths.map((path, i) => {
           if (path.startAt && path.endAt.nodeId === draft.nodes[index].id) {

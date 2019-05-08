@@ -9,7 +9,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import axios from 'axios';
 import produce from 'immer';
 import * as mindmapActions from 'store/modules/mindmap';
 import * as alertActions from 'store/modules/alert';
@@ -232,8 +231,7 @@ class CanvasContainer extends Component {
     } = this;
     const { children, zoom, handleMouseWheel } = this.props;
     const { originSize, changedSize, pins } = this.state;
-    console.log(pins);
-    console.log(originSize);
+
     return (
       <Canvas
         originSize={originSize}

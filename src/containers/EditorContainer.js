@@ -88,14 +88,33 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { uploadMindmap } = this;
     const { repositoryInfo } = this.state;
-    const { loggedUserId, history } = this.props;
-    if (repositoryInfo.user_id && loggedUserId)
+    const {
+      nodes,
+      loggedUserId,
+      history,
+      authState,
+      repoState,
+      mindmapState,
+    } = this.props;
+
+    if (repositoryInfo.user_id && loggedUserId) {
       if (repositoryInfo.user_id !== loggedUserId) {
-        const { origin } = window.location;
-        const { pathname } = history.location;
         history.replace('viewer');
+      } else if (
+        (prevProps.mindmapState.create === 'pending' &&
+          mindmapState.create === 'success') ||
+        (prevProps.mindmapState.read === 'pending' &&
+          mindmapState.read === 'success') ||
+        (prevProps.mindmapState.update === 'pending' &&
+          mindmapState.update === 'success') ||
+        (prevProps.mindmapState.delete === 'pending' &&
+          mindmapState.delete === 'success')
+      ) {
+        uploadMindmap();
       }
+    }
   }
 
   componentWillUnmount() {
@@ -328,13 +347,15 @@ class App extends Component {
   };
 
   /* Export Mindmap PNG Image   */
-  exportMindmap = targetDOM => {
+  exportMindmap = () => {
     const { canvasPins } = this.props;
-    const svg = document.querySelector(targetDOM);
+    const svg = document.querySelector('#canvas');
     const wrapper = document.querySelector('#canvasFrame');
 
     svg.viewBox.baseVal.x = canvasPins.leftTop.x;
     svg.viewBox.baseVal.y = canvasPins.leftTop.y;
+    svg.viewBox.width = canvasPins.rightBottom.x - canvasPins.leftTop.x;
+    svg.viewBox.height = canvasPins.rightBottom.y - canvasPins.leftTop.y;
 
     html2canvas(wrapper).then(canvas => {
       const imgURI = canvas
@@ -348,11 +369,36 @@ class App extends Component {
       });
 
       const a = document.createElement('a');
-      a.setAttribute('download', 'MY_COOL_IMAGE.png');
+      a.setAttribute('download', '마인드맵.png');
       a.setAttribute('href', imgURI);
       a.setAttribute('target', '_blank');
 
       a.dispatchEvent(evt);
+    });
+  };
+
+  uploadMindmap = () => {
+    const { canvasPins, repositoryId } = this.props;
+    const svg = document.querySelector('#canvas');
+    const wrapper = document.querySelector('#canvasFrame');
+
+    svg.viewBox.baseVal.x = canvasPins.leftTop.x;
+    svg.viewBox.baseVal.y = canvasPins.leftTop.y;
+    svg.viewBox.width = canvasPins.rightBottom.x - canvasPins.leftTop.x;
+    svg.viewBox.height = canvasPins.rightBottom.y - canvasPins.leftTop.y;
+
+    const data = new FormData();
+
+    html2canvas(wrapper).then(canvas => {
+      canvas.toBlob(blob => {
+        data.append('image-file', blob);
+        data.append('project_id', repositoryId);
+        axios.post('/api/project/img/update/', data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+      });
     });
   };
 
@@ -373,6 +419,7 @@ class App extends Component {
       toggleInfo,
       toggleExplore,
       exportMindmap,
+      uploadMindmap,
       handleCanvasZoom,
       handleMouseWheel,
     } = this;
@@ -427,6 +474,7 @@ class App extends Component {
           handleMouseWheel={handleMouseWheel}
           explore={explore}
           zoom={canvas.zoom}
+          uploadMindmap={uploadMindmap}
         >
           <g id="mindmap">
             <g id="paths">

@@ -26,12 +26,7 @@ const Header = ({ type, info, repository, exportMindmap }) => {
         ) : null}
       </div>
       <div className={styles.brainRightHeader}>
-        <MDBBtn
-          color="primary"
-          onClick={() => {
-            exportMindmap('#canvas');
-          }}
-        >
+        <MDBBtn color="primary" onClick={exportMindmap}>
           <MDBIcon icon="file-download" className="mr-3" />
           다운로드
         </MDBBtn>
