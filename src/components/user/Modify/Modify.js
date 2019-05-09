@@ -19,6 +19,7 @@ const Modify = ({
   handleChange,
   handleClick,
   handleClose,
+  handleUpdate,
 }) => {
   return (
     <div className={styles.modify}>
@@ -29,6 +30,7 @@ const Modify = ({
         handleChange={handleChange}
         handleClick={handleClick}
         handleClose={handleClose}
+        handleUpdate={handleUpdate}
         onCropChange={onCropChange}
         onCropComplete={onCropComplete}
         onZoomChange={onZoomChange}
@@ -46,7 +48,7 @@ const Profile = ({
   handleChange,
   handleClick,
   handleClose,
-
+  handleUpdate,
   onCropChange,
   onCropComplete,
   onZoomChange,
@@ -62,8 +64,9 @@ const Profile = ({
             <div>Name</div>
             <input
               type="text"
+              name="name"
               value={modify.name}
-              handleChange={handleChange}
+              onChange={handleChange}
             />
           </label>
         </div>
@@ -72,8 +75,9 @@ const Profile = ({
             <div>bio</div>
             <textarea
               type="text"
+              name="bio"
               value={modify.bio}
-              handleChange={handleChange}
+              onChange={handleChange}
             />
           </label>
         </div>
@@ -125,7 +129,7 @@ const Profile = ({
       </div>
     </div>
     <div className={styles.submit}>
-      <MDBBtn>update profile</MDBBtn>
+      <MDBBtn onClick={handleUpdate}>update profile</MDBBtn>
     </div>
   </div>
 );

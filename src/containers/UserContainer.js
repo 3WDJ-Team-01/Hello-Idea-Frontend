@@ -46,16 +46,17 @@ class UserContainer extends Component {
     const { user } = this.props;
     const { UserActions } = this.props;
 
-    UserActions.userRequest(user);
-    UserActions.targetGroupsRequest(user).then(() => {
+    UserActions.userRequest(user).then(() => {
       const { User_detail } = this.props.info;
       this.setState(
         produce(draft => {
           draft.modify.name = User_detail.user_name;
           draft.modify.bio = User_detail.user_intro;
+          draft.modify.bgColor = User_detail.user_bgimg;
         }),
       );
     });
+    UserActions.targetGroupsRequest(user);
     UserActions.repositoriesRequest(user, 0);
     UserActions.followerRequest(user);
 
@@ -138,6 +139,7 @@ class UserContainer extends Component {
       res();
     });
 
+  /* === Actions start === */
   /* IMAGE CROPPER ACTIONS */
 
   onCropChange = crop => {
@@ -165,16 +167,32 @@ class UserContainer extends Component {
   };
 
   showCroppedImage = async () => {
+    const { updateIMG } = this;
+    const { user } = this.props;
     const { imgSrc, croppedAreaPixels } = this.state.cropper;
     const croppedImage = await getCroppedImg(imgSrc, croppedAreaPixels);
+    const update = await updateIMG(user, croppedImage);
     this.setState(
       produce(draft => {
-        draft.modify.imgSrc = croppedImage;
+        draft.modify.imgSrc = URL.createObjectURL(croppedImage);
       }),
     );
-    console.log(croppedImage);
-    // axios.post('/api/user_img/update/', {})
   };
+
+  updateIMG = (user_id, blob) =>
+    new Promise((res, rej) => {
+      const data = new FormData();
+      data.append('user_img', blob, `user_${user_id}.png`);
+      data.append('user_id', user_id);
+      axios
+        .post('/api/user_img/update/', data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(() => res())
+        .catch(err => rej(err));
+    });
 
   /* HEADER ACTIONS */
   handleFollow = e => {
@@ -225,7 +243,7 @@ class UserContainer extends Component {
     AuthActions.userRequest();
   };
 
-  /* COLOR PICKER ACTIONS */
+  /* MODIFY ACTIONS */
 
   handleClick = () => {
     this.setState(
@@ -269,10 +287,36 @@ class UserContainer extends Component {
       );
     } else {
       e.persist();
-      this.setState(draft => {
-        draft.modify[e.target.name] = e.target.value;
-      });
+      this.setState(
+        produce(draft => {
+          draft.modify[e.target.name] = e.target.value;
+        }),
+      );
     }
+  };
+
+  handleUpdate = () => {
+    const { user, UserActions } = this.props;
+    const { bgColor, name, bio } = this.state.modify;
+    axios
+      .post('/api/user/update/', {
+        user_id: user,
+        user_intro: bio,
+        user_bgimg: bgColor,
+        user_name: name,
+      })
+      .then(() => {
+        UserActions.userRequest(user).then(() => {
+          const { User_detail } = this.props.info;
+          this.setState(
+            produce(draft => {
+              draft.modify.name = User_detail.user_name;
+              draft.modify.bio = User_detail.user_intro;
+              draft.modify.bgColor = User_detail.user_bgimg;
+            }),
+          );
+        });
+      });
   };
 
   /* REPOSITORIES ACTIONS */
@@ -298,6 +342,8 @@ class UserContainer extends Component {
     );
   };
 
+  /* === Actions end === */
+
   renderMenu = menu => {
     const {
       onCropChange,
@@ -309,6 +355,7 @@ class UserContainer extends Component {
       handleClose,
       handleFilter,
       handleSearchTo,
+      handleUpdate,
     } = this;
     const {
       cropper,
@@ -372,6 +419,7 @@ class UserContainer extends Component {
             handleChange={handleChange}
             handleClick={handleClick}
             handleClose={handleClose}
+            handleUpdate={handleUpdate}
           />
         );
       default:

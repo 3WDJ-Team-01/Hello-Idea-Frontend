@@ -5,7 +5,8 @@
   top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 1rem;
+  padding: 2rem;
+  box-shadow: $shadow2dp;
 
   @include media('<medium') {
     width: 100%;

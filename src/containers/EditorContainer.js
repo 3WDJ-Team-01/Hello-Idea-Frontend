@@ -112,15 +112,17 @@ class App extends Component {
         (prevProps.mindmapState.delete === 'pending' &&
           mindmapState.delete === 'success')
       ) {
-        uploadMindmap();
+        // updated
       }
     }
   }
 
   componentWillUnmount() {
+    const { uploadMindmap } = this;
     const { RepositoryActions, MindmapActions } = this.props;
     RepositoryActions.initialize();
     MindmapActions.initialize();
+    uploadMindmap();
   }
 
   /* === Actions start === */
@@ -391,14 +393,14 @@ class App extends Component {
 
     html2canvas(wrapper).then(canvas => {
       canvas.toBlob(blob => {
-        data.append('image-file', blob);
+        data.append('image-file', blob, `project_${repositoryId}.png`);
         data.append('project_id', repositoryId);
         axios.post('/api/project/img/update/', data, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-      });
+      }, 'image/png');
     });
   };
 

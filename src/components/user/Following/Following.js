@@ -7,16 +7,7 @@ const Following = ({ list, loggedUserFollowings }) => {
   return (
     <div className={styles.followerList}>
       {list.map((item, i) => (
-        <User
-          key={i}
-          value={item}
-          isFollow={
-            loggedUserFollowings &&
-            loggedUserFollowings.findIndex(
-              following => following.user_id === item.user_id,
-            ) > -1
-          }
-        />
+        <User key={i} value={item} />
       ))}
     </div>
   );
