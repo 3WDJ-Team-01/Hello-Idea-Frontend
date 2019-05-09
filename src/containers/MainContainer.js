@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import produce from 'immer';
+import Intro from 'components/base/Intro';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import MainWrapper from 'components/main/MainWrapper';
 import Discover from 'components/main/Discover';
@@ -123,6 +124,9 @@ class MainContainer extends Component {
       repositories,
       tendencyRepo,
     } = this.props;
+    if (!localStorage.getItem('userInfo')) {
+      return <Intro />;
+    }
     if (
       authState === 'success' &&
       alert.state === 'success' &&

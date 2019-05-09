@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MDBBtn } from 'mdbreact';
 import styles from './User.module.scss';
 
 const User = ({ value }) => (

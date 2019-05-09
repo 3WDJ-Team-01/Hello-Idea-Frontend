@@ -53,9 +53,10 @@ class HeaderContainer extends Component {
         user_name: userInfo.user_name,
         token: userInfo.token,
       });
-    } else if (!history.location.pathname.includes('auth')) {
-      history.push('/auth/login');
     }
+    // else if (!history.location.pathname.includes('auth')) {
+    //   history.push('/auth/login');
+    // }
 
     AuthActions.userRequest();
   };
