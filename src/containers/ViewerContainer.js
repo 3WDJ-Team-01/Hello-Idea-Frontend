@@ -7,7 +7,6 @@ import * as repositoryActions from 'store/modules/repository';
 import * as mindmapActions from 'store/modules/mindmap';
 import html2canvas from 'html2canvas';
 import produce from 'immer';
-import axios from 'axios';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import Path from 'components/mindmap/Path';
 import Header from 'components/mindmap/Header';
@@ -38,18 +37,6 @@ class App extends Component {
         svg: null,
         viewBox: 0,
         zoom: 1,
-      },
-      contextMenu: {
-        mode: null,
-        location: {
-          x: 0,
-          y: 0,
-        },
-      },
-      info: {
-        state: 'pending',
-        isActivated: false,
-        data: {},
       },
       explore: {
         state: 'pending',
@@ -269,15 +256,7 @@ class App extends Component {
       nodes,
       repositoryId,
     } = this.props;
-    const {
-      type,
-      repositoryInfo,
-      pointer,
-      contextMenu,
-      info,
-      explore,
-      canvas,
-    } = this.state;
+    const { type, repositoryInfo, pointer, explore, canvas } = this.state;
     return (
       <div
         className="App"

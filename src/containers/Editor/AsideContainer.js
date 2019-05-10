@@ -9,8 +9,6 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import produce from 'immer';
-import axios from 'axios';
 import { bindActionCreators } from 'redux';
 import * as mindmapActions from 'store/modules/mindmap';
 import Aside from 'components/mindmap/Aside';

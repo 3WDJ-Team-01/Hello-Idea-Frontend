@@ -117,12 +117,9 @@ class MainContainer extends Component {
       alert,
       authState,
       userState,
-      recommendState,
       userInfo,
-      followings,
       groups,
       repositories,
-      tendencyRepo,
     } = this.props;
     if (!localStorage.getItem('userInfo')) {
       return <Intro />;

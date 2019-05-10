@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react';
-import HeaderContainer from 'containers/HeaderContainer';
 import styles from './PageTemplate.module.scss';
 
 class PageTemplate extends Component {
@@ -17,7 +16,7 @@ class PageTemplate extends Component {
   };
 
   render() {
-    const { history, children, bgColor = 'white' } = this.props;
+    const { children, bgColor = 'white' } = this.props;
     const { handleDropdown } = this;
     return (
       <div

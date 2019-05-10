@@ -1,14 +1,12 @@
 /* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import Nav from 'components/alert/Nav';
 import AlertWrapper from 'components/alert/AlertWrapper';
 import Alerts from 'components/alert/Alerts';
 import produce from 'immer';
-import axios from 'axios';
 
 class AlertContainer extends Component {
   state = {

@@ -88,16 +88,8 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { uploadMindmap } = this;
     const { repositoryInfo } = this.state;
-    const {
-      nodes,
-      loggedUserId,
-      history,
-      authState,
-      repoState,
-      mindmapState,
-    } = this.props;
+    const { loggedUserId, history, mindmapState } = this.props;
 
     if (repositoryInfo.user_id && loggedUserId) {
       if (repositoryInfo.user_id !== loggedUserId) {

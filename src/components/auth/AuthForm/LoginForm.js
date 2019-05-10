@@ -3,10 +3,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBInput, MDBBtn } from 'mdbreact';
-import {
-  FacebookLoginButton,
-  GoogleLoginButton,
-} from 'components/auth/SocialLoginButton';
+// import {
+//   FacebookLoginButton,
+//   GoogleLoginButton,
+// } from 'components/auth/SocialLoginButton';
 import styles from './AuthForm.module.scss';
 
 const LoginForm = ({

@@ -1,7 +1,6 @@
 /* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import Nav from 'components/search/Nav';

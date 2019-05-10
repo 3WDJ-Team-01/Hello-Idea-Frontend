@@ -8,8 +8,6 @@
 /* eslint-disable no-shadow */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import axios from 'axios';
 import Canvas from 'components/mindmap/Canvas';
 
 class CanvasContainer extends Component {
@@ -27,21 +25,14 @@ class CanvasContainer extends Component {
     const { getPointFromEvent } = this;
     const { setPrevLoc, pointerDown } = this.props;
     e.persist();
-    console.log('down');
     setPrevLoc(getPointFromEvent(e));
     pointerDown(e);
   };
 
   handlePointerMove = e => {
     const { getPointFromEvent } = this;
-    const {
-      pointer,
-      pointerMove,
-      MindmapActions,
-      setViewBoxLocation,
-    } = this.props;
+    const { pointer, pointerMove, setViewBoxLocation } = this.props;
     if (!pointer.state.isDown || e.target.contentEditable) return;
-    console.log('move');
 
     e.preventDefault();
     pointerMove();
@@ -56,10 +47,7 @@ class CanvasContainer extends Component {
   };
 
   handlePointerUp = e => {
-    const { getPointFromEvent } = this;
-    const { pointer, nodes, pointerUp } = this.props;
-    const pointerPosition = getPointFromEvent(e);
-    console.log('up');
+    const { pointerUp } = this.props;
     pointerUp();
   };
 

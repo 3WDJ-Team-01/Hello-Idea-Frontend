@@ -45,7 +45,7 @@ class HeaderContainer extends Component {
   }
 
   checkUser = () => {
-    const { history, AuthActions } = this.props;
+    const { AuthActions } = this.props;
     if (localStorage.getItem('userInfo')) {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       AuthActions.setUserTemp({
@@ -62,7 +62,6 @@ class HeaderContainer extends Component {
   };
 
   handleLogout = () => {
-    const { checkUser } = this;
     const { AuthActions } = this.props;
 
     AuthActions.logoutRequest().then(() => this.checkUser());
@@ -97,8 +96,8 @@ class HeaderContainer extends Component {
   };
 
   render() {
-    const { history, AlertActions } = this.props;
-    const { isHidden, searchTo, isNewMessage, notifications } = this.state;
+    const { history } = this.props;
+    const { searchTo, isNewMessage, notifications } = this.state;
     const {
       handleLogout,
       handleSearch,

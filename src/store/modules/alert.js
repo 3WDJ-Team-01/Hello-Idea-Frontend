@@ -55,9 +55,6 @@ export const connectToWebsocket = user_id => dispatch => {
 export const readAllNotificationsRequest = user_id => dispatch => {
   axios.post('/api/notify/all/read/', { user_id }).then(() => {
     dispatch(readAllNotifications());
-    axios.post('/api/check/', { user_id }).then(({ data }) => {
-      dispatch(checkAlerts({ data, user_id }));
-    });
   });
 };
 
@@ -108,7 +105,7 @@ export default handleActions(
       produce(state, draft => {
         console.log(action.payload.data);
         const { user_id } = action.payload;
-        const { notifications, requests } = action.payload.data;
+        const { notifications } = action.payload.data;
         draft.state = 'success';
         notifications
           .filter(item => item.send_id !== user_id)

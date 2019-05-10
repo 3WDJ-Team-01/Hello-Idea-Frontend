@@ -171,7 +171,7 @@ class UserContainer extends Component {
     const { user } = this.props;
     const { imgSrc, croppedAreaPixels } = this.state.cropper;
     const croppedImage = await getCroppedImg(imgSrc, croppedAreaPixels);
-    const update = await updateIMG(user, croppedImage);
+    await updateIMG(user, croppedImage);
     this.setState(
       produce(draft => {
         draft.modify.imgSrc = URL.createObjectURL(croppedImage);

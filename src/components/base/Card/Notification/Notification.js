@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import TimeAgo from 'react-timeago';
 import koreanStrings from 'react-timeago/lib/language-strings/ko';
@@ -58,7 +58,6 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
     project_count,
     // repositories
     user_id,
-    group_id,
     project_topic,
     project_intro,
     project_likes,

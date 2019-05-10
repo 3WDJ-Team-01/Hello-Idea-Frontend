@@ -25,14 +25,14 @@ class RepositoryContainer extends Component {
 
   componentDidMount() {
     const { viewRepository } = this;
-    const { loggedUserId, RepositoryActions, repositoryId } = this.props;
+    const { loggedUserId } = this.props;
 
     if (loggedUserId) viewRepository(loggedUserId);
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { initialize, viewRepository } = this;
-    const { loggedUserId, repositoryId, RepositoryActions } = this.props;
+    const { loggedUserId, repositoryId } = this.props;
 
     if (prevProps.loggedUserId !== loggedUserId) viewRepository(loggedUserId);
 

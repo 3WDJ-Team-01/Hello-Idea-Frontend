@@ -9,10 +9,7 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import produce from 'immer';
-import { bindActionCreators } from 'redux';
 import Node from 'components/mindmap/Node/SVG';
-import NodeEditor from 'components/mindmap/Node/Editor';
 
 class NodeContainer extends Component {
   constructor(props) {

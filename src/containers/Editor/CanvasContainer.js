@@ -18,14 +18,7 @@ class CanvasContainer extends Component {
   constructor(props) {
     super(props);
     const { canvasPins } = props;
-    const width =
-      canvasPins.rightBottom.x - canvasPins.leftTop.x < window.screen.width
-        ? window.screen.width
-        : canvasPins.rightBottom.x - canvasPins.leftTop.x;
-    const height =
-      canvasPins.rightBottom.y - canvasPins.leftTop.y < window.screen.height
-        ? window.screen.height
-        : canvasPins.rightBottom.y - canvasPins.leftTop.y;
+    
     this.state = {
       originSize: {
         width: window.screen.width,
@@ -171,7 +164,6 @@ class CanvasContainer extends Component {
       pointer,
       MindmapActions,
       AlertActions,
-      loggedUserFollowers,
       userId,
       repositoryId,
     } = this.props;
