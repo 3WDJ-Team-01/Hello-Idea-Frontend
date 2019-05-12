@@ -86,7 +86,7 @@ const Header = ({
                 <div className={styles.item}>Your repositories</div>
               </MobileMenu>
               <MobileMenu>
-                <a href="/">
+                <a href="/auth/login">
                   <div className={styles.item} onClick={onLogout}>
                     Sign out
                   </div>
@@ -183,7 +183,7 @@ const Header = ({
                   <div className={styles.item}>Settings</div>
                 </DropdownMenu>
                 <DropdownMenu>
-                  <a href="/">
+                  <a href="/auth/login">
                     <div className={styles.item} onClick={onLogout}>
                       Sign out
                     </div>

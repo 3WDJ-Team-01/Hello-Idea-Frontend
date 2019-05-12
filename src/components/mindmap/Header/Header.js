@@ -8,17 +8,15 @@ import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Header.module.scss';
 
-const Header = ({ type, info, repository, exportMindmap }) => {
+const Header = ({ type, info, repository, exportMindmap, uploadMindmap }) => {
   return (
     <div className={styles.brainHeader}>
       <div className={styles.brainLeftHeader}>
-        <div className={styles.brainLogo}>
-          <Link to="/">
-            <img
-              src="https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/global/logo.png"
-              alt="logo"
-            />
-          </Link>
+        <div className={styles.brainLogo} onClick={uploadMindmap}>
+          <img
+            src="https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/global/logo.png"
+            alt="logo"
+          />
         </div>
         <div className={styles.projectName}>{info.project_topic}</div>
         {type === 'group' ? (

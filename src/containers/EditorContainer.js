@@ -91,30 +91,28 @@ class App extends Component {
     const { repositoryInfo } = this.state;
     const { loggedUserId, history, mindmapState } = this.props;
 
-    if (repositoryInfo.user_id && loggedUserId) {
-      if (repositoryInfo.user_id !== loggedUserId) {
-        history.replace('viewer');
-      } else if (
-        (prevProps.mindmapState.create === 'pending' &&
-          mindmapState.create === 'success') ||
-        (prevProps.mindmapState.read === 'pending' &&
-          mindmapState.read === 'success') ||
-        (prevProps.mindmapState.update === 'pending' &&
-          mindmapState.update === 'success') ||
-        (prevProps.mindmapState.delete === 'pending' &&
-          mindmapState.delete === 'success')
-      ) {
-        // updated
-      }
-    }
+    // if (repositoryInfo.user_id && loggedUserId) {
+    //   if (repositoryInfo.user_id !== loggedUserId) {
+    //     history.replace('viewer');
+    //   } else if (
+    //     (prevProps.mindmapState.create === 'pending' &&
+    //       mindmapState.create === 'success') ||
+    //     (prevProps.mindmapState.read === 'pending' &&
+    //       mindmapState.read === 'success') ||
+    //     (prevProps.mindmapState.update === 'pending' &&
+    //       mindmapState.update === 'success') ||
+    //     (prevProps.mindmapState.delete === 'pending' &&
+    //       mindmapState.delete === 'success')
+    //   ) {
+    //     // updated
+    //   }
+    // }
   }
 
   componentWillUnmount() {
-    const { uploadMindmap } = this;
     const { RepositoryActions, MindmapActions } = this.props;
     RepositoryActions.initialize();
     MindmapActions.initialize();
-    uploadMindmap();
   }
 
   /* === Actions start === */
@@ -372,7 +370,7 @@ class App extends Component {
   };
 
   uploadMindmap = () => {
-    const { canvasPins, repositoryId } = this.props;
+    const { canvasPins, repositoryId, history } = this.props;
     const svg = document.querySelector('#canvas');
     const wrapper = document.querySelector('#canvasFrame');
 
@@ -387,11 +385,15 @@ class App extends Component {
       canvas.toBlob(blob => {
         data.append('image-file', blob, `project_${repositoryId}.png`);
         data.append('project_id', repositoryId);
-        axios.post('/api/project/img/update/', data, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        axios
+          .post('/api/project/img/update/', data, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          .then(() => {
+            history.push('/');
+          });
       }, 'image/png');
     });
   };
@@ -451,6 +453,7 @@ class App extends Component {
           exportMindmap={exportMindmap}
           type={type}
           info={repositoryInfo}
+          uploadMindmap={uploadMindmap}
         />
         <CanvasContainer
           userId={loggedUserId}

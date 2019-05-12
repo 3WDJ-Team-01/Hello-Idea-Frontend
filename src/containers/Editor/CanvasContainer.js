@@ -18,7 +18,7 @@ class CanvasContainer extends Component {
   constructor(props) {
     super(props);
     const { canvasPins } = props;
-    
+
     this.state = {
       originSize: {
         width: window.screen.width,
