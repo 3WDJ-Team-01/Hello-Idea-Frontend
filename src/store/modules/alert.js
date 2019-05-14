@@ -103,16 +103,16 @@ export default handleActions(
       }),
     [CHECK_ALERTS]: (state, action) =>
       produce(state, draft => {
-        console.log(action.payload.data);
         const { user_id } = action.payload;
         const { notifications } = action.payload.data;
         draft.state = 'success';
-        notifications
-          .filter(item => item.send_id !== user_id)
-          .map(notify => {
-            draft.notifications.push(notify);
-            if (!notify.read_at) draft.newMessage = true;
-          });
+        if (notifications && notifications.length > 0)
+          notifications
+            .filter(item => item.send_id !== user_id)
+            .map(notify => {
+              if (notify.target) draft.notifications.push(notify);
+              if (!notify.read_at) draft.newMessage = true;
+            });
         draft.requests = action.payload.requests;
       }),
     [ADD_NOTIFICATIONS]: (state, action) =>

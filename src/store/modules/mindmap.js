@@ -620,18 +620,23 @@ export default handleActions(
         const gapY = state.nodes[index].location.y - action.payload.location.y;
 
         // reset location all of the child path
+
         if (state.nodes[index].parentOf.length > 0) {
           state.nodes[index].parentOf.map(child => {
             const childIndex = draft.nodes.findIndex(node => node.id === child);
-            draft.nodes[childIndex].location.x -= gapX;
-            draft.nodes[childIndex].location.y -= gapY;
+            if (childIndex > -1) {
+              draft.nodes[childIndex].location.x -= gapX;
+              draft.nodes[childIndex].location.y -= gapY;
+            }
             const pathIndex = draft.paths.findIndex(
               path => path.endAt.nodeId === child,
             );
-            draft.paths[pathIndex].startAt.x -= gapX;
-            draft.paths[pathIndex].startAt.y -= gapY;
-            draft.paths[pathIndex].endAt.x -= gapX;
-            draft.paths[pathIndex].endAt.y -= gapY;
+            if (pathIndex > -1) {
+              draft.paths[pathIndex].startAt.x -= gapX;
+              draft.paths[pathIndex].startAt.y -= gapY;
+              draft.paths[pathIndex].endAt.x -= gapX;
+              draft.paths[pathIndex].endAt.y -= gapY;
+            }
           });
         }
 

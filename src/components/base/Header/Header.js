@@ -24,6 +24,7 @@ const Header = ({
   history,
   searchTo,
   notifications,
+  goSearch,
   onClick,
   onLogout,
   onChange,
@@ -32,7 +33,7 @@ const Header = ({
   handleReadAlerts,
 }) => {
   const onKeyPress = e => {
-    if (e.key === 'Enter') history.push(`/search/${searchTo}`);
+    if (e.key === 'Enter') goSearch();
   };
 
   return (
@@ -62,7 +63,7 @@ const Header = ({
                   <div className={styles.searchResult}>
                     {searchTo && (
                       <Link to={`/search/${searchTo}`}>
-                        <div>
+                        <div onClick={goSearch}>
                           <MDBIcon icon="search" />
                           <span>{searchTo}</span>
                         </div>
@@ -118,7 +119,7 @@ const Header = ({
             <div className={styles.searchResult}>
               {searchTo && (
                 <Link to={`/search/${searchTo}`}>
-                  <div>
+                  <div onClick={goSearch}>
                     <MDBIcon icon="search" />
                     <span>{searchTo}</span>
                   </div>

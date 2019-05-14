@@ -30,7 +30,9 @@ class HeaderContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { url } = this.props.match;
-    if (prevProps.match.url !== url) this.checkUser();
+    if (prevProps.match.url !== url) {
+      this.checkUser();
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -77,6 +79,17 @@ class HeaderContainer extends Component {
     );
   };
 
+  goSearch = () => {
+    const { searchTo } = this.state;
+    const { history } = this.props;
+    history.push(`/search/${searchTo}`);
+    this.setState(
+      produce(draft => {
+        draft.searchTo = '';
+      }),
+    );
+  };
+
   handleDropdown = e => {
     const dropdown = document.querySelectorAll('details');
     dropdown.forEach(dom => {
@@ -103,6 +116,7 @@ class HeaderContainer extends Component {
       handleSearch,
       handleDropdown,
       handleReadAlerts,
+      goSearch,
     } = this;
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     const { pathname } = history.location;
@@ -113,6 +127,7 @@ class HeaderContainer extends Component {
       <Header
         history={history}
         searchTo={searchTo}
+        goSearch={goSearch}
         onClick={handleDropdown}
         onLogout={handleLogout}
         onChange={handleSearch}

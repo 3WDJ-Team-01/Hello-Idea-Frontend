@@ -69,17 +69,16 @@ class MainContainer extends Component {
   }
 
   shuffleRepo = repositories => {
+    if (repositories.length < 4) {
+      return repositories;
+    }
     let count = 0;
     const randomRepo = [];
-    repositories.forEach((repository, index) => {
-      if (count !== 3 && index - count > 2) {
-        count += 1;
-        randomRepo.push(repository);
-      } else if (count !== 3 && Math.random() < 0.5) {
-        count += 1;
-        randomRepo.push(repository);
-      }
-    });
+    while (count === 3) {
+      const index = Math.floor(Math.random() * repositories.length);
+      randomRepo.push(repositories[index]);
+      count += 1;
+    }
     return randomRepo;
   };
 

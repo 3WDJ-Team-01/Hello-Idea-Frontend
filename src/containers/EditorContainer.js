@@ -88,9 +88,8 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { repositoryInfo } = this.state;
-    const { loggedUserId, history, mindmapState } = this.props;
-
+    // const { repositoryInfo } = this.state;
+    // const { loggedUserId, history, mindmapState } = this.props;
     // if (repositoryInfo.user_id && loggedUserId) {
     //   if (repositoryInfo.user_id !== loggedUserId) {
     //     history.replace('viewer');

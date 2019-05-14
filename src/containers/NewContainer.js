@@ -60,7 +60,6 @@ class NewContainer extends Component {
       history,
     } = this.props;
     const { author_id, name, desc } = this.state;
-
     const notify = repositoryId => {
       AlertActions.sendNotify({
         type: 'create',
