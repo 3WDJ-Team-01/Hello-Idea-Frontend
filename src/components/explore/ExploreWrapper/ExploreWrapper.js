@@ -14,7 +14,10 @@ const ExploreWrapper = ({ news, children }) => {
                 rel="noopener noreferrer"
               >
                 <img
-                  src={news[0].img_src.split('?')[0]}
+                  src={
+                    typeof news[0].img_src === 'string' &&
+                    news[0].img_src.split('?')[0]
+                  }
                   alt={news[0].Comment}
                 />
                 <div className={styles.label}>
@@ -31,7 +34,10 @@ const ExploreWrapper = ({ news, children }) => {
                 rel="noopener noreferrer"
               >
                 <img
-                  src={news[1].img_src.split('?')[0]}
+                  src={
+                    typeof news[1].img_src === 'string' &&
+                    news[1].img_src.split('?')[0]
+                  }
                   alt={news[1].Comment}
                 />
                 <div className={styles.label}>
@@ -48,7 +54,10 @@ const ExploreWrapper = ({ news, children }) => {
                 rel="noopener noreferrer"
               >
                 <img
-                  src={news[2].img_src.split('?')[0]}
+                  src={
+                    typeof news[2].img_src === 'string' &&
+                    news[2].img_src.split('?')[0]
+                  }
                   alt={news[2].Comment}
                 />
                 <div className={styles.label}>

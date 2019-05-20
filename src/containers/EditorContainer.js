@@ -62,6 +62,12 @@ class App extends Component {
         results: [],
         ideas: [],
       },
+      file: {
+        state: 'pending',
+        isActivated: false,
+        targetNode: null,
+        list: [],
+      },
     };
   }
 
@@ -208,6 +214,8 @@ class App extends Component {
         draft.pointer.state.isDown = true;
         draft.explore.isActivated = false;
         draft.info.isActivated = false;
+        draft.file.isActivated = false;
+        draft.info.isActivated = false;
         draft.pointer.target.class =
           event.target.className.baseVal && event.target.className.baseVal;
         draft.pointer.target.nodeId =
@@ -337,6 +345,70 @@ class App extends Component {
       });
   };
 
+  toggleFile = nodeId => {
+    const { nodes, repositoryId } = this.props;
+    const index = nodes.findIndex(node => node.id === nodeId);
+    this.setState(
+      produce(draft => {
+        draft.file = {
+          state: 'pending',
+          isActivated: true,
+          targetNode: nodes[index],
+          list: [],
+        };
+      }),
+    );
+
+    axios
+      .post('/api/idea/file/select/', {
+        idea_id: nodes[index].id,
+      })
+      .then(({ data }) => {
+        this.setState(
+          produce(draft => {
+            draft.file.state = 'success';
+            draft.file.list = data;
+          }),
+        );
+      })
+      .catch(() => {
+        this.setState(
+          produce(draft => {
+            draft.file.state = 'failure';
+          }),
+        );
+      });
+  };
+
+  uploadFile = e => {
+    e.persist();
+    const { file } = this.state;
+    const data = new FormData();
+    this.setState(
+      produce(draft => {
+        draft.file.state = 'pending';
+      }),
+    );
+    data.append('idea_id', file.targetNode.id);
+    data.append('file', e.target.files[0]);
+    axios
+      .post('/api/idea/file/upload/', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(() => {
+        const { repositoryId, MindmapActions } = this.props;
+        MindmapActions.loadIdeasRequest(repositoryId);
+        this.setState(
+          produce(draft => {
+            draft.file.isActivated = false;
+          }),
+        );
+      })
+      .catch(err => {});
+  };
+
   /* Export Mindmap PNG Image   */
   exportMindmap = () => {
     const { canvasPins } = this.props;
@@ -400,6 +472,7 @@ class App extends Component {
   /* === Actions end === */
 
   render() {
+    // functions
     const {
       preventEvent,
       setSVG,
@@ -413,11 +486,14 @@ class App extends Component {
       toggleContextMenu,
       toggleInfo,
       toggleExplore,
+      toggleFile,
+      uploadFile,
       exportMindmap,
       uploadMindmap,
       handleCanvasZoom,
       handleMouseWheel,
     } = this;
+    // props
     const {
       authState,
       repoState,
@@ -427,6 +503,7 @@ class App extends Component {
       nodes,
       repositoryId,
     } = this.props;
+    // states
     const {
       type,
       repositoryInfo,
@@ -434,6 +511,7 @@ class App extends Component {
       contextMenu,
       info,
       explore,
+      file,
       canvas,
     } = this.state;
 
@@ -522,7 +600,11 @@ class App extends Component {
             toggleContextMenu={toggleContextMenu}
             toggleInfo={toggleInfo}
             toggleExplore={toggleExplore}
+            toggleFile={toggleFile}
           />
+        )}
+        {file.isActivated && (
+          <AsideContainer file={file} uploadFile={uploadFile} />
         )}
         {explore.isActivated && <AsideContainer explore={explore} />}
         {info.isActivated && <AsideContainer info={info} />}

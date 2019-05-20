@@ -26,7 +26,7 @@ class AsideContainer extends Component {
 
   render() {
     const { handleDragStart, handleDragEnd } = this;
-    const { explore, info } = this.props;
+    const { explore, file, info, uploadFile } = this.props;
 
     if (explore)
       return (
@@ -37,14 +37,16 @@ class AsideContainer extends Component {
           handleDragEnd={handleDragEnd}
         />
       );
-    return (
-      <Aside
-        state={info.state}
-        data={info.data}
-        handleDragStart={handleDragStart}
-        handleDragEnd={handleDragEnd}
-      />
-    );
+    if (file)
+      return (
+        <Aside
+          uploadFile={uploadFile}
+          state={file.state}
+          data={file.targetNode}
+          list={file.list}
+        />
+      );
+    return <Aside state={info.state} data={info.data} />;
   }
 }
 

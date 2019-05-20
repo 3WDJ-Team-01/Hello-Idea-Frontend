@@ -343,6 +343,7 @@ export default handleActions(
               height: node.idea_height,
             },
             parentOf: node.child_id,
+            hasFfile: node.file_check,
           }),
         );
         draft.nodes = nodes;

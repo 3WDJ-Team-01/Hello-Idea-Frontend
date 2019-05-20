@@ -67,7 +67,12 @@ class ContextMenuContainer extends Component {
 
   handleMenuClick = type => {
     const { pointer, userId, repositoryId } = this.props;
-    const { toggleContextMenu, toggleExplore, MindmapActions } = this.props;
+    const {
+      toggleContextMenu,
+      toggleExplore,
+      toggleFile,
+      MindmapActions,
+    } = this.props;
 
     const newNode = {
       project_id: repositoryId,
@@ -91,6 +96,12 @@ class ContextMenuContainer extends Component {
     const explore = e => {
       const { targetNodeId } = this.state;
       toggleExplore(targetNodeId);
+      toggleContextMenu(e);
+    };
+
+    const attachFile = e => {
+      const { targetNodeId } = this.state;
+      toggleFile(targetNodeId);
       toggleContextMenu(e);
     };
 
@@ -180,6 +191,8 @@ class ContextMenuContainer extends Component {
         return addFromNode;
       case 'SEARCH':
         return explore;
+      case 'ATTACH_FILE':
+        return attachFile;
       case 'EDIT':
         return editNode;
       case 'STYLE':

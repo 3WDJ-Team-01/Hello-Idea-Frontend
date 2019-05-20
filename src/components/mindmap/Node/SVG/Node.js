@@ -1,7 +1,16 @@
 import React from 'react';
 import styles from './Node.module.scss';
 
-const Node = ({ head, index, location, size, color, pointer, isForked }) => {
+const Node = ({
+  head,
+  index,
+  location,
+  size,
+  color,
+  pointer,
+  isForked,
+  hasFile,
+}) => {
   return (
     <g>
       <rect
@@ -62,6 +71,15 @@ const Node = ({ head, index, location, size, color, pointer, isForked }) => {
         filter={pointer.state.isDrag ? '' : 'url(#shadow-2dp)'}
         style={{ fill: 'transparent', stroke: 'transparent', strokeWidth: 2 }}
       />
+      {hasFile ? (
+        <circle
+          cx={location.x + size.width / 2}
+          cy={location.y - size.height / 2}
+          r="8"
+          stroke="#4285F4"
+          fill="#4285F4"
+        />
+      ) : null}
     </g>
   );
 };

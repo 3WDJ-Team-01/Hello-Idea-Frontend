@@ -3,6 +3,7 @@
 $boxWidth: 300px;
 
 .bodyRight {
+  z-index: 100;
   width: $boxWidth + 50px;
   display: flex;
   flex-direction: column;
@@ -15,20 +16,35 @@ $boxWidth: 300px;
   bottom: 0;
   right: 0;
   box-shadow: $shadow2dp;
-  background-color: rgba(white, 0.9); /*99bddc  c5e6ef   baabcf */
+  background-color: rgba(white, 1); /*99bddc  c5e6ef   baabcf */
 }
 .recommendBoxList {
   position: relative;
   width: 100%;
+  height: 100%;
   padding: 1.4rem;
 }
 .section {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   .keyword {
     border-bottom: 1px solid gray;
     margin-bottom: 1rem;
     font-weight: 500;
     font-size: 1.1rem;
     padding: 0.3rem 0;
+  }
+  .list {
+    flex: 1;
+  }
+  .btns {
+    font-size: 2rem;
+    display: flex;
+    justify-content: space-around;
+    input {
+      display: none;
+    }
   }
   p {
     font-size: 0.95rem;

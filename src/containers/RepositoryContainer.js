@@ -67,15 +67,15 @@ class RepositoryContainer extends Component {
       .then(() => {
         RepositoryActions.getRequest(repositoryId).then(() => {
           const { repositoryInfo, likedUsers } = this.props;
-          this.setState(
-            produce(draft => {
-              draft.name = repositoryInfo.project_topic;
-              draft.description = repositoryInfo.project_intro;
-              likedUsers.map(user => {
-                if (user.user_id == loggedUserId) draft.isLiked = true;
-              });
-            }),
-          );
+          // this.setState(
+          //   produce(draft => {
+          //     draft.name = repositoryInfo.project_topic;
+          //     draft.description = repositoryInfo.project_intro;
+          //     likedUsers.map(user => {
+          //       if (user.user_id == loggedUserId) draft.isLiked = true;
+          //     });
+          //   }),
+          // );
         });
       });
   };
