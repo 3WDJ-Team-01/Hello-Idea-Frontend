@@ -93,6 +93,7 @@ const Root = () => (
           />
           {/* New page */}
           <Route path="/user/:user/new" exact component={New} />
+          <Route path="/group/:user/new" exact component={New} />
           {/* NotFound page */}
           <Route component={NotFound} />
         </Switch>

@@ -19,12 +19,13 @@ $navHeight: 40px;
 }
 
 .groupTitle {
-  flex: 1;
   height: 150px;
   margin-top: 25px;
   display: flex;
   font-size: 1.2rem;
-
+  @include media('<medium') {
+    height: 100px;
+  }
   .emblem {
     width: 125px;
     height: 125px;

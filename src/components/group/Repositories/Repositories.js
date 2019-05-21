@@ -51,7 +51,9 @@ const Repositories = ({
         {repositories[filter].map((repository, i) => {
           const target = new RegExp(searchTo);
           if (target.test(repository.project_topic))
-            return <Repository key={i} author={groupId} value={repository} />;
+            return (
+              <Repository key={i} isGroup author={groupId} value={repository} />
+            );
         })}
       </div>
     </div>

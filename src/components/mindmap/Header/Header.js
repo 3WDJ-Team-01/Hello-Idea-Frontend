@@ -19,7 +19,7 @@ const Header = ({ type, info, repository, exportMindmap, uploadMindmap }) => {
         </div>
         <div className={styles.projectName}>{info.project_topic}</div>
         {type === 'group' ? (
-          <div className={styles.groupName}>GroupName</div>
+          <div className={styles.groupName}>{info.author}</div>
         ) : null}
       </div>
       <div className={styles.brainRightHeader}>

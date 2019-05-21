@@ -5,6 +5,7 @@ import mindmap from './mindmap';
 import explore from './explore';
 import recommend from './recommend';
 import repository from './repository';
+import group from './group';
 import alert from './alert';
 
 export default combineReducers({
@@ -14,5 +15,6 @@ export default combineReducers({
   explore,
   recommend,
   repository,
+  group,
   alert,
 });

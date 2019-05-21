@@ -7,6 +7,7 @@ import ProgressIndicator from 'components/base/ProgressIndicator';
 import styles from './New.module.scss';
 
 const New = ({
+  history,
   state,
   groups,
   userInfo,
@@ -15,6 +16,38 @@ const New = ({
   handleChange,
   handleSubmit,
 }) => {
+  const type = history.location.pathname.split('/')[1];
+  const targetId = parseInt(history.location.pathname.split('/')[2], 10);
+
+  const Person = () => (
+    <select
+      name="author_id"
+      className="browser-default custom-select"
+      onChange={handleChange}
+    >
+      <option value={userInfo.user_id}>{userInfo.user_name}</option>
+      {groups.map((group, i) => (
+        <option key={i} value={`G${group.group_id}`}>
+          {group.group_name}
+        </option>
+      ))}
+    </select>
+  );
+
+  const Group = () => {
+    const index = groups.findIndex(group => group.group_id === targetId);
+    const group = groups[index];
+    return (
+      <select
+        name="author_id"
+        className="browser-default custom-select"
+        onChange={handleChange}
+      >
+        <option value={`G${group.group_id}`}>{group.group_name}</option>
+      </select>
+    );
+  };
+
   return (
     <div className={styles.new}>
       {state.create === 'pending' ? <ProgressIndicator /> : null}
@@ -25,18 +58,7 @@ const New = ({
           <div className={styles.label}>
             <b>Owner</b>
           </div>
-          <select
-            name="author_id"
-            className="browser-default custom-select"
-            onChange={handleChange}
-          >
-            <option value={userInfo.user_id}>{userInfo.user_name}</option>
-            {groups.map((group, i) => (
-              <option key={i} value={`G${group.group_id}`}>
-                {group.group_name}
-              </option>
-            ))}
-          </select>
+          {type === 'user' ? <Person /> : <Group />}
         </div>
         <span>/</span>
         <div className={styles.section}>

@@ -3,7 +3,7 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import { bindActionCreators } from 'redux';
 import produce from 'immer';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import Header from 'components/group/Header';
@@ -12,31 +12,11 @@ import Repositories from 'components/group/Repositories';
 import People from 'components/group/People';
 import Setting from 'components/group/Setting';
 import getCroppedImg from 'tools/CropImage';
+import * as userActions from 'store/modules/user';
+import * as groupActions from 'store/modules/group';
 
 class GroupContainer extends Component {
   state = {
-    state: {
-      info: '',
-      repositories: '',
-      people: '',
-    },
-    info: {
-      group_name: '',
-      group_img: '',
-      group_bgimg: '',
-      group_intro: '',
-      user_id: '',
-    },
-    repositories: {
-      all: [],
-      Economy: [],
-      It: [],
-      Life: [],
-      Politics: [],
-      Society: [],
-      Sport: [],
-    },
-    people: [],
     filter: 'all',
     searchTo: '',
     displayColorPicker: false,
@@ -54,36 +34,11 @@ class GroupContainer extends Component {
   };
 
   componentDidMount() {
-    const { groupId } = this.props;
-    axios
-      .post('/api/main/project/', { user_id: 0, group_id: groupId })
-      .then(res => {
-        this.setState(
-          produce(draft => {
-            draft.state.repositories = 'success';
-            draft.repositories = {
-              ...res.data.category_project,
-              all: res.data.all_project,
-            };
-          }),
-        );
-      });
-    axios.post('/api/group_entry/', { group_id: groupId }).then(res => {
-      this.setState(
-        produce(draft => {
-          draft.state.people = 'success';
-          draft.people = res.data;
-        }),
-      );
-    });
-    axios.post('/api/group/detail/', { group_id: groupId }).then(res => {
-      this.setState(
-        produce(draft => {
-          draft.state.info = 'success';
-          draft.info = res.data;
-        }),
-      );
-    });
+    const { groupId, UserActions, GroupActions } = this.props;
+
+    UserActions.repositoriesRequest(0, groupId);
+    GroupActions.peopleRequest(groupId);
+    GroupActions.infoRequest(groupId);
   }
 
   handleFilter = e => {
@@ -209,10 +164,8 @@ class GroupContainer extends Component {
       handleClick,
       handleClose,
     } = this;
-    const { groupId, loggedUserId } = this.props;
+    const { groupId, loggedUserId, repositories, people } = this.props;
     const {
-      repositories,
-      people,
       filter,
       modify,
       searchTo,
@@ -255,13 +208,21 @@ class GroupContainer extends Component {
 
   render() {
     const { renderMenu } = this;
-    const { state, info } = this.state;
-    const { url, menu, authState, groupId } = this.props;
+    const {
+      url,
+      menu,
+      authState,
+      groupState,
+      repositoriesState,
+      groupId,
+      info,
+      people,
+    } = this.props;
     if (
       authState === 'success' &&
-      state.info === 'success' &&
-      state.repositories === 'success' &&
-      state.people === 'success'
+      groupState.people === 'success' &&
+      groupState.info === 'success' &&
+      repositoriesState === 'success'
     )
       return (
         <>
@@ -275,10 +236,18 @@ class GroupContainer extends Component {
 
 const mapStateToProps = state => ({
   authState: state.auth.state,
+  repositoriesState: state.user.state.repositories,
+  groupState: state.group.state,
   loggedUserId: state.auth.userInfo.user_id,
+  repositories: state.user.repositories,
+  info: state.group.info,
+  people: state.group.people,
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  UserActions: bindActionCreators(userActions, dispatch),
+  GroupActions: bindActionCreators(groupActions, dispatch),
+});
 
 export default connect(
   mapStateToProps,

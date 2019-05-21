@@ -48,8 +48,6 @@ export const connectToWebsocket = user_id => dispatch => {
       }
     });
   };
-
-  // dispatch(wsOnmessage(onMessage));
 };
 
 export const readAllNotificationsRequest = user_id => dispatch => {

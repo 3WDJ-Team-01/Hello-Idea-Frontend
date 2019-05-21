@@ -1,3 +1,4 @@
+/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-shadow */
@@ -15,6 +16,7 @@ import Path from 'components/mindmap/Path';
 import Header from 'components/mindmap/Header';
 import Footer from 'components/mindmap/Footer';
 import AsideContainer from './Editor/AsideContainer';
+import FooterContainer from './Editor/FooterContainer';
 import CanvasContainer from './Editor/CanvasContainer';
 import ContextMenuContainer from './Editor/ContextMenuContainer';
 import NodeContainer from './Editor/NodeContainer';
@@ -25,9 +27,11 @@ class App extends Component {
 
     this.state = {
       repositoryInfo: {
+        author: '',
         user_id: 0,
         group_id: 0,
         project_topic: '',
+        type: 'user',
       },
       pointer: {
         target: { class: null, nodeId: null },
@@ -68,6 +72,9 @@ class App extends Component {
         targetNode: null,
         list: [],
       },
+      chat: {
+        isActivated: false,
+      },
     };
   }
 
@@ -75,13 +82,16 @@ class App extends Component {
     const { setSVG, createSVGPoint, setViewBoxBaseVal } = this;
     const { repositoryId, RepositoryActions, MindmapActions } = this.props;
     RepositoryActions.getRequest(repositoryId).then(() => {
-      const { user_id, group_id, project_topic } = this.props.repository;
+      const { author, repository } = this.props;
+      const { user_id, group_id, project_topic } = repository;
       this.setState(
         produce(draft => {
           draft.repositoryInfo = {
+            author,
             user_id,
             group_id,
             project_topic,
+            type: user_id > 0 ? 'user' : 'group',
           };
         }),
       );
@@ -91,27 +101,6 @@ class App extends Component {
     setSVG(svg);
     createSVGPoint(svg);
     setViewBoxBaseVal(svg);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // const { repositoryInfo } = this.state;
-    // const { loggedUserId, history, mindmapState } = this.props;
-    // if (repositoryInfo.user_id && loggedUserId) {
-    //   if (repositoryInfo.user_id !== loggedUserId) {
-    //     history.replace('viewer');
-    //   } else if (
-    //     (prevProps.mindmapState.create === 'pending' &&
-    //       mindmapState.create === 'success') ||
-    //     (prevProps.mindmapState.read === 'pending' &&
-    //       mindmapState.read === 'success') ||
-    //     (prevProps.mindmapState.update === 'pending' &&
-    //       mindmapState.update === 'success') ||
-    //     (prevProps.mindmapState.delete === 'pending' &&
-    //       mindmapState.delete === 'success')
-    //   ) {
-    //     // updated
-    //   }
-    // }
   }
 
   componentWillUnmount() {
@@ -216,6 +205,7 @@ class App extends Component {
         draft.info.isActivated = false;
         draft.file.isActivated = false;
         draft.info.isActivated = false;
+        draft.chat.isActivated = false;
         draft.pointer.target.class =
           event.target.className.baseVal && event.target.className.baseVal;
         draft.pointer.target.nodeId =
@@ -409,6 +399,15 @@ class App extends Component {
       .catch(err => {});
   };
 
+  toggleChat = () => {
+    console.log('fire');
+    this.setState(
+      produce(draft => {
+        draft.chat.isActivated = !this.state.chat.isActivated;
+      }),
+    );
+  };
+
   /* Export Mindmap PNG Image   */
   exportMindmap = () => {
     const { canvasPins } = this.props;
@@ -488,6 +487,7 @@ class App extends Component {
       toggleExplore,
       toggleFile,
       uploadFile,
+      toggleChat,
       exportMindmap,
       uploadMindmap,
       handleCanvasZoom,
@@ -505,13 +505,13 @@ class App extends Component {
     } = this.props;
     // states
     const {
-      type,
       repositoryInfo,
       pointer,
       contextMenu,
       info,
       explore,
       file,
+      chat,
       canvas,
     } = this.state;
 
@@ -528,7 +528,7 @@ class App extends Component {
         ) : null}
         <Header
           exportMindmap={exportMindmap}
-          type={type}
+          type={repositoryInfo.type}
           info={repositoryInfo}
           uploadMindmap={uploadMindmap}
         />
@@ -608,11 +608,24 @@ class App extends Component {
         )}
         {explore.isActivated && <AsideContainer explore={explore} />}
         {info.isActivated && <AsideContainer info={info} />}
-        <Footer
-          type={type}
-          zoom={canvas.zoom}
-          handleCanvasZoom={handleCanvasZoom}
-        />
+        {/* type; user, group */}
+        {repositoryInfo.type === 'user' ? (
+          <Footer
+            type={repositoryInfo.type}
+            zoom={canvas.zoom}
+            handleCanvasZoom={handleCanvasZoom}
+          />
+        ) : (
+          <FooterContainer
+            groupId={repositoryInfo.group_id}
+            repositoryId={repositoryId}
+            type={repositoryInfo.type}
+            zoom={canvas.zoom}
+            chat={chat.isActivated}
+            handleCanvasZoom={handleCanvasZoom}
+            toggleChat={toggleChat}
+          />
+        )}
       </div>
     );
   }
@@ -624,6 +637,7 @@ const mapStateToProps = state => ({
   loggedUserId: state.auth.userInfo.user_id,
   mindmapState: state.mindmap.state,
   repository: state.repository.info,
+  author: state.repository.author,
   canvasPins: state.mindmap.canvasPins,
   paths: state.mindmap.paths,
   nodes: state.mindmap.nodes,

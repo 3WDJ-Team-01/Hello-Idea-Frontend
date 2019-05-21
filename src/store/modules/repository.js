@@ -51,6 +51,7 @@ export const createRequest = ({
   project_intro,
   history,
   notify,
+  member,
 }) => dispatch => {
   dispatch(create());
   return axios
@@ -66,17 +67,13 @@ export const createRequest = ({
         project_id,
         result,
       });
-      axios.post('/api/idea/root/create/', {
-        project_id,
-        idea_cont: 'Right click to edit',
-        idea_color: '#ECF0F1',
-        idea_width: 150,
-        idea_height: 40,
-      });
       axios
-        .post('/api/person_tendency/update/', {
-          user_id,
-          project_topic,
+        .post('/api/idea/root/create/', {
+          project_id,
+          idea_cont: 'Right click to edit',
+          idea_color: '#ECF0F1',
+          idea_width: 150,
+          idea_height: 40,
         })
         .then(() => {
           dispatch(createSuccess(res.data));
@@ -88,6 +85,23 @@ export const createRequest = ({
               `/group/${group_id}/repositories/${project_id}/editor`,
             );
         });
+      if (group_id === 0)
+        axios.post('/api/person_tendency/update/', {
+          user_id,
+          project_topic,
+        });
+      else
+        axios
+          .post('/api/chat/', {
+            project_id,
+          })
+          .then(({ data }) => {
+            const { chat_id } = data;
+            axios.post('/api/chat_entry/', {
+              user_id: member,
+              chat_id,
+            });
+          });
     })
     .catch(err => {
       if (err.response) dispatch(createFailure(err.response));
