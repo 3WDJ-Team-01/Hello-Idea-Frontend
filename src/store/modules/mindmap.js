@@ -6,6 +6,8 @@ import { createAction, handleActions } from 'redux-actions';
 import axios from 'axios';
 import { getPathEndPoint } from 'tools/Path';
 
+const url = `${process.env.REACT_APP_WS_URL_ORIGIN}/ws/work`;
+
 // initialize Actions
 const INITIALIZE = 'mindmap/INITIALIZE';
 const SET_SOURCE_NODE = 'mindmap/SET_SOURCE_NODE';
@@ -28,6 +30,12 @@ const SET_NODE_DATA_SUCCESS = 'mindmap/SET_NODE_DATA_SUCCESS';
 const SET_NODE_DATA_FAILURE = 'mindmap/SET_NODE_DATA_FAILURE';
 const SET_NODE_LOCATION = 'mindmap/SET_NODE_LOCATION'; // Node & Path ReLocation
 
+// Group Work Actions
+const WS_OPEN = 'mindmap/WS_OPEN';
+const WS_MESSAGE = 'mindmap/WS_MESSAGE';
+const WS_CLOSE = 'mindmap/WS_CLOSE';
+const WS_SEND = 'mindmap/WS_SEND';
+
 export const initialize = createAction(INITIALIZE);
 export const setSourceNode = createAction(SET_SOURCE_NODE);
 export const getNodes = createAction(GET_NODES);
@@ -46,6 +54,10 @@ export const setNodeData = createAction(SET_NODE_DATA);
 export const setNodeDataSuccess = createAction(SET_NODE_DATA_SUCCESS);
 export const setNodeDataFailure = createAction(SET_NODE_DATA_FAILURE);
 export const setNodeLocation = createAction(SET_NODE_LOCATION);
+export const wsOpen = createAction(WS_OPEN);
+export const wsMessage = createAction(WS_MESSAGE);
+export const wsClose = createAction(WS_CLOSE);
+export const wsSend = createAction(WS_SEND);
 
 // Communication
 export const loadIdeasRequest = project_id => dispatch => {
@@ -55,7 +67,7 @@ export const loadIdeasRequest = project_id => dispatch => {
     .then(res => {
       axios.post('/api/idea/root/select/', { project_id }).then(({ data }) => {
         dispatch(setSourceNode({ data, list: res.data }));
-        dispatch(getNodesSuccess(res.data));
+        dispatch(getNodesSuccess({ project_id, list: res.data }));
       });
     })
     .catch(err => {
@@ -132,6 +144,7 @@ export const removeIdeaRequest = idea_id => dispatch => {
     .post('/api/idea/delete/', { idea_id })
     .then(res => {
       dispatch(removeNodeSuccess(idea_id));
+      dispatch(wsSend());
     })
     .catch(err => {
       dispatch(removeNodeFailure());
@@ -152,6 +165,7 @@ export const updateIdeaRequest = data => dispatch => {
       })
       .then(res => {
         dispatch(setNodeDataSuccess());
+        dispatch(wsSend());
       })
       .catch(err => {
         dispatch(setNodeDataFailure());
@@ -166,13 +180,17 @@ export const updateIdeaRequest = data => dispatch => {
       })
       .then(res => {
         dispatch(setNodeDataSuccess());
-        axios.post('/api/idea/loc/update/', {
-          idea_id: data.id,
-          idea_x: data.location.x,
-          idea_y: data.location.y,
-          idea_width: data.size.width,
-          idea_height: data.size.height,
-        });
+        axios
+          .post('/api/idea/loc/update/', {
+            idea_id: data.id,
+            idea_x: data.location.x,
+            idea_y: data.location.y,
+            idea_width: data.size.width,
+            idea_height: data.size.height,
+          })
+          .then(() => {
+            dispatch(wsSend());
+          });
       })
       .catch(err => {
         dispatch(setNodeDataFailure());
@@ -186,13 +204,17 @@ export const updateIdeaRequest = data => dispatch => {
       })
       .then(res => {
         dispatch(setNodeDataSuccess());
-        axios.post('/api/idea/loc/update/', {
-          idea_id: data.id,
-          idea_x: data.location.x,
-          idea_y: data.location.y,
-          idea_width: data.size.width,
-          idea_height: data.size.height,
-        });
+        axios
+          .post('/api/idea/loc/update/', {
+            idea_id: data.id,
+            idea_x: data.location.x,
+            idea_y: data.location.y,
+            idea_width: data.size.width,
+            idea_height: data.size.height,
+          })
+          .then(() => {
+            dispatch(wsSend());
+          });
         axios
           .post('/api/idea/keyword/create/', {
             idea_id: data.id,
@@ -218,10 +240,21 @@ export const updateIdeaRequest = data => dispatch => {
     })
     .then(() => {
       dispatch(setNodeDataSuccess());
+      dispatch(wsSend());
     })
     .catch(err => {
       dispatch(setNodeDataFailure());
     });
+};
+export const connectToWebsocket = project_id => dispatch => {
+  const ws = new WebSocket(`${url}/${project_id}/`);
+  ws.onopen = () => {
+    dispatch(wsOpen(ws));
+  };
+  ws.onmessage = receive => {
+    const resData = JSON.parse(receive.data);
+    dispatch(wsMessage(resData));
+  };
 };
 
 const initialState = {
@@ -235,6 +268,8 @@ const initialState = {
     leftTop: { x: -window.innerWidth / 2, y: -window.innerHeight / 2 },
     rightBottom: { x: 0, y: 0 },
   },
+  project_id: 0,
+  websocket: null,
   nodes: [],
   paths: [
     // {
@@ -321,11 +356,13 @@ export default handleActions(
     // communication response
     [GET_NODES_SUCCESS]: (state, action) =>
       produce(state, draft => {
+        const { nodes } = state;
+        const { project_id, list } = action.payload;
+        draft.project_id = project_id;
         draft.state.read = 'success';
 
-        const { nodes } = state;
         // Get Node List
-        action.payload.map(node =>
+        list.map(node =>
           nodes.push({
             id: node.idea_id,
             user_id: node.user_id,
@@ -680,6 +717,134 @@ export default handleActions(
           }
         });
       }),
+    [WS_OPEN]: (state, action) =>
+      produce(state, draft => {
+        draft.websocket = action.payload;
+      }),
+    // message
+    [WS_MESSAGE]: (state, action) =>
+      produce(state, draft => {
+        const { Ideas, root_idea } = action.payload;
+        const nodes = [
+          {
+            id: 0,
+            isEditing: false,
+            location: {
+              x: 0,
+              y: 0,
+            },
+            size: {
+              width: root_idea.idea_width,
+              height: root_idea.idea_height,
+            },
+            color: root_idea.idea_color,
+            head: root_idea.idea_cont,
+            parentOf: [],
+            childOf: null,
+          },
+        ];
+        Ideas.map(node => {
+          if (node.parent_id === 0) {
+            draft.nodes[0].parentOf.push(node.idea_id);
+          }
+          nodes.push({
+            id: node.idea_id,
+            user_id: node.user_id,
+            childOf: node.parent_id,
+            head: node.idea_cont,
+            isForked: node.is_forked,
+            isEditing: false,
+            color: node.idea_color,
+            location: {
+              x: node.idea_x,
+              y: node.idea_y,
+            },
+            size: {
+              width: node.idea_width,
+              height: node.idea_height,
+            },
+            parentOf: node.child_id,
+            hasFfile: node.file_check,
+          });
+        });
+        draft.nodes = nodes;
+
+        const prevCanvasPins = state.canvasPins;
+        draft.paths = [];
+        for (let i = nodes.length - 1; i > -1; i--) {
+          const parentIndex = nodes.findIndex(
+            item => item.id === nodes[i].childOf,
+          );
+
+          const start = nodes[parentIndex];
+          const end = nodes[i];
+          if (end.location.x < prevCanvasPins.leftTop.x) {
+            prevCanvasPins.leftTop.x = end.location.x - 40;
+          } else if (end.location.x > prevCanvasPins.rightBottom.x) {
+            prevCanvasPins.rightBottom.x = end.location.x + 200;
+          }
+
+          if (end.location.y < prevCanvasPins.leftTop.y) {
+            prevCanvasPins.leftTop.y = end.location.y - 40;
+          } else if (end.location.y > prevCanvasPins.rightBottom.y) {
+            prevCanvasPins.rightBottom.y = end.location.y + 40;
+          }
+
+          if (parentIndex > -1) {
+            if (end.parentOf.length > 0) {
+              start.parentOf = start.parentOf.concat(end.parentOf);
+            }
+            const { mode, position } = getPathEndPoint(
+              start.location,
+              end.location,
+              end.size,
+            );
+
+            draft.paths.unshift({
+              options: {
+                mode: mode,
+                color: start.color,
+                endPosition: position,
+              },
+              startAt: {
+                nodeId: start.id,
+                width: start.size.width,
+                height: start.size.height,
+                x: start.location.x,
+                y: start.location.y,
+              },
+              endAt: {
+                nodeId: end.id,
+                width: end.size.width,
+                height: end.size.height,
+                x: end.location.x,
+                y: end.location.y,
+              },
+            });
+          } else {
+            draft.paths.unshift({
+              startAt: null,
+              endAt: {
+                nodeId: end.id,
+                width: end.size.width,
+                height: end.size.height,
+                x: end.location.x,
+                y: end.location.y,
+              },
+            });
+          }
+        }
+        draft.canvasPins = prevCanvasPins;
+      }),
+    [WS_SEND]: (state, action) => {
+      const { project_id } = state;
+      state.websocket.send(
+        JSON.stringify({
+          project_id,
+        }),
+      );
+      return state;
+    },
   },
   initialState,
 );

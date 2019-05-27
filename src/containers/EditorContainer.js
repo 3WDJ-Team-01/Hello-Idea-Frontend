@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as repositoryActions from 'store/modules/repository';
 import * as mindmapActions from 'store/modules/mindmap';
+import * as groupActions from 'store/modules/group';
 import html2canvas from 'html2canvas';
 import produce from 'immer';
 import axios from 'axios';
@@ -88,13 +89,37 @@ class App extends Component {
       MindmapActions,
     } = this.props;
     if (!loggedUserId) {
-      history.back();
+      history.push('/');
     } else {
       RepositoryActions.getRequest(repositoryId).then(() => {
-        const { author, repository } = this.props;
+        const {
+          author,
+          repository,
+          groupMembers,
+          GroupActions,
+          Mind,
+        } = this.props;
         const { user_id, group_id, project_topic } = repository;
-        if (user_id !== loggedUserId) {
+
+        if (user_id > 0 && user_id !== loggedUserId) {
           history.replace('viewer');
+        } else if (groupMembers.length > 0) {
+          if (
+            groupMembers.findIndex(member => member.user_id === loggedUserId) <
+            0
+          )
+            history.replace('viewer');
+          MindmapActions.connectToWebsocket(repositoryId);
+        } else {
+          GroupActions.peopleRequest(group_id).then(() => {
+            if (
+              groupMembers.findIndex(
+                member => member.user_id === loggedUserId,
+              ) < 0
+            )
+              history.replace('viewer');
+          });
+          MindmapActions.connectToWebsocket(repositoryId);
         }
         this.setState(
           produce(draft => {
@@ -650,6 +675,7 @@ const mapStateToProps = state => ({
   mindmapState: state.mindmap.state,
   repository: state.repository.info,
   author: state.repository.author,
+  groupMembers: state.group.people,
   canvasPins: state.mindmap.canvasPins,
   paths: state.mindmap.paths,
   nodes: state.mindmap.nodes,
@@ -658,6 +684,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   RepositoryActions: bindActionCreators(repositoryActions, dispatch),
   MindmapActions: bindActionCreators(mindmapActions, dispatch),
+  GroupActions: bindActionCreators(groupActions, dispatch),
 });
 
 export default connect(

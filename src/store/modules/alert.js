@@ -5,7 +5,7 @@ import { createAction, handleActions } from 'redux-actions';
 import axios from 'axios';
 
 // websocket url path origin
-const url = `${process.env.REACT_APP_WS_URL_ORIGIN}/ws/test`;
+const url = `${process.env.REACT_APP_WS_URL_ORIGIN}/ws/alert`;
 
 const WS_OPEN = 'alert/WS_OPEN';
 const WS_MESSAGE = 'alert/WS_MESSAGE';
