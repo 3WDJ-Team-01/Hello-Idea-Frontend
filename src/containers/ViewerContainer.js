@@ -6,12 +6,16 @@ import { bindActionCreators } from 'redux';
 import * as repositoryActions from 'store/modules/repository';
 import * as mindmapActions from 'store/modules/mindmap';
 import html2canvas from 'html2canvas';
+import axios from 'axios';
 import produce from 'immer';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import Path from 'components/mindmap/Path';
 import Header from 'components/mindmap/Header';
 import Footer from 'components/mindmap/Footer';
 import CanvasContainer from './Viewer/CanvasContainer';
+import AsideContainer from './Viewer/AsideContainer';
+import CommentContainer from './Viewer/CommentContainer';
+import ContextMenuContainer from './Viewer/ContextMenuContainer';
 import NodeContainer from './Viewer/NodeContainer';
 
 class App extends Component {
@@ -20,9 +24,11 @@ class App extends Component {
 
     this.state = {
       repositoryInfo: {
+        author: '',
         user_id: 0,
         group_id: 0,
         project_topic: '',
+        type: 'user',
       },
       pointer: {
         target: { class: null, nodeId: null },
@@ -38,12 +44,22 @@ class App extends Component {
         viewBox: 0,
         zoom: 1,
       },
-      explore: {
+      contextMenu: {
+        mode: null,
+        location: {
+          x: 0,
+          y: 0,
+        },
+      },
+      file: {
         state: 'pending',
         isActivated: false,
         targetNode: null,
-        results: [],
-        ideas: [],
+        list: [],
+      },
+      comment: {
+        isActivated: false,
+        targetNode: null,
       },
     };
   }
@@ -52,13 +68,16 @@ class App extends Component {
     const { setSVG, createSVGPoint, setViewBoxBaseVal } = this;
     const { repositoryId, RepositoryActions, MindmapActions } = this.props;
     RepositoryActions.getRequest(repositoryId).then(() => {
-      const { user_id, group_id, project_topic } = this.props.repository;
+      const { author, repository } = this.props;
+      const { user_id, group_id, project_topic } = repository;
       this.setState(
         produce(draft => {
           draft.repositoryInfo = {
+            author,
             user_id,
             group_id,
             project_topic,
+            type: user_id > 0 ? 'user' : 'group',
           };
         }),
       );
@@ -168,8 +187,7 @@ class App extends Component {
     this.setState(
       produce(draft => {
         draft.pointer.state.isDown = true;
-        draft.explore.isActivated = false;
-        draft.info.isActivated = false;
+        draft.file.isActivated = false;
         draft.pointer.target.class =
           event.target.className.baseVal && event.target.className.baseVal;
         draft.pointer.target.nodeId =
@@ -201,6 +219,113 @@ class App extends Component {
     );
   };
 
+  goBack = () => {
+    const { history } = this.props;
+
+    history.push('');
+  };
+
+  /* Toggle Menu   */
+
+  toggleContextMenu = event => {
+    event.persist();
+    const { pointer } = this.state;
+
+    this.setState(
+      produce(draft => {
+        if (event.button === 0) draft.contextMenu.mode = null;
+        else if (event.button === 2) {
+          if (event.target.id === '0') draft.contextMenu.mode = 'root';
+          else
+            draft.contextMenu.mode =
+              event.target.className.baseVal && event.target.className.baseVal;
+          draft.contextMenu.location = pointer.currLoc;
+          draft.pointer.state.isDown = false;
+          draft.pointer.state.isDrag = false;
+        }
+      }),
+    );
+  };
+
+  toggleFile = nodeId => {
+    const { nodes, repositoryId } = this.props;
+    const index = nodes.findIndex(node => node.id === nodeId);
+    this.setState(
+      produce(draft => {
+        draft.file = {
+          state: 'pending',
+          isActivated: true,
+          targetNode: nodes[index],
+          list: [],
+        };
+      }),
+    );
+
+    axios
+      .post('/api/idea/file/select/', {
+        idea_id: nodes[index].id,
+      })
+      .then(({ data }) => {
+        this.setState(
+          produce(draft => {
+            draft.file.state = 'success';
+            draft.file.list = data;
+          }),
+        );
+      })
+      .catch(() => {
+        this.setState(
+          produce(draft => {
+            draft.file.state = 'failure';
+          }),
+        );
+      });
+  };
+
+  toggleComment = nodeId => {
+    const { nodes, repositoryId } = this.props;
+    const { comment } = this.state;
+    if (!comment.isActivated)
+      this.setState(
+        produce(draft => {
+          const index = nodes.findIndex(node => node.id === nodeId);
+          draft.comment = {
+            isActivated: true,
+            targetNode: nodes[index],
+          };
+        }),
+      );
+    else
+      this.setState(
+        produce(draft => {
+          draft.comment = {
+            isActivated: false,
+            targetNode: null,
+          };
+        }),
+      );
+
+    // axios
+    //   .post('/api/idea/file/select/', {
+    //     idea_id: nodes[index].id,
+    //   })
+    //   .then(({ data }) => {
+    //     this.setState(
+    //       produce(draft => {
+    //         draft.file.state = 'success';
+    //         draft.file.list = data;
+    //       }),
+    //     );
+    //   })
+    //   .catch(() => {
+    //     this.setState(
+    //       produce(draft => {
+    //         draft.file.state = 'failure';
+    //       }),
+    //     );
+    //   });
+  };
+
   /* Export Mindmap PNG Image   */
   exportMindmap = targetDOM => {
     const { cavasPins } = this.props;
@@ -225,7 +350,6 @@ class App extends Component {
       a.setAttribute('download', 'MY_COOL_IMAGE.png');
       a.setAttribute('href', imgURI);
       a.setAttribute('target', '_blank');
-
       a.dispatchEvent(evt);
     });
   };
@@ -243,9 +367,13 @@ class App extends Component {
       pointerUp,
       pointerDown,
       pointerMove,
+      toggleContextMenu,
+      toggleFile,
+      toggleComment,
       exportMindmap,
       handleCanvasZoom,
       handleMouseWheel,
+      goBack,
     } = this;
     const {
       authState,
@@ -256,7 +384,16 @@ class App extends Component {
       nodes,
       repositoryId,
     } = this.props;
-    const { type, repositoryInfo, pointer, explore, canvas } = this.state;
+    const {
+      type,
+      repositoryInfo,
+      pointer,
+      explore,
+      canvas,
+      contextMenu,
+      file,
+      comment,
+    } = this.state;
     return (
       <div
         className="App"
@@ -272,6 +409,7 @@ class App extends Component {
           exportMindmap={exportMindmap}
           type={type}
           info={repositoryInfo}
+          onClick={goBack}
         />
         <CanvasContainer
           userId={loggedUserId}
@@ -285,6 +423,7 @@ class App extends Component {
           pointerUp={pointerUp}
           pointerDown={pointerDown}
           pointerMove={pointerMove}
+          toggleContextMenu={toggleContextMenu}
           handleMouseWheel={handleMouseWheel}
           explore={explore}
           zoom={canvas.zoom}
@@ -329,6 +468,25 @@ class App extends Component {
             </g>
           </g>
         </CanvasContainer>
+        {contextMenu.mode && (
+          <ContextMenuContainer
+            pointer={pointer}
+            mode={contextMenu.mode}
+            location={contextMenu.location}
+            userId={loggedUserId}
+            repositoryId={repositoryId}
+            toggleContextMenu={toggleContextMenu}
+            toggleFile={toggleFile}
+            toggleComment={toggleComment}
+          />
+        )}
+        {file.isActivated && <AsideContainer file={file} />}
+        {comment.isActivated && (
+          <CommentContainer
+            target={comment.targetNode}
+            toggleComment={toggleComment}
+          />
+        )}
         <Footer
           type={type}
           zoom={canvas.zoom}

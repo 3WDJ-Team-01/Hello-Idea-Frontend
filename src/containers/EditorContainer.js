@@ -80,27 +80,40 @@ class App extends Component {
 
   componentDidMount() {
     const { setSVG, createSVGPoint, setViewBoxBaseVal } = this;
-    const { repositoryId, RepositoryActions, MindmapActions } = this.props;
-    RepositoryActions.getRequest(repositoryId).then(() => {
-      const { author, repository } = this.props;
-      const { user_id, group_id, project_topic } = repository;
-      this.setState(
-        produce(draft => {
-          draft.repositoryInfo = {
-            author,
-            user_id,
-            group_id,
-            project_topic,
-            type: user_id > 0 ? 'user' : 'group',
-          };
-        }),
-      );
-    });
-    MindmapActions.loadIdeasRequest(repositoryId);
-    const svg = document.querySelector('#canvas');
-    setSVG(svg);
-    createSVGPoint(svg);
-    setViewBoxBaseVal(svg);
+    const {
+      history,
+      loggedUserId,
+      repositoryId,
+      RepositoryActions,
+      MindmapActions,
+    } = this.props;
+    if (!loggedUserId) {
+      history.back();
+    } else {
+      RepositoryActions.getRequest(repositoryId).then(() => {
+        const { author, repository } = this.props;
+        const { user_id, group_id, project_topic } = repository;
+        if (user_id !== loggedUserId) {
+          history.replace('viewer');
+        }
+        this.setState(
+          produce(draft => {
+            draft.repositoryInfo = {
+              author,
+              user_id,
+              group_id,
+              project_topic,
+              type: user_id > 0 ? 'user' : 'group',
+            };
+          }),
+        );
+      });
+      MindmapActions.loadIdeasRequest(repositoryId);
+      const svg = document.querySelector('#canvas');
+      setSVG(svg);
+      createSVGPoint(svg);
+      setViewBoxBaseVal(svg);
+    }
   }
 
   componentWillUnmount() {
@@ -494,6 +507,7 @@ class App extends Component {
     } = this;
     // props
     const {
+      history,
       authState,
       repoState,
       mindmapState,
@@ -529,7 +543,7 @@ class App extends Component {
           exportMindmap={exportMindmap}
           type={repositoryInfo.type}
           info={repositoryInfo}
-          uploadMindmap={uploadMindmap}
+          onClick={uploadMindmap}
         />
         <CanvasContainer
           userId={loggedUserId}
@@ -547,7 +561,6 @@ class App extends Component {
           handleMouseWheel={handleMouseWheel}
           explore={explore}
           zoom={canvas.zoom}
-          uploadMindmap={uploadMindmap}
         >
           <g id="mindmap">
             <g id="paths">

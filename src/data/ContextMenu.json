@@ -126,5 +126,24 @@
         "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/search.png"
       }
     ]
+  },
+  "viewer": {
+    "options": {
+      "bgColor": "rgba(41, 128, 185, 1.0)"
+    },
+    "list": [
+      {},
+      {
+        "type": "COMMENT",
+        "label": "add comment",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/add_comment.png"
+      },
+      {},
+      {
+        "type": "FILE_LIST",
+        "label": "files",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/folder.png"
+      }
+    ]
   }
 }

@@ -8,6 +8,7 @@
 /* eslint-disable no-shadow */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import produce from 'immer';
 import Canvas from 'components/mindmap/Canvas';
 
 class CanvasContainer extends Component {
@@ -20,16 +21,21 @@ class CanvasContainer extends Component {
         width: window.screen.width,
         height: window.screen.height,
       },
+      changedSize: {
+        width: 0,
+        height: 0,
+      },
       pins: canvasPins,
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    const { canvasPins } = nextProps;
+    const { originSize } = prevState;
+    const changedWidth = canvasPins.rightBottom.x - canvasPins.leftTop.x;
+    const changedHeight = canvasPins.rightBottom.y - canvasPins.leftTop.y;
+
     if (prevState.canvasPins !== nextProps.canvasPins) {
-      const { canvasPins } = nextProps;
-      const { originSize } = prevState;
-      const changedWidth = canvasPins.rightBottom.x - canvasPins.leftTop.x;
-      const changedHeight = canvasPins.rightBottom.y - canvasPins.leftTop.y;
       return {
         originSize: {
           width:
@@ -59,46 +65,84 @@ class CanvasContainer extends Component {
 
   handlePointerDown = e => {
     const { getPointFromEvent } = this;
-    const { setPrevLoc, pointerDown } = this.props;
+    const { setPrevLoc, pointerDown, toggleContextMenu } = this.props;
     e.persist();
     setPrevLoc(getPointFromEvent(e));
     pointerDown(e);
+    toggleContextMenu(e);
   };
 
   handlePointerMove = e => {
     const { getPointFromEvent } = this;
-    const { pointer, pointerMove, setViewBoxLocation } = this.props;
+    const {
+      pointer,
+      pointerMove,
+      MindmapActions,
+      setViewBoxLocation,
+    } = this.props;
     if (!pointer.state.isDown || e.target.contentEditable) return;
 
     e.preventDefault();
     pointerMove();
 
     const pointerPosition = getPointFromEvent(e);
+    const changedLocX = pointerPosition.x - pointer.prevLoc.x;
+    const changedLocY = pointerPosition.y - pointer.prevLoc.y;
+
     if (pointer.target.class === 'canvas') {
       setViewBoxLocation({
-        x: pointerPosition.x - pointer.prevLoc.x,
-        y: pointerPosition.y - pointer.prevLoc.y,
+        x: changedLocX,
+        y: changedLocY,
       });
+      this.setState(
+        produce(draft => {
+          draft.changedSize.width += changedLocX;
+          draft.changedSize.height += changedLocY;
+          draft.pins.leftTop.x -= changedLocX;
+          draft.pins.leftTop.y -= changedLocY;
+        }),
+      );
     }
   };
 
   handlePointerUp = e => {
-    const { pointerUp } = this.props;
+    const { getPointFromEvent } = this;
+    const { changedSize } = this.state;
+    const { pointer, nodes, pointerUp, MindmapActions } = this.props;
+    const pointerPosition = getPointFromEvent(e);
+
+    if (pointer.target.class === 'canvas') {
+      const { width, height } = changedSize;
+      this.setState(
+        produce(draft => {
+          draft.originSize.width += Math.abs(width);
+          draft.originSize.height += Math.abs(height);
+        }),
+      );
+    }
     pointerUp();
   };
 
   render() {
-    const { handlePointerDown, handlePointerUp, handlePointerMove } = this;
+    const {
+      handlePointerDown,
+      handlePointerUp,
+      handlePointerMove,
+      handleIdeaDrop,
+    } = this;
     const { children, zoom, handleMouseWheel } = this.props;
-    const { originSize, pins } = this.state;
+    const { originSize, changedSize, pins } = this.state;
+
     return (
       <Canvas
         originSize={originSize}
+        changedSize={changedSize}
         pins={pins}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerMove={handlePointerMove}
         onWheel={handleMouseWheel}
+        onDrop={handleIdeaDrop}
         zoom={zoom}
       >
         {children}
@@ -108,7 +152,7 @@ class CanvasContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  cavasPins: state.mindmap.cavasPins,
+  canvasPins: state.mindmap.canvasPins,
   nodes: state.mindmap.nodes,
   loggedUserFollowers: state.auth.relation.followersId,
 });

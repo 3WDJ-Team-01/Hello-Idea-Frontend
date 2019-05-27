@@ -8,7 +8,7 @@ import ProgressIndicator from 'components/base/ProgressIndicator';
 import styles from './Aside.module.scss';
 
 const Aside = ({
-  isActivated,
+  type,
   state,
   data,
   results,
@@ -111,7 +111,7 @@ const Aside = ({
     </div>
   );
   // File Action
-  const List = () => (
+  const FileList = () => (
     <div className={styles.recommendBoxList}>
       <div className={styles.section}>
         <div className={styles.keyword}>{data.head}</div>
@@ -133,22 +133,68 @@ const Aside = ({
             ))}
           </p>
         </div>
-        <div className={styles.btns}>
-          <label htmlFor="file">
-            <MDBIcon icon="file-upload" />
-          </label>
-          <input type="file" id="file" onChange={uploadFile} />
-          <label htmlFor="camera">
-            <MDBIcon icon="camera" />
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            capture="camera"
-            id="camera"
-            onChange={uploadFile}
-          />
+        {window.location.pathname.includes('viewer') ? null : (
+          <div className={styles.btns}>
+            <label htmlFor="file">
+              <MDBIcon icon="file-upload" />
+            </label>
+            <input type="file" id="file" onChange={uploadFile} />
+            <label htmlFor="camera">
+              <MDBIcon icon="camera" />
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              capture="camera"
+              id="camera"
+              onChange={uploadFile}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+  // Comments Action
+  const Comments = () => (
+    <div className={styles.recommendBoxList}>
+      <div className={styles.section}>
+        <div className={styles.keyword}>{data.head}</div>
+        <div className={styles.list}>
+          <p>
+            <span>
+              <b>파일</b>
+            </span>
+            {list.map((item, i) => (
+              <span key={i}>
+                <a
+                  href={item.idea_file}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {item.idea_file.split('/media.hello-idea.com/')[1]}
+                </a>
+              </span>
+            ))}
+          </p>
         </div>
+        {window.location.pathname.includes('viewer') ? null : (
+          <div className={styles.btns}>
+            <label htmlFor="file">
+              <MDBIcon icon="file-upload" />
+            </label>
+            <input type="file" id="file" onChange={uploadFile} />
+            <label htmlFor="camera">
+              <MDBIcon icon="camera" />
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              capture="camera"
+              id="camera"
+              onChange={uploadFile}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -156,34 +202,21 @@ const Aside = ({
   const Failure = () => (
     <div className={styles.recommendBoxList}>결과가 없습니다</div>
   );
-  if (results)
-    return (
-      <div className={styles.bodyRight}>
-        {results.length > 0 && state === 'success' ? (
-          <Results />
-        ) : state === 'pending' ? (
-          <Loading />
-        ) : (
-          <Failure />
-        )}
-      </div>
-    );
-  if (list)
-    return (
-      <div className={styles.bodyRight}>
-        {state === 'success' ? (
-          <List />
-        ) : state === 'pending' ? (
-          <Loading />
-        ) : (
-          <Failure />
-        )}
-      </div>
-    );
+
+  const renderContents = () => {
+    switch (type) {
+      case 'explore':
+        return <Results />;
+      case 'file':
+        return <FileList />;
+      default:
+        return <Info />;
+    }
+  };
   return (
     <div className={styles.bodyRight}>
       {state === 'success' ? (
-        <Info />
+        renderContents()
       ) : state === 'pending' ? (
         <Loading />
       ) : (

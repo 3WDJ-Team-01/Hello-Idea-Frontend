@@ -102,7 +102,7 @@ export default handleActions(
     [CHECK_ALERTS]: (state, action) =>
       produce(state, draft => {
         const { user_id } = action.payload;
-        const { notifications } = action.payload.data;
+        const { notifications, requests } = action.payload.data;
         draft.state = 'success';
         if (notifications && notifications.length > 0)
           notifications
@@ -111,7 +111,13 @@ export default handleActions(
               if (notify.target) draft.notifications.push(notify);
               if (!notify.read_at) draft.newMessage = true;
             });
-        draft.requests = action.payload.requests;
+        if (requests && requests.length > 0)
+          requests
+            .filter(item => item.send_id !== user_id)
+            .map(notify => {
+              if (notify.target) draft.requests.push(notify);
+              if (!notify.read_at) draft.newMessage = true;
+            });
       }),
     [ADD_NOTIFICATIONS]: (state, action) =>
       produce(state, draft => {

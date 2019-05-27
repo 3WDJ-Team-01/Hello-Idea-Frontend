@@ -34,14 +34,10 @@ const Canvas = ({
         <svg
           id="canvas"
           className="canvas"
-          viewBox={`${
-            pins.leftTop.x
-            // -
-          } ${
-            pins.leftTop.y
-            // -
-          }
-          ${width / zoom} ${height / zoom}`}
+          viewBox={`
+          ${pins.leftTop.x} ${pins.leftTop.y}
+          ${width / zoom} ${height / zoom}
+          `}
           width={width}
           height={height}
           style={style}

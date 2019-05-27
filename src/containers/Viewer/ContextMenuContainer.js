@@ -59,140 +59,28 @@ class ContextMenuContainer extends Component {
 
   handleMenuClick = type => {
     const { pointer, userId, repositoryId } = this.props;
-    const {
-      toggleContextMenu,
-      toggleExplore,
-      toggleFile,
-      MindmapActions,
-    } = this.props;
+    const { toggleContextMenu, toggleFile, MindmapActions } = this.props;
 
-    const newNode = {
-      project_id: repositoryId,
-      user_id: userId,
-      childOf: 0,
-      isForked: 0,
-      isEditing: true,
-      color: '#ECF0F1',
-      location: {
-        x: pointer.prevLoc.x,
-        y: pointer.prevLoc.y,
-      },
-      size: {
-        width: 100,
-        height: 40,
-      },
-      head: '',
-      parentOf: [],
-    };
-
-    const explore = e => {
+    const viewFiles = e => {
       const { targetNodeId } = this.state;
-      toggleExplore(targetNodeId);
-      toggleContextMenu(e);
-    };
 
-    const attachFile = e => {
-      const { targetNodeId } = this.state;
       toggleFile(targetNodeId);
       toggleContextMenu(e);
     };
 
-    /* From canvas */
+    const sendComment = e => {
+      const { toggleComment } = this.props;
+      const { targetNodeId } = this.state;
 
-    const addFromCanvas = e => {
-      const { nodes } = this.props;
-      const { color } = nodes[0];
-      MindmapActions.createIdeaRequest({ ...newNode, color });
+      toggleComment(targetNodeId);
       toggleContextMenu(e);
     };
 
-    /* From nodes */
-
-    const addFromNode = e => {
-      const { nodes } = this.props;
-      const { targetNodeId } = this.state;
-      const { color } = nodes[
-        nodes.findIndex(item => item.id === targetNodeId)
-      ];
-
-      MindmapActions.createIdeaRequest({
-        ...newNode,
-        color,
-        childOf: targetNodeId,
-      });
-
-      toggleContextMenu(e);
-    };
-
-    const remove = e => {
-      const { nodes } = this.props;
-      const { targetNodeId } = this.state;
-      const index = nodes.findIndex(node => node.id === targetNodeId);
-      const targetNodes = nodes[index].parentOf.concat(targetNodeId);
-
-      MindmapActions.removeIdeaRequest(targetNodes);
-      toggleContextMenu(e);
-    };
-
-    const editNode = e => {
-      const { targetNodeId } = this.state;
-
-      MindmapActions.toggleNodeEditing(targetNodeId);
-      toggleContextMenu(e);
-    };
-
-    const changeColor = e => {
-      const { targetNodeId } = this.state;
-      const { nodes } = this.props;
-
-      const index = nodes.findIndex(node => node.id === targetNodeId);
-
-      this.setState(
-        produce(draft => {
-          draft.color = nodes[index].color;
-          draft.isColorPicker = true;
-        }),
-      );
-    };
-
-    const info = e => {
-      const { targetNodeId } = this.state;
-      const { nodes, toggleInfo } = this.props;
-      const index = nodes.findIndex(node => node.id === targetNodeId);
-
-      toggleInfo(nodes[index].isForked);
-      toggleContextMenu(e);
-    };
-
-    // menu types
-    // * canvas
-    //   - ADD_NODE_FROM_CANVAS: add new idea from canvas
-    //   - SEARCH: explore ideas
-    //
-    // * node
-    //   - REMOVE: add new idea
-    //   - ATTACH_FILE: attach external file
-    //   - ADD_NODE_FROM_NODE: add new idea from parent node
-    //   - EDIT: edit text content in node
-    //   - STYLE: choose node's style
-    //   - SEARCH: explore the other side's idea
     switch (type) {
-      case 'ADD_NODE_FROM_CANVAS':
-        return addFromCanvas;
-      case 'ADD_NODE_FROM_NODE':
-        return addFromNode;
-      case 'SEARCH':
-        return explore;
-      case 'ATTACH_FILE':
-        return attachFile;
-      case 'EDIT':
-        return editNode;
-      case 'STYLE':
-        return changeColor;
-      case 'FORKED_IDEA_INFO':
-        return info;
-      case 'REMOVE':
-        return remove;
+      case 'FILE_LIST':
+        return viewFiles;
+      case 'COMMENT':
+        return sendComment;
       default:
         return null;
     }
@@ -207,7 +95,7 @@ class ContextMenuContainer extends Component {
       handleMouseOut,
       handleChangeComplete,
     } = this;
-    const { list, options } = ContextMenuData[`${mode}`];
+    const { list, options } = ContextMenuData.viewer;
     const {
       wrapperSize,
       bgColor,
