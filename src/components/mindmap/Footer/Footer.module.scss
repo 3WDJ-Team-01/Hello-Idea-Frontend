@@ -16,6 +16,7 @@
 .chat {
   display: flex;
   flex-direction: column;
+  background-color: white;
   z-index: 100;
   box-shadow: $shadow4dp;
   position: absolute;
@@ -41,13 +42,19 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      margin-right: 0.5rem;
+
+      > img {
+        width: 32px;
+        height: 32px;
+        border: 1px solid $gray;
+        border-radius: 0.5rem;
+      }
     }
     .message {
-      flex: 1;
-      background-color: $gray;
+      background-color: lighten($gray, 8%);
       border-radius: 0.5rem;
       padding: 0.2rem 0.5rem;
+      margin: 0 0.5rem;
     }
   }
   .send {

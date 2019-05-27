@@ -20,6 +20,13 @@ class FooterContainer extends Component {
     GroupActions.connectToWebsocket(repositoryId);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { chat } = this.props;
+    const chatRoom = document.querySelector('#chat-list');
+
+    if (chat) chatRoom.scrollTop = chatRoom.scrollHeight;
+  }
+
   handleInputChange = e => {
     e.persist();
     this.setState(
@@ -37,18 +44,25 @@ class FooterContainer extends Component {
       user_id: loggedUserId,
       message: inputMessage,
     });
+    this.setState(
+      produce(draft => {
+        draft.inputMessage = '';
+      }),
+    );
   };
 
   render() {
     const { handleInputChange, handleMessageSubmit } = this;
     const { inputMessage } = this.state;
-    const { people } = this.props;
+    const { people, chatList, loggedUserId } = this.props;
     const { type, zoom, chat, toggleChat, handleCanvasZoom } = this.props;
 
     return (
       <Footer
+        loggedUserId={loggedUserId}
         inputMessage={inputMessage}
         people={people}
+        chatList={chatList}
         type={type}
         zoom={zoom}
         chat={chat}
@@ -64,6 +78,7 @@ class FooterContainer extends Component {
 const mapStateToProps = state => ({
   loggedUserId: state.auth.userInfo.user_id,
   people: state.group.people,
+  chatList: state.group.messages,
 });
 const mapDispatchToProps = dispatch => ({
   GroupActions: bindActionCreators(groupActions, dispatch),

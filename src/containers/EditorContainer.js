@@ -400,7 +400,6 @@ class App extends Component {
   };
 
   toggleChat = () => {
-    console.log('fire');
     this.setState(
       produce(draft => {
         draft.chat.isActivated = !this.state.chat.isActivated;

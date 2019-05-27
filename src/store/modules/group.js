@@ -62,7 +62,7 @@ export const connectToWebsocket = project_id => dispatch => {
     };
     ws.onmessage = receive => {
       const resData = JSON.parse(receive.data);
-      const message = data.resData;
+      dispatch(wsMessage(resData));
     };
   });
 };
@@ -121,10 +121,22 @@ export default handleActions(
           user_id: '',
         };
       }),
+    [LOAD_ALL_CHATS]: (state, action) =>
+      produce(state, draft => {
+        draft.messages = action.payload.reverse();
+      }),
     [WS_OPEN]: (state, action) =>
       produce(state, draft => {
         draft.websocket = action.payload.ws;
         draft.chat_id = action.payload.chat_id;
+      }),
+    [WS_MESSAGE]: (state, action) =>
+      produce(state, draft => {
+        const { message, user } = action.payload;
+        draft.messages.push({
+          chat_cont: message,
+          ...user,
+        });
       }),
     [WS_SEND]: (state, action) => {
       const { chat_id } = state;

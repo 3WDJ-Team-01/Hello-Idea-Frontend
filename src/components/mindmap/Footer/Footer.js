@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -6,7 +8,9 @@ import { MDBBtn } from 'mdbreact';
 import styles from './Footer.module.scss';
 
 const Footer = ({
+  loggedUserId,
   inputMessage,
+  chatList,
   people,
   type,
   zoom,
@@ -26,20 +30,24 @@ const Footer = ({
         <div className={styles.brainStatus}>
           {chat ? (
             <div className={styles.chat}>
-              <div className={styles.list}>
+              <div id="chat-list" className={styles.list}>
                 {/* line */}
-                <div className={styles.line}>
-                  <div className={styles.user} />
-                  <div className={styles.message}>test message</div>
-                </div>
-                <div className={styles.line}>
-                  <div className={styles.user} />
-                  <div className={styles.message}>test message</div>
-                </div>
-                <div className={styles.line}>
-                  <div className={styles.user} />
-                  <div className={styles.message}>test message</div>
-                </div>
+                {chatList.map((message, i) => (
+                  <div
+                    style={
+                      message.user_id === loggedUserId
+                        ? { flexDirection: 'row-reverse' }
+                        : {}
+                    }
+                    key={i}
+                    className={styles.line}
+                  >
+                    <div className={styles.user}>
+                      <img src={message.user_img} alt={message.user_name} />
+                    </div>
+                    <div className={styles.message}>{message.chat_cont}</div>
+                  </div>
+                ))}
               </div>
               <div className={styles.send}>
                 <input
