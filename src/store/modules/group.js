@@ -152,6 +152,11 @@ export default handleActions(
       );
       return state;
     },
+    [WS_CLOSE]: (state, action) =>
+      produce(state, draft => {
+        if(state.websocket) state.websocket.close();
+        draft.websocket = null;
+      }),
   },
   initialState,
 );

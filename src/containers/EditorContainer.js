@@ -92,34 +92,11 @@ class App extends Component {
       history.push('/');
     } else {
       RepositoryActions.getRequest(repositoryId).then(() => {
-        const {
-          author,
-          repository,
-          groupMembers,
-          GroupActions,
-          Mind,
-        } = this.props;
+        const { author, repository, GroupActions, Mind } = this.props;
         const { user_id, group_id, project_topic } = repository;
 
         if (user_id > 0 && user_id !== loggedUserId) {
           history.replace('viewer');
-        } else if (groupMembers.length > 0) {
-          if (
-            groupMembers.findIndex(member => member.user_id === loggedUserId) <
-            0
-          )
-            history.replace('viewer');
-          MindmapActions.connectToWebsocket(repositoryId);
-        } else {
-          GroupActions.peopleRequest(group_id).then(() => {
-            if (
-              groupMembers.findIndex(
-                member => member.user_id === loggedUserId,
-              ) < 0
-            )
-              history.replace('viewer');
-          });
-          MindmapActions.connectToWebsocket(repositoryId);
         }
         this.setState(
           produce(draft => {
@@ -654,6 +631,7 @@ class App extends Component {
           />
         ) : (
           <FooterContainer
+            history={history}
             groupId={repositoryInfo.group_id}
             repositoryId={repositoryId}
             type={repositoryInfo.type}
@@ -675,7 +653,6 @@ const mapStateToProps = state => ({
   mindmapState: state.mindmap.state,
   repository: state.repository.info,
   author: state.repository.author,
-  groupMembers: state.group.people,
   canvasPins: state.mindmap.canvasPins,
   paths: state.mindmap.paths,
   nodes: state.mindmap.nodes,

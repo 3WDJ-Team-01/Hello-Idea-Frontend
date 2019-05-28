@@ -246,8 +246,8 @@ export const updateIdeaRequest = data => dispatch => {
       dispatch(setNodeDataFailure());
     });
 };
-export const connectToWebsocket = project_id => dispatch => {
-  const ws = new WebSocket(`${url}/${project_id}/`);
+export const connectToWebsocket = (project_id, user_id) => dispatch => {
+  const ws = new WebSocket(`${url}/${project_id}/${user_id}/`);
   ws.onopen = () => {
     dispatch(wsOpen(ws));
   };
@@ -270,6 +270,7 @@ const initialState = {
   },
   project_id: 0,
   websocket: null,
+  participants: [],
   nodes: [],
   paths: [
     // {
@@ -724,117 +725,121 @@ export default handleActions(
     // message
     [WS_MESSAGE]: (state, action) =>
       produce(state, draft => {
-        const { Ideas, root_idea } = action.payload;
-        const nodes = [
-          {
-            id: 0,
-            isEditing: false,
-            location: {
-              x: 0,
-              y: 0,
+        const { type, member, ideas, root_idea } = action.payload;
+        if (type === 'member') {
+          draft.participants = member.map(list => list.user);
+        } else {
+          const nodes = [
+            {
+              id: 0,
+              isEditing: false,
+              location: {
+                x: 0,
+                y: 0,
+              },
+              size: {
+                width: root_idea.idea_width,
+                height: root_idea.idea_height,
+              },
+              color: root_idea.idea_color,
+              head: root_idea.idea_cont,
+              parentOf: [],
+              childOf: null,
             },
-            size: {
-              width: root_idea.idea_width,
-              height: root_idea.idea_height,
-            },
-            color: root_idea.idea_color,
-            head: root_idea.idea_cont,
-            parentOf: [],
-            childOf: null,
-          },
-        ];
-        Ideas.map(node => {
-          if (node.parent_id === 0) {
-            draft.nodes[0].parentOf.push(node.idea_id);
-          }
-          nodes.push({
-            id: node.idea_id,
-            user_id: node.user_id,
-            childOf: node.parent_id,
-            head: node.idea_cont,
-            isForked: node.is_forked,
-            isEditing: false,
-            color: node.idea_color,
-            location: {
-              x: node.idea_x,
-              y: node.idea_y,
-            },
-            size: {
-              width: node.idea_width,
-              height: node.idea_height,
-            },
-            parentOf: node.child_id,
-            hasFfile: node.file_check,
-          });
-        });
-        draft.nodes = nodes;
-
-        const prevCanvasPins = state.canvasPins;
-        draft.paths = [];
-        for (let i = nodes.length - 1; i > -1; i--) {
-          const parentIndex = nodes.findIndex(
-            item => item.id === nodes[i].childOf,
-          );
-
-          const start = nodes[parentIndex];
-          const end = nodes[i];
-          if (end.location.x < prevCanvasPins.leftTop.x) {
-            prevCanvasPins.leftTop.x = end.location.x - 40;
-          } else if (end.location.x > prevCanvasPins.rightBottom.x) {
-            prevCanvasPins.rightBottom.x = end.location.x + 200;
-          }
-
-          if (end.location.y < prevCanvasPins.leftTop.y) {
-            prevCanvasPins.leftTop.y = end.location.y - 40;
-          } else if (end.location.y > prevCanvasPins.rightBottom.y) {
-            prevCanvasPins.rightBottom.y = end.location.y + 40;
-          }
-
-          if (parentIndex > -1) {
-            if (end.parentOf.length > 0) {
-              start.parentOf = start.parentOf.concat(end.parentOf);
+          ];
+          ideas.map(node => {
+            if (node.parent_id === 0) {
+              draft.nodes[0].parentOf.push(node.idea_id);
             }
-            const { mode, position } = getPathEndPoint(
-              start.location,
-              end.location,
-              end.size,
+            nodes.push({
+              id: node.idea_id,
+              user_id: node.user_id,
+              childOf: node.parent_id,
+              head: node.idea_cont,
+              isForked: node.is_forked,
+              isEditing: false,
+              color: node.idea_color,
+              location: {
+                x: node.idea_x,
+                y: node.idea_y,
+              },
+              size: {
+                width: node.idea_width,
+                height: node.idea_height,
+              },
+              parentOf: node.child_id,
+              hasFfile: node.file_check,
+            });
+          });
+          draft.nodes = nodes;
+
+          const prevCanvasPins = state.canvasPins;
+          draft.paths = [];
+          for (let i = nodes.length - 1; i > -1; i--) {
+            const parentIndex = nodes.findIndex(
+              item => item.id === nodes[i].childOf,
             );
 
-            draft.paths.unshift({
-              options: {
-                mode: mode,
-                color: start.color,
-                endPosition: position,
-              },
-              startAt: {
-                nodeId: start.id,
-                width: start.size.width,
-                height: start.size.height,
-                x: start.location.x,
-                y: start.location.y,
-              },
-              endAt: {
-                nodeId: end.id,
-                width: end.size.width,
-                height: end.size.height,
-                x: end.location.x,
-                y: end.location.y,
-              },
-            });
-          } else {
-            draft.paths.unshift({
-              startAt: null,
-              endAt: {
-                nodeId: end.id,
-                width: end.size.width,
-                height: end.size.height,
-                x: end.location.x,
-                y: end.location.y,
-              },
-            });
+            const start = nodes[parentIndex];
+            const end = nodes[i];
+            if (end.location.x < prevCanvasPins.leftTop.x) {
+              prevCanvasPins.leftTop.x = end.location.x - 40;
+            } else if (end.location.x > prevCanvasPins.rightBottom.x) {
+              prevCanvasPins.rightBottom.x = end.location.x + 200;
+            }
+
+            if (end.location.y < prevCanvasPins.leftTop.y) {
+              prevCanvasPins.leftTop.y = end.location.y - 40;
+            } else if (end.location.y > prevCanvasPins.rightBottom.y) {
+              prevCanvasPins.rightBottom.y = end.location.y + 40;
+            }
+
+            if (parentIndex > -1) {
+              if (end.parentOf.length > 0) {
+                start.parentOf = start.parentOf.concat(end.parentOf);
+              }
+              const { mode, position } = getPathEndPoint(
+                start.location,
+                end.location,
+                end.size,
+              );
+
+              draft.paths.unshift({
+                options: {
+                  mode: mode,
+                  color: start.color,
+                  endPosition: position,
+                },
+                startAt: {
+                  nodeId: start.id,
+                  width: start.size.width,
+                  height: start.size.height,
+                  x: start.location.x,
+                  y: start.location.y,
+                },
+                endAt: {
+                  nodeId: end.id,
+                  width: end.size.width,
+                  height: end.size.height,
+                  x: end.location.x,
+                  y: end.location.y,
+                },
+              });
+            } else {
+              draft.paths.unshift({
+                startAt: null,
+                endAt: {
+                  nodeId: end.id,
+                  width: end.size.width,
+                  height: end.size.height,
+                  x: end.location.x,
+                  y: end.location.y,
+                },
+              });
+            }
           }
+          draft.canvasPins = prevCanvasPins;
         }
-        draft.canvasPins = prevCanvasPins;
       }),
     [WS_SEND]: (state, action) => {
       const { project_id } = state;
@@ -845,6 +850,11 @@ export default handleActions(
       );
       return state;
     },
+    [WS_CLOSE]: (state, action) =>
+      produce(state, draft => {
+        if (state.websocket) state.websocket.close();
+        draft.websocket = null;
+      }),
   },
   initialState,
 );

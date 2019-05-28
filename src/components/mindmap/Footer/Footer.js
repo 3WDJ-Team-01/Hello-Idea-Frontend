@@ -11,7 +11,7 @@ const Footer = ({
   loggedUserId,
   inputMessage,
   chatList,
-  people,
+  participants,
   type,
   zoom,
   chat,
@@ -84,7 +84,7 @@ const Footer = ({
             </MDBBtn>
           </div>
           <div className={styles.brainRightFooter}>
-            {people.map((user, i) => (
+            {participants.map((user, i) => (
               <div key={i}>
                 <img src={user.user_img} alt={user.user_name} />
               </div>

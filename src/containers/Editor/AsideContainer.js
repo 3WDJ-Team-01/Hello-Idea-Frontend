@@ -31,6 +31,7 @@ class AsideContainer extends Component {
     if (explore)
       return (
         <Aside
+          type="explore"
           state={explore.state}
           results={explore.results}
           handleDragStart={handleDragStart}
@@ -40,13 +41,14 @@ class AsideContainer extends Component {
     if (file)
       return (
         <Aside
+          type="file"
           uploadFile={uploadFile}
           state={file.state}
           data={file.targetNode}
           list={file.list}
         />
       );
-    return <Aside state={info.state} data={info.data} />;
+    return <Aside type="info" state={info.state} data={info.data} />;
   }
 }
 
