@@ -1,1 +1,1 @@
-export { default } from './New';
+export { New, Info, Desc, Deadline, Person, Group } from './New';

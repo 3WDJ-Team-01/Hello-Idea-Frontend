@@ -5,12 +5,21 @@ import produce from 'immer';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import New from 'components/repository/New';
+import {
+  New,
+  Info,
+  Desc,
+  Deadline,
+  Person,
+  Group,
+} from 'components/repository/New';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import * as userActions from 'store/modules/user';
 import * as groupActions from 'store/modules/group';
 import * as repositoryActions from 'store/modules/repository';
 import * as alertActions from 'store/modules/alert';
+import moment from 'moment';
+import 'moment/locale/ko';
 
 class NewContainer extends Component {
   constructor(props) {
@@ -18,11 +27,14 @@ class NewContainer extends Component {
     const { history } = props;
     const type = history.location.pathname.split('/')[1];
     const targetId = parseInt(history.location.pathname.split('/')[2], 10);
+    moment.locale('ko');
 
     this.state = {
+      datePicker: false,
       author_id: type === 'user' ? targetId : `G${targetId}`,
       name: '',
       desc: '',
+      date: moment().add(3, 'days'),
     };
   }
 
@@ -75,7 +87,7 @@ class NewContainer extends Component {
       history,
       groupPeople,
     } = this.props;
-    const { author_id, name, desc } = this.state;
+    const { author_id, name, desc, date } = this.state;
 
     const notify = repositoryId => {
       AlertActions.sendNotify({
@@ -88,6 +100,11 @@ class NewContainer extends Component {
     if (typeof author_id === 'string' && author_id.includes('G')) {
       const member =
         groupPeople.length > 0 ? groupPeople.map(people => people.user_id) : [];
+      const period = {
+        start: moment().format(),
+        end: date,
+      };
+
       RepositoryActions.createRequest({
         user_id: 0,
         group_id: parseInt(author_id.replace('G', ''), 10),
@@ -96,6 +113,7 @@ class NewContainer extends Component {
         history,
         notify,
         member,
+        period,
       });
     } else {
       RepositoryActions.createRequest({
@@ -109,9 +127,39 @@ class NewContainer extends Component {
     }
   };
 
+  handleDateChange = m => {
+    this.setState(
+      produce(draft => {
+        draft.date = m;
+      }),
+    );
+  };
+
+  handleDateSave = e => {
+    this.setState(
+      produce(draft => {
+        draft.datePicker = false;
+      }),
+    );
+  };
+
+  toggleDatePicker = () => {
+    this.setState(
+      produce(draft => {
+        draft.datePicker = true;
+      }),
+    );
+  };
+
   render() {
-    const { handleChange, handleSubmit } = this;
-    const { name, desc } = this.state;
+    const {
+      handleChange,
+      handleSubmit,
+      handleDateChange,
+      handleDateSave,
+      toggleDatePicker,
+    } = this;
+    const { datePicker, name, desc, date } = this.state;
     const {
       state,
       authState,
@@ -120,18 +168,37 @@ class NewContainer extends Component {
       userInfo,
       history,
     } = this.props;
+    const type = history.location.pathname.split('/')[1];
+    const targetId = parseInt(history.location.pathname.split('/')[2], 10);
     if (authState === 'success' && groupState === 'success')
       return (
-        <New
-          history={history}
-          state={state}
-          groups={groups}
-          userInfo={userInfo}
-          name={name}
-          desc={desc}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-        />
+        <New state={state} name={name} handleSubmit={handleSubmit}>
+          <Info name={name} handleChange={handleChange}>
+            {type === 'user' ? (
+              <Person
+                handleChange={handleChange}
+                userInfo={userInfo}
+                groups={groups}
+              />
+            ) : (
+              <Group
+                groups={groups}
+                targetId={targetId}
+                handleChange={handleChange}
+              />
+            )}
+          </Info>
+          {type === 'group' ? (
+            <Deadline
+              date={date}
+              datePicker={datePicker}
+              toggleDatePicker={toggleDatePicker}
+              handleDateChange={handleDateChange}
+              handleDateSave={handleDateSave}
+            />
+          ) : null}
+          <Desc desc={desc} handleChange={handleChange} />
+        </New>
       );
     return <ProgressIndicator />;
   }

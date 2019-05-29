@@ -52,6 +52,7 @@ export const createRequest = ({
   history,
   notify,
   member,
+  period,
 }) => dispatch => {
   dispatch(create());
   return axios
@@ -102,6 +103,11 @@ export const createRequest = ({
               chat_id,
             });
           });
+      axios.post('/api/project/setting/', {
+        project_id,
+        project_start: period.start,
+        project_deadline: period.end,
+      });
     })
     .catch(err => {
       if (err.response) dispatch(createFailure(err.response));
