@@ -193,18 +193,31 @@ const Header = ({
               </DropdownMenuList>
             </DropdownWrapper>
           </div>
-          <div className={styles.mobileNotif} style={{ fontSize: '1.3rem' }}>
+          {/* 요기부터 */}
+          <div className={styles.mobileNotif} onClick={handleReadAlerts}>
             <DropdownWrapper>
-              <DropdownTrigger message>
+              <DropdownTrigger message={isNewMessage}>
                 <MDBIcon icon="bell" />
               </DropdownTrigger>
               <DropdownMenuList>
-                <DropdownMenu>알림1</DropdownMenu>
-                <DropdownMenu>알림2</DropdownMenu>
+                {notifications.map(
+                  (notify, i) =>
+                    i < 5 && (
+                      <DropdownMenu key={i}>
+                        <HeaderNotify
+                          notify={notify}
+                          loggedUserId={userInfo.user_id}
+                        />
+                      </DropdownMenu>
+                    ),
+                )}
                 <DropdownMenu isDivider />
-                <DropdownMenu>전체알림</DropdownMenu>
+                <DropdownMenu path="/alert">
+                  <div className={styles.more}>더보기</div>
+                </DropdownMenu>
               </DropdownMenuList>
             </DropdownWrapper>
+            {/* 요기까지 */}
           </div>
         </div>
       </div>

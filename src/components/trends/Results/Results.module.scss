@@ -8,7 +8,7 @@
   flex-direction: column;
   align-items: center;
   @include media('<medium') {
-    margin: 0 3%;
+    padding: 5%;
   }
 }
 
@@ -72,6 +72,13 @@
     margin-left: 5%;
     align-items: center;
     border-bottom: 1px solid $gray;
+    @include media('<medium') {
+      width: 130px;
+      height: 56px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
     &:hover {
       cursor: pointer;
       padding-left: 5%;

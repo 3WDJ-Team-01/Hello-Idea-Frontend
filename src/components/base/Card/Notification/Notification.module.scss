@@ -19,6 +19,9 @@ $spaceImgToActivity: 1rem;
     margin-top: 1%;
     display: flex;
     padding: 1rem;
+    @include media('<medium') {
+      margin-left: 0;
+    }
     > a {
       margin-right: 1.5rem;
     }
@@ -84,4 +87,7 @@ $spaceImgToActivity: 1rem;
   font-size: 0.8rem;
   display: flex;
   align-items: center;
+  @include media('<medium') {
+    margin-left: 15%;
+  }
 }
