@@ -202,7 +202,7 @@ class App extends Component {
     );
   };
 
-  pointerUp = () => {
+  pointerUp = event => {
     this.setState(
       produce(draft => {
         draft.pointer.state.isDown = false;
@@ -215,6 +215,7 @@ class App extends Component {
     event.persist();
     this.setState(
       produce(draft => {
+        if (event.button === 0) draft.contextMenu.mode = null;
         draft.pointer.state.isDown = true;
         draft.explore.isActivated = false;
         draft.info.isActivated = false;
@@ -253,14 +254,12 @@ class App extends Component {
   };
 
   /* Toggle Actions */
-  toggleContextMenu = event => {
+  toggleContextMenu = (event, mobile = false) => {
     event.persist();
     const { pointer } = this.state;
-
     this.setState(
       produce(draft => {
-        if (event.button === 0) draft.contextMenu.mode = null;
-        else if (event.button === 2) {
+        if (event.button === 2 || mobile) {
           if (event.target.id === '0') draft.contextMenu.mode = 'root';
           else
             draft.contextMenu.mode =
@@ -268,7 +267,7 @@ class App extends Component {
           draft.contextMenu.location = pointer.currLoc;
           draft.pointer.state.isDown = false;
           draft.pointer.state.isDrag = false;
-        }
+        } else if (event.button === 0) draft.contextMenu.mode = null;
       }),
     );
   };
