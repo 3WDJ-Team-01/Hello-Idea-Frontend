@@ -169,8 +169,11 @@ class RepositoryContainer extends Component {
     } = this.props;
     if (window.confirm('해당 저장소를 삭제하시겠습니까?')) {
       RepositoryActions.removeRequest(repositoryId).then(() => {
-        if (repositoryInfo.group_id === 0)
-          history.push(`/user/${repositoryInfo.user_id}/repositories/`);
+        const { user_id, group_id } = repositoryInfo;
+        const type = user_id > 0 ? 'user' : 'group';
+
+        if (type === 'user') history.push(`/${type}/${user_id}/repositories/`);
+        else history.push(`/${type}/${group_id}/`);
       });
     } else return;
   };

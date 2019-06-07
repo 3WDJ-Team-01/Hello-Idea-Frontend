@@ -51,15 +51,15 @@
   font-size: 2rem;
 
   @include media('<medium') {
-    position: absolute;
-    right: 3%;
-    top: 5rem;
+    position: relative;
   }
   button {
     margin: 0;
     padding: 0.7rem 1.7rem;
     width: 100%;
     @include media('<medium') {
+      position: relative;
+      top: 4rem;
       padding: 0.5rem 1.3rem;
       width: 7.5rem;
     }

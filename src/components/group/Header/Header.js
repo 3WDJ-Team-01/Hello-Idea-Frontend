@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Header.module.scss';
 
-const Header = ({ url, menu, groupId, info }) => {
+const Header = ({ url, menu, groupId, info, isMaster }) => {
   return (
     <div className={styles.groupHeader}>
       <div>
@@ -49,21 +49,23 @@ const Header = ({ url, menu, groupId, info }) => {
             >
               <div className={styles.MyPageRepositories}>People</div>
             </Link>
-            <Link
-              to={`/group/${groupId}/settings`}
-              style={
-                menu === 'settings'
-                  ? {
-                      borderTop: `3px solid #4285f4`,
-                      borderBottom: 'none',
-                      backgroundColor: 'white',
-                      fontWeight: 500,
-                    }
-                  : { border: 'none' }
-              }
-            >
-              <div className={styles.MyPageRepositories}>Settings</div>
-            </Link>
+            {isMaster ? (
+              <Link
+                to={`/group/${groupId}/settings`}
+                style={
+                  menu === 'settings'
+                    ? {
+                        borderTop: `3px solid #4285f4`,
+                        borderBottom: 'none',
+                        backgroundColor: 'white',
+                        fontWeight: 500,
+                      }
+                    : { border: 'none' }
+                }
+              >
+                <div className={styles.MyPageRepositories}>Settings</div>
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>

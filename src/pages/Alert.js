@@ -5,7 +5,7 @@ import AlertContainer from 'containers/AlertContainer';
 const Auth = ({ match }) => {
   return (
     <PageTemplate isHidden>
-      <AlertContainer />
+      <AlertContainer type={match.url.split('/')[2]} />
     </PageTemplate>
   );
 };

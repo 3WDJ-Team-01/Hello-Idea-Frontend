@@ -27,7 +27,8 @@ const Root = () => (
           {/* Main page */}
           <Route path="/" exact component={Main} />
           {/* Alert page */}
-          <Route path="/alert" exact component={Alert} />
+          <Route path="/alert/notifications" exact component={Alert} />
+          <Route path="/alert/requests" exact component={Alert} />
           {/* Search page */}
           <Route path="/search/:searchTo" exact component={Search} />
           {/* Auth page */}

@@ -9,6 +9,7 @@ import styles from './Repository.module.scss';
 const Repository = ({
   userInfo,
   groups,
+  owner,
   repositories,
   filter,
   searchTo,
@@ -32,7 +33,14 @@ const Repository = ({
         {repositories[filter].map((repository, i) => {
           const target = new RegExp(searchTo);
           if (target.test(repository.project_topic))
-            return <Item key={i} userInfo={userInfo} repository={repository} />;
+            return (
+              <Item
+                key={i}
+                owner={owner}
+                userInfo={userInfo}
+                repository={repository}
+              />
+            );
         })}
         <div className={styles.moreRepository}>
           <Link to={`/user/${userInfo.user_id}/repositories`}>
@@ -104,7 +112,7 @@ const List = ({ children }) => (
   </div>
 );
 
-const Item = ({ userInfo, repository }) => (
+const Item = ({ userInfo, repository, owner }) => (
   <div className={styles.ideabox}>
     <div className={styles.ideaimg}>
       <img src={repository.project_img} alt={repository.project_img} />
@@ -115,14 +123,14 @@ const Item = ({ userInfo, repository }) => (
         <div className={styles.options}>
           <Link
             className={styles.box}
-            to={`/user/${userInfo.user_id}/repositories/${
+            to={`/${owner.type}/${owner.id}/repositories/${
               repository.project_id
             }/editor`}
           >
             open
           </Link>
           <Link
-            to={`/user/${userInfo.user_id}/repositories/${
+            to={`/${owner.type}/${owner.id}/repositories/${
               repository.project_id
             }`}
           >

@@ -34,6 +34,7 @@ export const connectToWebsocket = user_id => dispatch => {
     });
   };
   ws.onmessage = receive => {
+    console.log(JSON.parse(receive.data));
     const { id, message } = JSON.parse(receive.data);
     axios.post('/api/check/', { user_id }).then(({ data }) => {
       if (message === 'notifications') {
@@ -84,6 +85,10 @@ export const sendNotify = ({
   });
 };
 
+export const sendRequest = data => dispatch => {
+  axios.post('/api/request/send/', data);
+};
+
 const initialState = {
   state: '',
   websocket: null,
@@ -112,12 +117,10 @@ export default handleActions(
               if (!notify.read_at) draft.newMessage = true;
             });
         if (requests && requests.length > 0)
-          requests
-            .filter(item => item.send_id !== user_id)
-            .map(notify => {
-              if (notify.target) draft.requests.push(notify);
-              if (!notify.read_at) draft.newMessage = true;
-            });
+          requests.map(notify => {
+            draft.requests.push(notify);
+            if (!notify.is_accepted > 0) draft.newMessage = true;
+          });
       }),
     [ADD_NOTIFICATIONS]: (state, action) =>
       produce(state, draft => {

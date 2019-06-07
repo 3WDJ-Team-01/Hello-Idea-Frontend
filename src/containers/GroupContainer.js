@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable array-callback-return */
@@ -19,6 +20,9 @@ class GroupContainer extends Component {
   state = {
     filter: 'all',
     searchTo: '',
+    master: {
+      user_id: 0,
+    },
     displayColorPicker: false,
     cropper: {
       imgSrc: '',
@@ -37,7 +41,15 @@ class GroupContainer extends Component {
     const { groupId, UserActions, GroupActions } = this.props;
 
     UserActions.repositoriesRequest(0, groupId);
-    GroupActions.peopleRequest(groupId);
+    GroupActions.peopleRequest(groupId).then(() => {
+      const { people } = this.props;
+
+      this.setState(
+        produce(draft => {
+          draft.master = people[0];
+        }),
+      );
+    });
     GroupActions.infoRequest(groupId);
   }
 
@@ -166,16 +178,18 @@ class GroupContainer extends Component {
     } = this;
     const { groupId, loggedUserId, repositories, people } = this.props;
     const {
+      master,
       filter,
       modify,
       searchTo,
       cropper,
       displayColorPicker,
     } = this.state;
+    const isMaster = master.user_id === loggedUserId;
 
     switch (menu) {
       case 'people':
-        return <People list={people} />;
+        return <People master={master} isMaster={isMaster} list={people} />;
       case 'settings':
         return (
           <Setting
@@ -195,6 +209,7 @@ class GroupContainer extends Component {
       default:
         return (
           <Repositories
+            isMaster={isMaster}
             groupId={groupId}
             repositories={repositories}
             filter={filter}
@@ -208,6 +223,7 @@ class GroupContainer extends Component {
 
   render() {
     const { renderMenu } = this;
+    const { master } = this.state;
     const {
       url,
       menu,
@@ -217,19 +233,29 @@ class GroupContainer extends Component {
       groupId,
       info,
       people,
+      loggedUserId,
     } = this.props;
     if (
       authState === 'success' &&
       groupState.people === 'success' &&
       groupState.info === 'success' &&
       repositoriesState === 'success'
-    )
+    ) {
+      const isMaster = master.user_id === loggedUserId;
+
       return (
         <>
-          <Header url={url} menu={menu} groupId={groupId} info={info} />
+          <Header
+            url={url}
+            isMaster={isMaster}
+            menu={menu}
+            groupId={groupId}
+            info={info}
+          />
           <GroupWrapper>{renderMenu(menu)}</GroupWrapper>
         </>
       );
+    }
     return <ProgressIndicator />;
   }
 }

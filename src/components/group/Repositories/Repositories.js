@@ -12,6 +12,7 @@ import Repository from 'components/base/Card/Repository';
 import styles from './Repositories.module.scss';
 
 const Repositories = ({
+  isMaster,
   groupId,
   repositories,
   filter,
@@ -23,12 +24,14 @@ const Repositories = ({
     <div className={styles.repositoriesWrapper}>
       <div className={styles.repositories}>
         <div className={styles.search}>
-          <Link to={`/group/${groupId}/new`}>
-            <MDBBtn color="primary">
-              <MDBIcon icon="edit" className="mr-1" />
-              NEW
-            </MDBBtn>
-          </Link>
+          {isMaster ? (
+            <Link to={`/group/${groupId}/new`}>
+              <MDBBtn color="primary">
+                <MDBIcon icon="edit" className="mr-1" />
+                NEW
+              </MDBBtn>
+            </Link>
+          ) : null}
           <input
             type="text"
             value={searchTo}

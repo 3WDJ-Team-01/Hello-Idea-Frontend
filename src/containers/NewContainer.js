@@ -101,8 +101,8 @@ class NewContainer extends Component {
       const member =
         groupPeople.length > 0 ? groupPeople.map(people => people.user_id) : [];
       const period = {
-        start: moment().format(),
-        end: date,
+        start: moment().format('YYYY[-]MM[-]DD'),
+        end: date.format('YYYY[-]MM[-]DD'),
       };
 
       RepositoryActions.createRequest({

@@ -7,3 +7,26 @@
     max-width: 768px;
   }
 }
+
+.options {
+  display: flex;
+  > button {
+    width: 100%;
+  }
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  > div {
+    flex: 1;
+  }
+  > span {
+    display: flex;
+    justify-content: center;
+    font-weight: 400;
+    width: 8rem;
+    margin: 0.5rem;
+    cursor: default;
+  }
+}

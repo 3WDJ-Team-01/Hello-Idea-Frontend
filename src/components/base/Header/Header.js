@@ -18,11 +18,13 @@ import {
   MobileWrapper,
 } from 'components/base/Dropdown/MobileMenubar';
 import { HeaderNotify } from 'components/base/Card/Notification';
+import { HeaderRequest } from 'components/base/Card/Request';
 import styles from './Header.module.scss';
 
 const Header = ({
   history,
   searchTo,
+  requests,
   notifications,
   goSearch,
   onClick,
@@ -145,9 +147,17 @@ const Header = ({
                 <MDBIcon icon="bell" />
               </DropdownTrigger>
               <DropdownMenuList>
+                {requests.map(
+                  (request, i) =>
+                    i < 2 && (
+                      <DropdownMenu key={i}>
+                        <HeaderRequest request={request} />
+                      </DropdownMenu>
+                    ),
+                )}
                 {notifications.map(
                   (notify, i) =>
-                    i < 5 && (
+                    i < 3 && (
                       <DropdownMenu key={i}>
                         <HeaderNotify
                           notify={notify}
@@ -157,7 +167,7 @@ const Header = ({
                     ),
                 )}
                 <DropdownMenu isDivider />
-                <DropdownMenu path="/alert">
+                <DropdownMenu path="/alert/notifications">
                   <div className={styles.more}>더보기</div>
                 </DropdownMenu>
               </DropdownMenuList>
@@ -200,9 +210,17 @@ const Header = ({
                 <MDBIcon icon="bell" />
               </DropdownTrigger>
               <DropdownMenuList>
+                {requests.map(
+                  (request, i) =>
+                    i < 2 && (
+                      <DropdownMenu key={i}>
+                        <HeaderRequest request={request} />
+                      </DropdownMenu>
+                    ),
+                )}
                 {notifications.map(
                   (notify, i) =>
-                    i < 5 && (
+                    i < 3 && (
                       <DropdownMenu key={i}>
                         <HeaderNotify
                           notify={notify}
@@ -212,7 +230,7 @@ const Header = ({
                     ),
                 )}
                 <DropdownMenu isDivider />
-                <DropdownMenu path="/alert">
+                <DropdownMenu path="/alert/notifications">
                   <div className={styles.more}>더보기</div>
                 </DropdownMenu>
               </DropdownMenuList>

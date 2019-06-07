@@ -16,6 +16,7 @@ class HeaderContainer extends Component {
       searchTo: '',
       isNewMessage: false,
       notifications: [],
+      requests: [],
     };
     this.checkUser();
   }
@@ -36,10 +37,14 @@ class HeaderContainer extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.notifications !== nextProps.notifications) {
+    if (
+      prevState.notifications !== nextProps.notifications ||
+      prevState.requests !== nextProps.requests
+    ) {
       return {
         isNewMessage: nextProps.isNewMessage,
         notifications: nextProps.notifications,
+        requests: nextProps.requests,
       };
     }
 
@@ -110,7 +115,7 @@ class HeaderContainer extends Component {
 
   render() {
     const { history } = this.props;
-    const { searchTo, isNewMessage, notifications } = this.state;
+    const { searchTo, isNewMessage, notifications, requests } = this.state;
     const {
       handleLogout,
       handleSearch,
@@ -132,6 +137,7 @@ class HeaderContainer extends Component {
         onLogout={handleLogout}
         onChange={handleSearch}
         userInfo={userInfo}
+        requests={requests}
         notifications={notifications}
         isNewMessage={isNewMessage}
         handleReadAlerts={handleReadAlerts}
@@ -147,6 +153,7 @@ const mapStateToProps = state => ({
   userInfo: state.auth.userInfo,
   isNewMessage: state.alert.newMessage,
   notifications: state.alert.notifications,
+  requests: state.alert.requests,
 });
 
 const mapDisaptchToProps = dispatch => ({

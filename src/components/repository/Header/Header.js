@@ -16,6 +16,12 @@ const Header = ({
   repositoryInfo,
   handleStar,
 }) => {
+  const type = repositoryInfo.user_id > 0 ? 'user' : 'group';
+  const owner_id =
+    repositoryInfo.user_id > 0
+      ? repositoryInfo.user_id
+      : repositoryInfo.group_id;
+
   return (
     <div className={styles.repoHeader}>
       <div>
@@ -25,15 +31,11 @@ const Header = ({
               <MDBIcon icon="folder-open" />
             </span>
             <span>
-              <Link to={`/user/${repositoryInfo.user_id}`}>{author}</Link>
+              <Link to={`/${type}/${owner_id}`}>{author}</Link>
             </span>
             <span>/</span>
             <span>
-              <Link
-                to={`/user/${
-                  repositoryInfo.user_id
-                }/repositories/${repositoryId}`}
-              >
+              <Link to={`/${type}/${owner_id}/repositories/${repositoryId}`}>
                 {repositoryInfo.project_topic}
               </Link>
             </span>
@@ -67,9 +69,7 @@ const Header = ({
         <div className={styles.userNavWrapper}>
           <div className={styles.userNav}>
             <Link
-              to={`/user/${
-                repositoryInfo.user_id
-              }/repositories/${repositoryId}`}
+              to={`/${type}/${owner_id}/repositories/${repositoryId}`}
               style={
                 !menu
                   ? {
@@ -85,9 +85,7 @@ const Header = ({
             </Link>
             {authorId === loggedUserId ? (
               <Link
-                to={`/user/${
-                  repositoryInfo.user_id
-                }/repositories/${repositoryId}/settings`}
+                to={`/${type}/${owner_id}/repositories/${repositoryId}/settings`}
                 style={
                   menu === 'settings'
                     ? {

@@ -60,6 +60,10 @@ $spaceImgToActivity: 1rem;
   display: flex;
   align-items: center;
   width: 100%;
+  > button {
+    padding: 0.7rem 1.75rem !important;
+    border-radius: 0.25rem;
+  }
   .img {
     @include avartar;
     img {

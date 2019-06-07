@@ -37,7 +37,7 @@ export const MobileMenu = ({ isDivider, disabled, path, onClick, children }) =>
 export const MobileMenuList = ({
   children,
   posRight = '100%',
-  minWidth = '768px',
+  minWidth = '100%',
 }) => (
   <div className={styles.wrapper}>
     <div className={styles.menu} style={{ right: posRight, minWidth }}>

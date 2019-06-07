@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -20,12 +21,24 @@ class MainContainer extends Component {
     filter: 'all',
     recommends: [],
     feeds: [],
+    owner: {
+      type: '',
+      id: 0,
+    },
   };
 
   componentDidMount() {
     const { userInfo, UserActions, RecommendActions } = this.props;
 
     if (userInfo.user_id) {
+      this.setState(
+        produce(draft => {
+          draft.owner = {
+            type: 'user',
+            id: userInfo.user_id,
+          };
+        }),
+      );
       UserActions.targetGroupsRequest(userInfo.user_id);
       UserActions.repositoriesRequest(userInfo.user_id, 0);
       UserActions.followerRequest(userInfo.user_id);
@@ -45,6 +58,14 @@ class MainContainer extends Component {
     const { userInfo, UserActions, RecommendActions } = this.props;
 
     if (prevProps.userInfo.user_id !== userInfo.user_id) {
+      this.setState(
+        produce(draft => {
+          draft.owner = {
+            type: 'user',
+            id: userInfo.user_id,
+          };
+        }),
+      );
       UserActions.targetGroupsRequest(userInfo.user_id);
       UserActions.repositoriesRequest(userInfo.user_id, 0);
       UserActions.followerRequest(userInfo.user_id);
@@ -100,18 +121,35 @@ class MainContainer extends Component {
   };
 
   handleChageUser = e => {
+    e.persist();
     const { UserActions, userInfo } = this.props;
 
     if (e.target.value === 'personal') {
       UserActions.repositoriesRequest(userInfo.user_id, 0);
+      this.setState(
+        produce(draft => {
+          draft.owner = {
+            type: 'user',
+            id: userInfo.user_id,
+          };
+        }),
+      );
     } else {
       UserActions.repositoriesRequest(0, e.target.value);
+      this.setState(
+        produce(draft => {
+          draft.owner = {
+            type: 'group',
+            id: e.target.value,
+          };
+        }),
+      );
     }
   };
 
   render() {
     const { handleFilter, handleSearchTo, handleChageUser } = this;
-    const { searchTo, filter, recommends, feeds } = this.state;
+    const { searchTo, filter, recommends, feeds, owner } = this.state;
     const {
       alert,
       authState,
@@ -137,6 +175,7 @@ class MainContainer extends Component {
                 userState={userState}
                 userInfo={userInfo}
                 groups={groups}
+                owner={owner}
                 repositories={repositories}
                 filter={filter}
                 searchTo={searchTo}
