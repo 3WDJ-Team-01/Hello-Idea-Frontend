@@ -15,6 +15,7 @@ const CHECK_ALERTS = 'alert/CHECK_ALERTS';
 const ADD_NOTIFICATIONS = 'alert/ADD_NOTIFICATIONS';
 const ADD_REQUESTS = 'alert/ADD_REQUESTS';
 const READ_ALL_NOTIFICATIONS = 'alert/READ_ALL_NOTIFICATIONS';
+const REQUEST_IS_ACCEPTED = 'alert/REQUEST_IS_ACCEPTED';
 
 export const wsOpen = createAction(WS_OPEN);
 export const wsMessage = createAction(WS_MESSAGE);
@@ -24,6 +25,7 @@ export const checkAlerts = createAction(CHECK_ALERTS);
 export const addNotifications = createAction(ADD_NOTIFICATIONS);
 export const addRequests = createAction(ADD_REQUESTS);
 export const readAllNotifications = createAction(READ_ALL_NOTIFICATIONS);
+export const requestIsAccepted = createAction(REQUEST_IS_ACCEPTED);
 
 export const connectToWebsocket = user_id => dispatch => {
   const ws = new WebSocket(`${url}/${user_id}/`);
@@ -34,8 +36,8 @@ export const connectToWebsocket = user_id => dispatch => {
     });
   };
   ws.onmessage = receive => {
-    console.log(JSON.parse(receive.data));
     const { id, message } = JSON.parse(receive.data);
+    console.log('JSON', JSON.parse(receive.data));
     axios.post('/api/check/', { user_id }).then(({ data }) => {
       if (message === 'notifications') {
         const { notifications } = data;
@@ -43,12 +45,31 @@ export const connectToWebsocket = user_id => dispatch => {
           ({ notify_id }) => notify_id === id,
         );
         const notify = notifications[notifyIndex];
+        console.log('notifications', notifications);
         if (notify.send_id !== user_id) dispatch(addNotifications(notify));
       } else if (message === 'requests') {
-        // dispatch(addRequests(request));
+        const { requests } = data;
+        console.log('req', requests);
+        dispatch(addRequests(requests[0]));
       }
     });
   };
+};
+
+export const toggleAccepted = (request_id, is_accepted) => dispatch => {
+  axios
+    .post('/api/request_accept/', {
+      request_id,
+      is_accepted,
+    })
+    .then(() => {
+      dispatch(
+        requestIsAccepted({
+          request_id,
+          is_accepted,
+        }),
+      );
+    });
 };
 
 export const readAllNotificationsRequest = user_id => dispatch => {
@@ -85,8 +106,16 @@ export const sendNotify = ({
   });
 };
 
-export const sendRequest = data => dispatch => {
-  axios.post('/api/request/send/', data);
+export const sendRequest = ({
+  send_id,
+  receive_id,
+  request_cont,
+}) => dispatch => {
+  axios.post('/api/request/send/', {
+    send_id,
+    receive_id,
+    request_cont,
+  });
 };
 
 const initialState = {
@@ -130,9 +159,24 @@ export default handleActions(
         if (!notify.read_at) draft.newMessage = true;
         else draft.newMessage = false;
       }),
+    [ADD_REQUESTS]: (state, action) =>
+      produce(state, draft => {
+        const request = action.payload;
+
+        draft.requests.unshift(request);
+        draft.newMessage = true;
+      }),
     [READ_ALL_NOTIFICATIONS]: state =>
       produce(state, draft => {
         draft.newMessage = false;
+      }),
+    [REQUEST_IS_ACCEPTED]: (state, action) =>
+      produce(state, draft => {
+        const { request_id, is_accepted } = action.payload;
+        const index = state.requests.findIndex(
+          req => req.request_id === request_id,
+        );
+        draft.requests[index].is_accepted = is_accepted;
       }),
   },
   initialState,

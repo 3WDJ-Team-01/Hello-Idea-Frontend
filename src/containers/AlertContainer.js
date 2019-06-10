@@ -2,12 +2,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import produce from 'immer';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import Nav from 'components/alert/Nav';
 import AlertWrapper from 'components/alert/AlertWrapper';
 import Alerts from 'components/alert/Alerts';
+import * as alertActions from 'store/modules/alert';
 
 class AlertContainer extends Component {
   constructor(props) {
@@ -47,27 +49,23 @@ class AlertContainer extends Component {
     );
   };
 
-  handleConsent = id => {
-    const request_id = id;
+  handleConsent = (request_id, group_id) => {
+    const { loggedUserId, AlertActions } = this.props;
+    const { alerts } = this.state;
 
-    axios.post('/api/request_accept/', {
+    AlertActions.toggleAccepted(request_id, 2);
+
+    axios.post('/api/group/invite/', {
       request_id,
-      is_accepted: 2,
+      group_id,
+      user_id: loggedUserId,
     });
-    // axios.post('/api/group/invite/', {
-    //   request_id
-    //   group_id:,
-    //   user_id:,
-    // })
   };
 
-  handleRefuse = id => {
-    const request_id = id;
+  handleRefuse = request_id => {
+    const { loggedUserId, AlertActions } = this.props;
 
-    axios.post('/request_accept/', {
-      request_id,
-      is_accepted: 1,
-    });
+    AlertActions.toggleAccepted(request_id, 1);
   };
 
   render() {
@@ -101,7 +99,9 @@ const mapStateToProps = state => ({
   loggedUserId: state.auth.userInfo.user_id,
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  AlertActions: bindActionCreators(alertActions, dispatch),
+});
 
 export default withRouter(
   connect(

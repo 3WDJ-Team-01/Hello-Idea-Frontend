@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import axios from 'axios';
 import produce from 'immer';
 import ProgressIndicator from 'components/base/ProgressIndicator';
 import Header from 'components/group/Header';
@@ -15,11 +16,14 @@ import Setting from 'components/group/Setting';
 import getCroppedImg from 'tools/CropImage';
 import * as userActions from 'store/modules/user';
 import * as groupActions from 'store/modules/group';
+import * as alertActions from 'store/modules/alert';
 
 class GroupContainer extends Component {
   state = {
     filter: 'all',
     searchTo: '',
+    isInviting: false,
+    userList: null,
     master: {
       user_id: 0,
     },
@@ -72,6 +76,46 @@ class GroupContainer extends Component {
         draft.searchTo = e.target.value;
       }),
     );
+  };
+
+  handleInvite = () => {
+    this.setState(
+      produce(this.state, draft => {
+        draft.isInviting = !this.state.isInviting;
+        draft.searchTo = '';
+        draft.userList = null;
+      }),
+    );
+  };
+
+  findUser = () => {
+    const { searchTo } = this.state;
+
+    axios
+      .post('/api/user/find/', {
+        user_email: searchTo,
+      })
+      .then(res => {
+        this.setState(
+          produce(draft => {
+            draft.userList = res.data;
+          }),
+        );
+      });
+  };
+
+  sendInvite = () => {
+    const { handleInvite } = this;
+    const { loggedUserId, AlertActions } = this.props;
+    const { userList } = this.state;
+
+    AlertActions.sendRequest({
+      send_id: loggedUserId,
+      receive_id: userList.user_id,
+      request_cont: 'requests',
+    });
+
+    handleInvite();
   };
 
   /* IMAGE CROPPER ACTIONS */
@@ -175,9 +219,14 @@ class GroupContainer extends Component {
       handleChange,
       handleClick,
       handleClose,
+      handleInvite,
+      findUser,
+      sendInvite,
     } = this;
     const { groupId, loggedUserId, repositories, people } = this.props;
     const {
+      isInviting,
+      userList,
       master,
       filter,
       modify,
@@ -189,7 +238,20 @@ class GroupContainer extends Component {
 
     switch (menu) {
       case 'people':
-        return <People master={master} isMaster={isMaster} list={people} />;
+        return (
+          <People
+            isInviting={isInviting}
+            userList={userList}
+            searchTo={searchTo}
+            master={master}
+            isMaster={isMaster}
+            list={people}
+            handleInvite={handleInvite}
+            handleSearchTo={handleSearchTo}
+            findUser={findUser}
+            sendInvite={sendInvite}
+          />
+        );
       case 'settings':
         return (
           <Setting
@@ -273,6 +335,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   UserActions: bindActionCreators(userActions, dispatch),
   GroupActions: bindActionCreators(groupActions, dispatch),
+  AlertActions: bindActionCreators(alertActions, dispatch),
 });
 
 export default connect(

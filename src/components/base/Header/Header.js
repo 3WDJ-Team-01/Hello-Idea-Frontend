@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -147,14 +149,19 @@ const Header = ({
                 <MDBIcon icon="bell" />
               </DropdownTrigger>
               <DropdownMenuList>
-                {requests.map(
-                  (request, i) =>
-                    i < 2 && (
+                {requests.map((request, i) => {
+                  let count = 0;
+                  count += 1;
+                  if (count > 2) return;
+                  if (request.is_accepted === 0) {
+                    return (
                       <DropdownMenu key={i}>
                         <HeaderRequest request={request} />
                       </DropdownMenu>
-                    ),
-                )}
+                    );
+                  }
+                  count -= 1;
+                })}
                 {notifications.map(
                   (notify, i) =>
                     i < 3 && (

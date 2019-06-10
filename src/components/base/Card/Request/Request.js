@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -28,21 +29,29 @@ const Request = ({ request, handleConsent, handleRefuse }) => {
             <TimeAgo date={created_at} formatter={formatter} />
           </div>
         </div>
-        <MDBBtn
-          color="primary"
-          onClick={() => {
-            handleConsent(request_id);
-          }}
-        >
-          승낙
-        </MDBBtn>
-        <MDBBtn
-          outline
-          color="primary"
-          onClick={() => handleRefuse(request_id)}
-        >
-          거절
-        </MDBBtn>
+        {is_accepted === 0 ? (
+          <div className={styles.btns}>
+            <MDBBtn
+              color="primary"
+              onClick={() => {
+                handleConsent(request_id, group_id);
+              }}
+            >
+              승낙
+            </MDBBtn>
+            <MDBBtn
+              outline
+              color="primary"
+              onClick={() => handleRefuse(request_id)}
+            >
+              거절
+            </MDBBtn>
+          </div>
+        ) : is_accepted === 1 ? (
+          <span className={styles.message}>거절하였습니다.</span>
+        ) : (
+          <span className={styles.message}>승낙하였습니다.</span>
+        )}
       </div>
       <div className={styles.detail}>
         <Detail
