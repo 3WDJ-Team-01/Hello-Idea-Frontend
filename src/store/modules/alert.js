@@ -37,7 +37,7 @@ export const connectToWebsocket = user_id => dispatch => {
   };
   ws.onmessage = receive => {
     const { id, message } = JSON.parse(receive.data);
-    console.log('JSON', JSON.parse(receive.data));
+
     axios.post('/api/check/', { user_id }).then(({ data }) => {
       if (message === 'notifications') {
         const { notifications } = data;
@@ -45,11 +45,11 @@ export const connectToWebsocket = user_id => dispatch => {
           ({ notify_id }) => notify_id === id,
         );
         const notify = notifications[notifyIndex];
-        console.log('notifications', notifications);
+
         if (notify.send_id !== user_id) dispatch(addNotifications(notify));
       } else if (message === 'requests') {
         const { requests } = data;
-        console.log('req', requests);
+
         dispatch(addRequests(requests[0]));
       }
     });

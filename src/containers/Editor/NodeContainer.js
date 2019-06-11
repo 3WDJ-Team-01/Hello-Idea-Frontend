@@ -136,6 +136,8 @@ class NodeContainer extends Component {
       handleTextContent,
       handleKeyPress,
     } = this;
+    const hasFeedback = node.feedbacks.length > 0;
+
     if (mode === 'SVG')
       return (
         <Node
@@ -147,6 +149,7 @@ class NodeContainer extends Component {
           pointer={pointer}
           isForked={node.isForked}
           hasFile={node.hasFfile}
+          hasFeedback={hasFeedback}
         />
       );
     else if (mode === 'Edit')

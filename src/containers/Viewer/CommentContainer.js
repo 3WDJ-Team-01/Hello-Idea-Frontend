@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import produce from 'immer';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as mindmapActions from 'store/modules/mindmap';
+import * as alertActions from 'store/modules/alert';
 import Comment from 'components/mindmap/Comment';
 
 class CommentContainer extends Component {
@@ -26,7 +29,15 @@ class CommentContainer extends Component {
   };
 
   handleSubmit = () => {
-    const { loggedUserId, toggleComment } = this.props;
+    const {
+      loggedUserId,
+      toggleComment,
+      MindmapActions,
+      AlertActions,
+      repositoryId,
+      repositoryInfo,
+      loggedUserFollowers,
+    } = this.props;
     const { target, comment } = this.state;
 
     axios
@@ -37,7 +48,15 @@ class CommentContainer extends Component {
       })
       .then(() => {
         toggleComment();
+        MindmapActions.loadIdeasRequest(repositoryId);
       });
+
+    AlertActions.sendNotify({
+      type: 'comment',
+      send_id: loggedUserId,
+      receive_id: [repositoryInfo.user_id, ...loggedUserFollowers],
+      target_id: repositoryId,
+    });
   };
 
   render() {
@@ -61,9 +80,13 @@ const mapStateToProps = state => ({
   loggedUserId: state.auth.userInfo.user_id,
   repositoryInfo: state.repository.info,
   nodeList: state.mindmap.nodes,
+  loggedUserFollowers: state.auth.relation.followersId,
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  MindmapActions: bindActionCreators(mindmapActions, dispatch),
+  AlertActions: bindActionCreators(alertActions, dispatch),
+});
 
 export default connect(
   mapStateToProps,

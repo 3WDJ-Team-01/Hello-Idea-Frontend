@@ -26,6 +26,8 @@ class NodeContainer extends Component {
   render() {
     const { node } = this.state;
     const { pointer } = this.props;
+    const hasFeedback = node.feedbacks.length > 0;
+
     return (
       <Node
         index={node.id}
@@ -35,6 +37,8 @@ class NodeContainer extends Component {
         color={node.color}
         pointer={pointer}
         isForked={node.isForked}
+        hasFile={node.hasFfile}
+        hasFeedback={hasFeedback}
       />
     );
   }

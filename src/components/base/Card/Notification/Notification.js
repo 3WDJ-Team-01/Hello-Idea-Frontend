@@ -178,6 +178,30 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
         path: `/user/${user_id}/repositories/${target_id}`,
         string: `님이 ${project_topic}에서 당신의 생각을 참조하였습니다.`,
       };
+    case 'comment':
+      return {
+        label: (
+          <span>
+            님이{' '}
+            <Link to={`/user/${user_id}/repositories/${target_id}`}>
+              {project_topic}
+            </Link>
+            에서 의견을 작성하였습니다.
+          </span>
+        ),
+        component: (
+          <Detail
+            path={`/user/${user_id}/repositories/${target_id}`}
+            name={project_topic}
+            intro={project_intro}
+          >
+            <div>{`${project_likes} likes`}</div>
+            <div>{`${project_hits} hits`}</div>
+          </Detail>
+        ),
+        path: `/user/${user_id}/repositories/${target_id}`,
+        string: `님이 ${project_topic}에서 의견을 작성하였습니다.`,
+      };
     default:
       return null;
   }

@@ -342,6 +342,7 @@ export default handleActions(
             head: data.idea_cont,
             parentOf: [],
             childOf: null,
+            feedbacks: [],
           },
         ];
         list.map(node => {
@@ -382,6 +383,7 @@ export default handleActions(
             },
             parentOf: node.child_id,
             hasFfile: node.file_check,
+            feedbacks: node.feedback,
           }),
         );
         draft.nodes = nodes;
@@ -745,6 +747,7 @@ export default handleActions(
               head: root_idea.idea_cont,
               parentOf: [],
               childOf: null,
+              feedbacks: [],
             },
           ];
           ideas.map(node => {
@@ -769,6 +772,7 @@ export default handleActions(
               },
               parentOf: node.child_id,
               hasFfile: node.file_check,
+              feedbacks: node.feedback,
             });
           });
           draft.nodes = nodes;

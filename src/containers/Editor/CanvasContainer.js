@@ -69,17 +69,19 @@ class CanvasContainer extends Component {
 
     const { svg } = this.props.pointer;
     const { getLocationFromEvent } = this.props;
-
     const invertedSVGMatrix = svg.getScreenCTM().inverse();
+    
     return getLocationFromEvent(e).matrixTransform(invertedSVGMatrix);
   };
 
   handlePointerDown = e => {
     const { getPointFromEvent } = this;
     const { setPrevLoc, pointerDown, toggleContextMenu } = this.props;
+    
     e.persist();
     setPrevLoc(getPointFromEvent(e));
     pointerDown(e);
+
     if (this.isMobile) {
       this.touchTimer = setTimeout(() => toggleContextMenu(e, true), 500);
     }else if (e.button === 2) toggleContextMenu(e);

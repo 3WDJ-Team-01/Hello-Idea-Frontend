@@ -213,6 +213,7 @@ class App extends Component {
 
   pointerDown = event => {
     event.persist();
+    
     this.setState(
       produce(draft => {
         if (event.button === 0) draft.contextMenu.mode = null;
@@ -220,8 +221,8 @@ class App extends Component {
         draft.explore.isActivated = false;
         draft.info.isActivated = false;
         draft.file.isActivated = false;
-        draft.info.isActivated = false;
         draft.chat.isActivated = false;
+        draft.explore.isActivated = false;
         draft.pointer.target.class =
           event.target.className.baseVal && event.target.className.baseVal;
         draft.pointer.target.nodeId =
@@ -257,6 +258,7 @@ class App extends Component {
   toggleContextMenu = (event, mobile = false) => {
     event.persist();
     const { pointer } = this.state;
+    
     this.setState(
       produce(draft => {
         if (event.button === 2 || mobile) {

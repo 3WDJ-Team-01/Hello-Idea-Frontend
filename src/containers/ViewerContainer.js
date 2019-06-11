@@ -173,7 +173,7 @@ class App extends Component {
     );
   };
 
-  pointerUp = () => {
+  pointerUp = event => {
     this.setState(
       produce(draft => {
         draft.pointer.state.isDown = false;
@@ -184,8 +184,10 @@ class App extends Component {
 
   pointerDown = event => {
     event.persist();
+
     this.setState(
       produce(draft => {
+        if (event.button === 0) draft.contextMenu.mode = null;
         draft.pointer.state.isDown = true;
         draft.file.isActivated = false;
         draft.pointer.target.class =
@@ -226,15 +228,13 @@ class App extends Component {
   };
 
   /* Toggle Menu   */
-
-  toggleContextMenu = event => {
+  toggleContextMenu = (event, mobile = false) => {
     event.persist();
     const { pointer } = this.state;
 
     this.setState(
       produce(draft => {
-        if (event.button === 0) draft.contextMenu.mode = null;
-        else if (event.button === 2) {
+        if (event.button === 2 || mobile) {
           if (event.target.id === '0') draft.contextMenu.mode = 'root';
           else
             draft.contextMenu.mode =
@@ -242,7 +242,7 @@ class App extends Component {
           draft.contextMenu.location = pointer.currLoc;
           draft.pointer.state.isDown = false;
           draft.pointer.state.isDrag = false;
-        }
+        } else if (event.button === 0) draft.contextMenu.mode = null;
       }),
     );
   };
@@ -250,6 +250,7 @@ class App extends Component {
   toggleFile = nodeId => {
     const { nodes, repositoryId } = this.props;
     const index = nodes.findIndex(node => node.id === nodeId);
+
     this.setState(
       produce(draft => {
         draft.file = {
@@ -261,25 +262,26 @@ class App extends Component {
       }),
     );
 
-    axios
-      .post('/api/idea/file/select/', {
-        idea_id: nodes[index].id,
-      })
-      .then(({ data }) => {
-        this.setState(
-          produce(draft => {
-            draft.file.state = 'success';
-            draft.file.list = data;
-          }),
-        );
-      })
-      .catch(() => {
-        this.setState(
-          produce(draft => {
-            draft.file.state = 'failure';
-          }),
-        );
-      });
+    if (nodes[index].id > 0)
+      axios
+        .post('/api/idea/file/select/', {
+          idea_id: nodes[index].id,
+        })
+        .then(({ data }) => {
+          this.setState(
+            produce(draft => {
+              draft.file.state = 'success';
+              draft.file.list = data;
+            }),
+          );
+        })
+        .catch(() => {
+          this.setState(
+            produce(draft => {
+              draft.file.state = 'failure';
+            }),
+          );
+        });
   };
 
   toggleComment = nodeId => {
@@ -304,26 +306,6 @@ class App extends Component {
           };
         }),
       );
-
-    // axios
-    //   .post('/api/idea/file/select/', {
-    //     idea_id: nodes[index].id,
-    //   })
-    //   .then(({ data }) => {
-    //     this.setState(
-    //       produce(draft => {
-    //         draft.file.state = 'success';
-    //         draft.file.list = data;
-    //       }),
-    //     );
-    //   })
-    //   .catch(() => {
-    //     this.setState(
-    //       produce(draft => {
-    //         draft.file.state = 'failure';
-    //       }),
-    //     );
-    //   });
   };
 
   /* Export Mindmap PNG Image   */
@@ -483,6 +465,7 @@ class App extends Component {
         {file.isActivated && <AsideContainer file={file} />}
         {comment.isActivated && (
           <CommentContainer
+            repositoryId={repositoryId}
             target={comment.targetNode}
             toggleComment={toggleComment}
           />
