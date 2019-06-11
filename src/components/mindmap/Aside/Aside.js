@@ -154,50 +154,6 @@ const Aside = ({
       </div>
     </div>
   );
-  // Comments Action
-  const Comments = () => (
-    <div className={styles.recommendBoxList}>
-      <div className={styles.section}>
-        <div className={styles.keyword}>{data.head}</div>
-        <div className={styles.list}>
-          <p>
-            <span>
-              <b>파일</b>
-            </span>
-            {list.map((item, i) => (
-              <span key={i}>
-                <a
-                  href={item.idea_file}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {item.idea_file.split('/media.hello-idea.com/')[1]}
-                </a>
-              </span>
-            ))}
-          </p>
-        </div>
-        {window.location.pathname.includes('viewer') ? null : (
-          <div className={styles.btns}>
-            <label htmlFor="file">
-              <MDBIcon icon="file-upload" />
-            </label>
-            <input type="file" id="file" onChange={uploadFile} />
-            <label htmlFor="camera">
-              <MDBIcon icon="camera" />
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              capture="camera"
-              id="camera"
-              onChange={uploadFile}
-            />
-          </div>
-        )}
-      </div>
-    </div>
-  );
   const Loading = () => <ProgressIndicator mini />;
   const Failure = () => (
     <div className={styles.recommendBoxList}>결과가 없습니다</div>

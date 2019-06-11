@@ -58,8 +58,7 @@ class ContextMenuContainer extends Component {
   };
 
   handleMenuClick = type => {
-    const { pointer, userId, repositoryId } = this.props;
-    const { toggleContextMenu, toggleFile, MindmapActions } = this.props;
+    const { toggleContextMenu, toggleFile} = this.props;
 
     const viewFiles = e => {
       const { targetNodeId } = this.state;
@@ -87,7 +86,7 @@ class ContextMenuContainer extends Component {
   };
 
   render() {
-    const { mode, location } = this.props;
+    const { location } = this.props;
     const { currentMenu, isColorPicker, color } = this.state;
     const {
       handleMenuClick,

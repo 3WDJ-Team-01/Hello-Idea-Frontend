@@ -248,7 +248,7 @@ class App extends Component {
   };
 
   toggleFile = nodeId => {
-    const { nodes, repositoryId } = this.props;
+    const { nodes} = this.props;
     const index = nodes.findIndex(node => node.id === nodeId);
 
     this.setState(
@@ -285,7 +285,7 @@ class App extends Component {
   };
 
   toggleComment = nodeId => {
-    const { nodes, repositoryId } = this.props;
+    const { nodes } = this.props;
     const { comment } = this.state;
     if (!comment.isActivated)
       this.setState(

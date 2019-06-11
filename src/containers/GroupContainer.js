@@ -152,8 +152,6 @@ class GroupContainer extends Component {
         draft.modify.imgSrc = croppedImage;
       }),
     );
-    console.log(croppedImage);
-    // axios.post('/api/user_img/update/', {})
   };
 
   /* COLOR PICKER ACTIONS */
@@ -294,7 +292,6 @@ class GroupContainer extends Component {
       repositoriesState,
       groupId,
       info,
-      people,
       loggedUserId,
     } = this.props;
     if (

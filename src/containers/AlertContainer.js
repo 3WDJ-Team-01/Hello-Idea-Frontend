@@ -51,7 +51,6 @@ class AlertContainer extends Component {
 
   handleConsent = (request_id, group_id) => {
     const { loggedUserId, AlertActions } = this.props;
-    const { alerts } = this.state;
 
     AlertActions.toggleAccepted(request_id, 2);
 
@@ -63,7 +62,7 @@ class AlertContainer extends Component {
   };
 
   handleRefuse = request_id => {
-    const { loggedUserId, AlertActions } = this.props;
+    const { AlertActions } = this.props;
 
     AlertActions.toggleAccepted(request_id, 1);
   };

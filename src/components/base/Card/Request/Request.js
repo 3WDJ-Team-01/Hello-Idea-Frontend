@@ -3,7 +3,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import TimeAgo from 'react-timeago';
-import { MDBIcon, MDBBtn } from 'mdbreact';
+import { MDBBtn } from 'mdbreact';
 import koreanStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import styles from './Request.module.scss';
@@ -87,8 +87,8 @@ const Detail = ({ thumbnail, path, name, intro, children }) => {
 };
 
 export const HeaderRequest = ({ request }) => {
-  const { group, is_accepted, created_at } = request;
-  const { group_id, group_name, group_img, group_intro, member_count } = group;
+  const { group, created_at } = request;
+  const {  group_name, group_img} = group;
 
   return (
     <Link to="/alert/requests">

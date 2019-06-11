@@ -92,7 +92,7 @@ class App extends Component {
       history.push('/');
     } else {
       RepositoryActions.getRequest(repositoryId).then(() => {
-        const { author, repository, GroupActions, Mind } = this.props;
+        const { author, repository } = this.props;
         const { user_id, group_id, project_topic } = repository;
 
         if (user_id > 0 && user_id !== loggedUserId) {
@@ -352,7 +352,7 @@ class App extends Component {
   };
 
   toggleFile = nodeId => {
-    const { nodes, repositoryId } = this.props;
+    const { nodes } = this.props;
     const index = nodes.findIndex(node => node.id === nodeId);
     this.setState(
       produce(draft => {

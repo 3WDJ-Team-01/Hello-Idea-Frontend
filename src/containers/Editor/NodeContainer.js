@@ -136,7 +136,7 @@ class NodeContainer extends Component {
       handleTextContent,
       handleKeyPress,
     } = this;
-    const hasFeedback = node.feedbacks.length > 0;
+    const hasFeedback = node.feedbacks && node.feedbacks.length > 0;
 
     if (mode === 'SVG')
       return (

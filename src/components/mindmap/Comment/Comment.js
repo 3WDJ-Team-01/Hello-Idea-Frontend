@@ -4,7 +4,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import { MDBIcon, MDBBtn } from 'mdbreact';
-import ProgressIndicator from 'components/base/ProgressIndicator';
 import TimeAgo from 'react-timeago';
 import koreanStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';

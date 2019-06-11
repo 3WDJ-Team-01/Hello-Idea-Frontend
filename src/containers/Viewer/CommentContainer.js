@@ -61,7 +61,7 @@ class CommentContainer extends Component {
 
   render() {
     const { handleChange, handleSubmit } = this;
-    const { repositoryInfo, nodeList, toggleComment } = this.props;
+    const { repositoryInfo, toggleComment } = this.props;
     const { target, comment } = this.state;
     return (
       <Comment
