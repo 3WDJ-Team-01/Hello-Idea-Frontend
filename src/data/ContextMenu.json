@@ -37,6 +37,11 @@
         "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/remove.png"
       },
       {
+        "type": "COMMENT",
+        "label": "add comment",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/add_comment.png"
+      },
+      {
         "type": "ATTACH_FILE",
         "label": "attach files",
         "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/attachment.png"
@@ -72,6 +77,11 @@
         "type": "REMOVE",
         "label": "remove idea",
         "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/remove.png"
+      },
+      {
+        "type": "COMMENT",
+        "label": "add comment",
+        "iconURL": "https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/context_menu/add_comment.png"
       },
       {
         "type": "ATTACH_FILE",

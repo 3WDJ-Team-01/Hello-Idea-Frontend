@@ -19,6 +19,7 @@ import Footer from 'components/mindmap/Footer';
 import AsideContainer from './Editor/AsideContainer';
 import FooterContainer from './Editor/FooterContainer';
 import CanvasContainer from './Editor/CanvasContainer';
+import CommentContainer from './Editor/CommentContainer';
 import ContextMenuContainer from './Editor/ContextMenuContainer';
 import NodeContainer from './Editor/NodeContainer';
 
@@ -72,6 +73,10 @@ class App extends Component {
         isActivated: false,
         targetNode: null,
         list: [],
+      },
+      comment: {
+        isActivated: false,
+        targetNode: null,
       },
       chat: {
         isActivated: false,
@@ -415,6 +420,30 @@ class App extends Component {
       .catch(err => {});
   };
 
+  toggleComment = nodeId => {
+    const { nodes } = this.props;
+    const { comment } = this.state;
+    if (!comment.isActivated)
+      this.setState(
+        produce(draft => {
+          const index = nodes.findIndex(node => node.id === nodeId);
+          draft.comment = {
+            isActivated: true,
+            targetNode: nodes[index],
+          };
+        }),
+      );
+    else
+      this.setState(
+        produce(draft => {
+          draft.comment = {
+            isActivated: false,
+            targetNode: null,
+          };
+        }),
+      );
+  };
+
   toggleChat = () => {
     this.setState(
       produce(draft => {
@@ -502,6 +531,7 @@ class App extends Component {
       toggleExplore,
       toggleFile,
       uploadFile,
+      toggleComment,
       toggleChat,
       exportMindmap,
       uploadMindmap,
@@ -529,6 +559,7 @@ class App extends Component {
       file,
       chat,
       canvas,
+      comment,
     } = this.state;
 
     return (
@@ -616,10 +647,18 @@ class App extends Component {
             toggleInfo={toggleInfo}
             toggleExplore={toggleExplore}
             toggleFile={toggleFile}
+            toggleComment={toggleComment}
           />
         )}
         {file.isActivated && (
           <AsideContainer file={file} uploadFile={uploadFile} />
+        )}
+        {comment.isActivated && (
+          <CommentContainer
+            repositoryId={repositoryId}
+            target={comment.targetNode}
+            toggleComment={toggleComment}
+          />
         )}
         {explore.isActivated && <AsideContainer explore={explore} />}
         {info.isActivated && <AsideContainer info={info} />}

@@ -63,6 +63,7 @@ class ContextMenuContainer extends Component {
       toggleContextMenu,
       toggleExplore,
       toggleFile,
+      toggleComment,
       MindmapActions,
     } = this.props;
 
@@ -94,6 +95,13 @@ class ContextMenuContainer extends Component {
     const attachFile = e => {
       const { targetNodeId } = this.state;
       toggleFile(targetNodeId);
+      toggleContextMenu(e);
+    };
+
+    const sendComment = e => {
+      const { targetNodeId } = this.state;
+
+      toggleComment(targetNodeId);
       toggleContextMenu(e);
     };
 
@@ -185,6 +193,8 @@ class ContextMenuContainer extends Component {
         return explore;
       case 'ATTACH_FILE':
         return attachFile;
+      case 'COMMENT':
+        return sendComment;
       case 'EDIT':
         return editNode;
       case 'STYLE':
