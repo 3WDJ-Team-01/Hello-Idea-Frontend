@@ -5,10 +5,13 @@ import { Link } from 'react-router-dom';
 import TimeAgo from 'react-timeago';
 import { MDBBtn } from 'mdbreact';
 import koreanStrings from 'react-timeago/lib/language-strings/ko';
+import japanStrings from 'react-timeago/lib/language-strings/ja';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import { ja } from 'data/locale';
 import styles from './Request.module.scss';
 
-const formatter = buildFormatter(koreanStrings);
+// const formatter = buildFormatter(koreanStrings);
+const formatter = buildFormatter(japanStrings);
 
 const Request = ({ request, handleConsent, handleRefuse }) => {
   const { request_id, group, is_accepted, created_at } = request;
@@ -24,7 +27,7 @@ const Request = ({ request, handleConsent, handleRefuse }) => {
           <Link to={`/group/${group_id}`}>
             <b>{group_name}</b>
           </Link>
-          <span>에서 당신을 초대했습니다.</span>
+          <span>{ja.alert.inviteMe}</span>
           <div className={styles.date}>
             <TimeAgo date={created_at} formatter={formatter} />
           </div>
@@ -37,20 +40,20 @@ const Request = ({ request, handleConsent, handleRefuse }) => {
                 handleConsent(request_id, group_id);
               }}
             >
-              승낙
+              {ja.alert.accept}
             </MDBBtn>
             <MDBBtn
               outline
               color="primary"
               onClick={() => handleRefuse(request_id)}
             >
-              거절
+              {ja.alert.decline}
             </MDBBtn>
           </div>
         ) : is_accepted === 1 ? (
-          <span className={styles.message}>거절하였습니다.</span>
+          <span className={styles.message}>{ja.alert.isAccept}</span>
         ) : (
-          <span className={styles.message}>승낙하였습니다.</span>
+          <span className={styles.message}>{ja.alert.isDecline}</span>
         )}
       </div>
       <div className={styles.detail}>
@@ -88,7 +91,7 @@ const Detail = ({ thumbnail, path, name, intro, children }) => {
 
 export const HeaderRequest = ({ request }) => {
   const { group, created_at } = request;
-  const {  group_name, group_img} = group;
+  const { group_name, group_img } = group;
 
   return (
     <Link to="/alert/requests">

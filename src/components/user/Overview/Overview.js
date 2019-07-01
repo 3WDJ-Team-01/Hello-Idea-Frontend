@@ -18,6 +18,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
+import { ja } from 'data/locale';
 import styles from './Overview.module.scss';
 
 const Overview = ({ loggedUser, info }) => {
@@ -36,7 +37,7 @@ const Overview = ({ loggedUser, info }) => {
     Object.keys(info.User_log).map(key => {
       const date = key.split('/').splice(0, 2);
       const obj = {
-        date: `${date[0]}월 ${date[1]}일`,
+        date: `${date[0]}${ja.auth.MM} ${date[1]}${ja.auth.DD}`,
         project: info.User_log[key].project_count,
         idea: info.User_log[key].idea_count,
       };
@@ -51,7 +52,9 @@ const Overview = ({ loggedUser, info }) => {
       };
 
       if (info.User_feed[key][0]) {
-        obj.date = `${date[2]}년 ${date[0]}월 ${date[1]}일`;
+        obj.date = `${date[2]}${ja.auth.YYYY} ${date[0]}${ja.auth.MM} ${
+          date[1]
+        }${ja.auth.DD}`;
 
         return obj;
       }
@@ -162,9 +165,8 @@ const ActivityGroup = ({ date, repositories }) => (
                   >
                     {item.project_topic}
                   </Link>
-                  {`에 관하여 `}
-                  <span>{item.idea_count}개의 아이디어</span>
-                  {`를 생성했습니다.`}
+                  {ja.user.about}
+                  <span>{`${item.idea_count}${ja.user.numberIdea}`}</span>
                 </div>
               ))}
           </div>

@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import ProgressIndicator from 'components/base/ProgressIndicator';
+import { ja } from 'data/locale';
 import styles from './Search.module.scss';
 
 const Search = ({
@@ -18,7 +19,7 @@ const Search = ({
   return (
     <>
       <div className={styles.trendsSearch}>
-        <h3>사용자들의 검색어 동향을 살펴보세요</h3>
+        <h3>{ja.trend.title}</h3>
         <div className={styles.input}>
           <input
             type="search"
@@ -35,7 +36,7 @@ const Search = ({
       <div className={styles.recentlyKeywords}>
         {state === 'success' ? (
           <>
-            <h4>최근 검색어</h4>
+            <h4>{ja.trend.recent}</h4>
             <div className={styles.list}>
               {recentlyKeywords.map((item, i) => (
                 <Link key={i} to={`/trends/${item}`} onClick={handleSearch}>

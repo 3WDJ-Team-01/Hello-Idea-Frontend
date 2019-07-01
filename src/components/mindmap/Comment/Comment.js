@@ -25,7 +25,7 @@ const Comment = ({
   return (
     <div className={styles.wrapper}>
       <div className={styles.card}>
-        <div className={styles.label}>의견 보내기</div>
+        <div className={styles.label}>Comment</div>
         <div className={styles.info}>
           <span>{project_topic}</span>
           <MDBIcon icon="chevron-right" />
@@ -54,10 +54,10 @@ const Comment = ({
         </div>
         <div className={styles.btns}>
           <MDBBtn color="mdb-color" onClick={toggleComment}>
-            닫기
+            Close
           </MDBBtn>
           <MDBBtn color="primary" onClick={handleSubmit}>
-            제출
+            Submit
           </MDBBtn>
         </div>
       </div>

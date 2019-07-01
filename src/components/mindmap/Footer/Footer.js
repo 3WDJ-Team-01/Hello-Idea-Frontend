@@ -52,13 +52,13 @@ const Footer = ({
               <div className={styles.send}>
                 <input
                   type="text"
-                  placeholder="메시지를 입력하세요..."
+                  placeholder="message to..."
                   value={inputMessage}
                   onChange={handleInputChange}
                   onKeyPress={onKeyPress}
                 />
                 <span className={styles.submit} onClick={handleMessageSubmit}>
-                  전송
+                  Submit
                 </span>
               </div>
             </div>

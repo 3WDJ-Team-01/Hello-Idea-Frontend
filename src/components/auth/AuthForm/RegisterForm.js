@@ -5,6 +5,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBInput, MDBBtn } from 'mdbreact';
+import { ja } from 'data/locale';
 import styles from './AuthForm.module.scss';
 
 const RegisterForm = ({
@@ -22,7 +23,7 @@ const RegisterForm = ({
     <div className={styles.form}>
       <div className={styles.column}>
         <MDBInput
-          label="이메일"
+          label={ja.auth.email}
           size="lg"
           outline
           type="email"
@@ -34,7 +35,7 @@ const RegisterForm = ({
       </div>
       <div className={styles.column}>
         <MDBInput
-          label="비밀번호"
+          label={ja.auth.password}
           size="lg"
           outline
           type="password"
@@ -46,7 +47,7 @@ const RegisterForm = ({
       </div>
       <div className={styles.column}>
         <MDBInput
-          label="이름"
+          label={ja.auth.name}
           size="lg"
           outline
           type="text"
@@ -59,7 +60,7 @@ const RegisterForm = ({
       <div className={styles.column}>
         <div className={styles.row}>
           <MDBInput
-            label="년"
+            label={ja.auth.YYYY}
             size="lg"
             outline
             className={styles.input_row}
@@ -71,7 +72,7 @@ const RegisterForm = ({
             error={error.message}
           />
           <MDBInput
-            label="월"
+            label={ja.auth.MM}
             size="lg"
             outline
             className={styles.input_row}
@@ -83,7 +84,7 @@ const RegisterForm = ({
             error={error.message}
           />
           <MDBInput
-            label="일"
+            label={ja.auth.DD}
             size="lg"
             outline
             className={styles.input_row}
@@ -105,7 +106,7 @@ const RegisterForm = ({
               value="male"
               onChange={changeInput}
             />
-            <div className={styles.button_row}>남성</div>
+            <div className={styles.button_row}>{ja.auth.male}</div>
           </label>
           <label className={styles.gender}>
             <input
@@ -114,15 +115,15 @@ const RegisterForm = ({
               value="female"
               onChange={changeInput}
             />
-            <div className={styles.button_row}>여성</div>
+            <div className={styles.button_row}>{ja.auth.female}</div>
           </label>
         </div>
       </div>
       <MDBBtn size="lg" color="primary" onClick={handleRegister}>
-        회원가입
+        {ja.auth.signup}
       </MDBBtn>
       <Link to="/auth/login" className={styles.description}>
-        이미 계정이 있으신가요?
+        {ja.auth.isAccount}
       </Link>
     </div>
   </div>

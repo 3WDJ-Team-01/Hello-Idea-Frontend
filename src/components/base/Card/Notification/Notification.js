@@ -3,10 +3,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import TimeAgo from 'react-timeago';
 import koreanStrings from 'react-timeago/lib/language-strings/ko';
+import japanStrings from 'react-timeago/lib/language-strings/ja';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import { ja } from 'data/locale';
 import styles from './Notification.module.scss';
 
-const formatter = buildFormatter(koreanStrings);
+// const formatter = buildFormatter(koreanStrings);
+const formatter = buildFormatter(japanStrings);
 
 const Notification = ({ notify, loggedUserId }) => {
   const { notify_cont, created_at, send_id, send, target_id, target } = notify;
@@ -68,11 +71,12 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
       return {
         label:
           loggedUserId === notifyData.target_id ? (
-            <span>님이 당신을 팔로우하고 있습니다.</span>
+            <span>{`${ja.alert.sir} ${ja.alert.followMe}`}</span>
           ) : (
             <span>
-              님이 <Link to={`/user/${target_id}`}>{notifyData.user_name}</Link>
-              사용자를 팔로우하고 있습니다.
+              {`${ja.alert.sir} `}
+              <Link to={`/user/${target_id}`}>{notifyData.user_name}</Link>
+              {`${ja.alert.follow}`}
             </span>
           ),
         component:
@@ -103,18 +107,18 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
             : `/user/${target_id}`,
         string:
           loggedUserId === notifyData.target_id
-            ? `님이 당신을 팔로우하고 있습니다.`
-            : `님이 ${notifyData.user_name} 사용자를 팔로우하고 있습니다.`,
+            ? `${ja.alert.sir} ${ja.alert.followMe}`
+            : `${ja.alert.sir} ${notifyData.user_name} ${ja.alert.follow}.`,
       };
     case 'create':
       return {
         label: (
           <span>
-            님이{' '}
+            {`${ja.alert.sir} `}
             <Link to={`/user/${user_id}/repositories/${target_id}`}>
               {project_topic}
             </Link>
-            주제로 생각하고 있습니다.
+            {`${ja.alert.create}`}
           </span>
         ),
         component: (
@@ -128,17 +132,17 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
           </Detail>
         ),
         path: `/user/${user_id}/repositories/${target_id}`,
-        string: `님이 ${project_topic} 주제로 생각하고 있습니다.`,
+        string: `${ja.alert.sir} ${project_topic} ${ja.alert.create}`,
       };
     case 'like':
       return {
         label: (
           <span>
-            님이{' '}
+            {`${ja.alert.sir} `}
             <Link to={`/user/${user_id}/repositories/${target_id}`}>
               {project_topic}
             </Link>
-            주제를 좋아합니다.
+            {`${ja.alert.like}`}
           </span>
         ),
         component: (
@@ -152,17 +156,18 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
           </Detail>
         ),
         path: `/user/${user_id}/repositories/${target_id}`,
-        string: `님이 ${project_topic} 주제를 좋아합니다.`,
+        string: `${ja.alert.sir} ${project_topic} ${ja.alert.create}`,
       };
     case 'fork':
       return {
         label: (
           <span>
-            님이{' '}
-            <Link to={`/user/${user_id}/repositories/${target_id}`}>
-              {project_topic}
-            </Link>
-            에서 당신의 생각을 참조하였습니다.
+            {`${ja.alert.sir} ${(
+              <Link to={`/user/${user_id}/repositories/${target_id}`}>
+                {project_topic}
+              </Link>
+            )}
+            ${ja.alert.fork}`}
           </span>
         ),
         component: (
@@ -176,17 +181,17 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
           </Detail>
         ),
         path: `/user/${user_id}/repositories/${target_id}`,
-        string: `님이 ${project_topic}에서 당신의 생각을 참조하였습니다.`,
+        string: `${ja.alert.sir} ${project_topic} ${ja.alert.fork}`,
       };
     case 'comment':
       return {
         label: (
           <span>
-            님이{' '}
+            {`${ja.alert.sir} `}
             <Link to={`/user/${user_id}/repositories/${target_id}`}>
               {project_topic}
             </Link>
-            에서 의견을 작성하였습니다.
+            {`${ja.alert.comment}`}
           </span>
         ),
         component: (
@@ -200,7 +205,7 @@ const notification = (type, loggedUserId, sendingUser, notifyData) => {
           </Detail>
         ),
         path: `/user/${user_id}/repositories/${target_id}`,
-        string: `님이 ${project_topic}에서 의견을 작성하였습니다.`,
+        string: `${ja.alert.sir} ${project_topic} ${ja.alert.comment}`,
       };
     default:
       return null;

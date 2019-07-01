@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "./MenuLabel.module.scss";
+import React from 'react';
+import styles from './MenuLabel.module.scss';
+
 const MenuLabel = ({ wrapperSize, location, label, options }) => {
   return (
     <div
@@ -8,7 +9,7 @@ const MenuLabel = ({ wrapperSize, location, label, options }) => {
         width: `${wrapperSize}px`,
         top: location.y + wrapperSize / 2,
         left: location.x - wrapperSize / 2,
-        color: options.bgColor
+        color: options.bgColor,
       }}
     >
       {label}

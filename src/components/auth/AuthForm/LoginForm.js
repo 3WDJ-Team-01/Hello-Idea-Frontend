@@ -3,10 +3,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBInput, MDBBtn } from 'mdbreact';
-// import {
-//   FacebookLoginButton,
-//   GoogleLoginButton,
-// } from 'components/auth/SocialLoginButton';
+import { ja } from 'data/locale';
 import styles from './AuthForm.module.scss';
 
 const LoginForm = ({
@@ -24,7 +21,7 @@ const LoginForm = ({
       <div className={styles.form}>
         <div className={styles.column}>
           <MDBInput
-            label="이메일"
+            label={ja.auth.email}
             outline
             type="email"
             name="user_email"
@@ -36,7 +33,7 @@ const LoginForm = ({
         </div>
         <div className={styles.column}>
           <MDBInput
-            label="비밀번호"
+            label={ja.auth.password}
             outline
             type="password"
             name="password"
@@ -48,25 +45,12 @@ const LoginForm = ({
           />
         </div>
         <MDBBtn size="lg" color="primary" onClick={handleLogin}>
-          로그인
+          {ja.auth.signin}
         </MDBBtn>
         <Link to="/auth/register" className={styles.description}>
-          아직 계정이 없으신가요?
+          {ja.auth.notAccount}
         </Link>
       </div>
-      {/* <div className={styles.divider_wrapper}>
-        <div className={styles.divider} />
-        <div>or</div>
-        <div className={styles.divider} />
-      </div>
-      <div className={styles.form}>
-        <Link to="/*" className={styles.button}>
-          <FacebookLoginButton />
-        </Link>
-        <Link to="/*" className={styles.button}>
-          <GoogleLoginButton />
-        </Link>
-      </div> */}
     </div>
   );
 };

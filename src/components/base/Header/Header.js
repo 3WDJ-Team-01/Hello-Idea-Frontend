@@ -238,7 +238,7 @@ const Header = ({
                 )}
                 <DropdownMenu isDivider />
                 <DropdownMenu path="/alert/notifications">
-                  <div className={styles.more}>더보기</div>
+                  <div className={styles.more}>more</div>
                 </DropdownMenu>
               </DropdownMenuList>
             </DropdownWrapper>

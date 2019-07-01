@@ -5,12 +5,13 @@ import React from 'react';
 import { MDBIcon } from 'mdbreact';
 import { Link } from 'react-router-dom';
 import { getTendencyColor } from 'tools/TendencyColor';
+import { ja } from 'data/locale';
 import styles from './Discover.module.scss';
 
 const Discover = ({ tendencyRepo }) => {
   return (
     <div className={styles.discover}>
-      <span>이런 주제의 생각은 어떠세요?</span>
+      <span>{ja.main.recommend}</span>
       <div className={styles.repoList}>
         {tendencyRepo.map((repository, i) => (
           <Item
@@ -26,7 +27,7 @@ const Discover = ({ tendencyRepo }) => {
           />
         ))}
       </div>
-      <Link to="/explore">모두 보기</Link>
+      <Link to="/explore">more...</Link>
     </div>
   );
 };

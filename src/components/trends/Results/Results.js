@@ -16,6 +16,7 @@ import {
 } from 'recharts';
 import { Link } from 'react-router-dom';
 import ProgressIndicator from 'components/base/ProgressIndicator';
+import { ja } from 'data/locale';
 import styles from './Results.module.scss';
 
 const COLORS = [
@@ -47,18 +48,18 @@ const Results = ({ state, keyword, attention, log, relate }) => {
     Object.keys(log[item]).map(key => {
       if (key === 'Male')
         logData.push({
-          name: '남성',
-          비율: log[item][key],
+          name: ja.auth.male,
+          ratio: log[item][key],
         });
       else if (key === 'Female')
         logData.push({
-          name: '여성',
-          비율: log[item][key],
+          name: ja.auth.female,
+          ratio: log[item][key],
         });
       else
         logData.push({
           name: key,
-          비율: log[item][key],
+          ratio: log[item][key],
         });
     });
   });
@@ -66,11 +67,11 @@ const Results = ({ state, keyword, attention, log, relate }) => {
   return (
     <div className={styles.trendsResultAll}>
       <div className={styles.searchWord}>
-        검색어
+        {ja.trend.keyword}
         <h4>{keyword}</h4>
       </div>
       <div className={styles.section}>
-        <h5>관심도 변화</h5>
+        <h5>{ja.trend.attention}</h5>
         {state.attention === 'success' ? (
           <div className={styles.graph}>
             <LineChart
@@ -103,7 +104,7 @@ const Results = ({ state, keyword, attention, log, relate }) => {
       </div>
 
       <div className={styles.section}>
-        <h5>성별, 연령별 관심도</h5>
+        <h5>{ja.trend.age}</h5>
         {state.log === 'success' ? (
           <div className={styles.graph}>
             <BarChart
@@ -116,7 +117,7 @@ const Results = ({ state, keyword, attention, log, relate }) => {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <Tooltip />
-              <Bar dataKey="비율" fill="#3498db" label={{ position: 'top' }}>
+              <Bar dataKey="ratio" fill="#3498db" label={{ position: 'top' }}>
                 {logData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index]} />
                 ))}
@@ -130,7 +131,7 @@ const Results = ({ state, keyword, attention, log, relate }) => {
 
       <div className={`${styles.section} ${styles.relate}`}>
         <div className={styles.article}>
-          <h5>관련 주제</h5>
+          <h5>{ja.trend.similarTopic}</h5>
           {state.relate === 'success' ? (
             <div className={styles.list}>
               {relate.related_topic.map((item, i) => (
@@ -150,7 +151,10 @@ const Results = ({ state, keyword, attention, log, relate }) => {
                 </Link>
               ))}
               {relate.related_topic.length === 0 ? (
-                <div className={styles.null}>관련된 주제가 없습니다.</div>
+                <div className={styles.null}>{`${ja.trend.similarTopic}${
+                  ja.trend.none
+                }`}
+                </div>
               ) : null}
             </div>
           ) : (
@@ -158,7 +162,7 @@ const Results = ({ state, keyword, attention, log, relate }) => {
           )}
         </div>
         <div className={styles.article}>
-          <h5>관련 검색어</h5>
+          <h5>{ja.trend.similarKeyword}</h5>
           {state.relate === 'success' ? (
             <div className={styles.list}>
               {relate.related_search.map((item, i) => (
@@ -172,7 +176,10 @@ const Results = ({ state, keyword, attention, log, relate }) => {
                 </Link>
               ))}
               {relate.related_search.length === 0 ? (
-                <div className={styles.null}>관련된 검색어가 없습니다.</div>
+                <div className={styles.null}>{`${ja.trend.similarKeyword}${
+                  ja.trend.none
+                }`}
+                </div>
               ) : null}
             </div>
           ) : (

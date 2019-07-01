@@ -38,7 +38,7 @@ const People = ({
         <div className={styles.invite}>
           <div>
             <div className={styles.title}>
-              <span>그룹원 초대</span>
+              <span>Group invite</span>
               <span className={styles.close} onClick={handleInvite}>
                 &times;
               </span>
@@ -47,7 +47,7 @@ const People = ({
               <input
                 type="email"
                 className="form-control"
-                placeholder="이메일 입력"
+                placeholder="email"
                 value={searchTo}
                 onChange={handleSearchTo}
               />

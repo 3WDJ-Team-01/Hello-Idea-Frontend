@@ -69,13 +69,13 @@ const Aside = ({
         <div className={styles.keyword}>{data.idea_cont}</div>
         <p>
           <span>
-            <b>소유자</b>
+            <b>Owner</b>
           </span>
           <span>{data.user_name}</span>
         </p>
         <p>
           <span>
-            <b>주제</b>
+            <b>Topic</b>
           </span>
           <span>{data.project_topic}</span>
         </p>
@@ -118,7 +118,7 @@ const Aside = ({
         <div className={styles.list}>
           <p>
             <span>
-              <b>파일</b>
+              <b>File</b>
             </span>
             {list.map((item, i) => (
               <span key={i}>
@@ -156,7 +156,7 @@ const Aside = ({
   );
   const Loading = () => <ProgressIndicator mini />;
   const Failure = () => (
-    <div className={styles.recommendBoxList}>결과가 없습니다</div>
+    <div className={styles.recommendBoxList}>Not find...</div>
   );
 
   const renderContents = () => {

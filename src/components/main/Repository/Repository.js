@@ -82,7 +82,7 @@ const Header = ({
         value={searchTo}
         onChange={handleSearchTo}
         className="form-control"
-        placeholder="저장소 이름"
+        placeholder="Repository"
       />
       <select
         className={`browser-default custom-select ${styles.filter}`}
