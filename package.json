@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "react": "^16.8.2",
+    "react-autosize-textarea": "^7.0.0",
     "react-dom": "^16.8.2",
+    "react-intl": "^2.9.0",
     "react-scripts": "2.1.5"
   },
   "scripts": {
@@ -68,5 +70,5 @@
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0"
   },
-  "proxy": "http://localhost:8000"
+  "proxy": "https://hello-idea.2muni.com"
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import ProgressIndicator from 'components/base/ProgressIndicator';
-import { ja } from 'data/locale';
+import { FormattedMessage } from 'react-intl';
 import styles from './Search.module.scss';
 
 const Search = ({
@@ -19,7 +19,9 @@ const Search = ({
   return (
     <>
       <div className={styles.trendsSearch}>
-        <h3>{ja.trend.title}</h3>
+        <FormattedMessage id="trend.title">
+          {title => <h3>{title}</h3>}
+        </FormattedMessage>
         <div className={styles.input}>
           <input
             type="search"
@@ -36,7 +38,9 @@ const Search = ({
       <div className={styles.recentlyKeywords}>
         {state === 'success' ? (
           <>
-            <h4>{ja.trend.recent}</h4>
+            <FormattedMessage id="trend.recent">
+              {recent => <h4>{recent}</h4>}
+            </FormattedMessage>
             <div className={styles.list}>
               {recentlyKeywords.map((item, i) => (
                 <Link key={i} to={`/trends/${item}`} onClick={handleSearch}>

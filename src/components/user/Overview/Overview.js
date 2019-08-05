@@ -18,10 +18,10 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
-import { ja } from 'data/locale';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import styles from './Overview.module.scss';
 
-const Overview = ({ loggedUser, info }) => {
+const Overview = ({ loggedUser, info, intl }) => {
   // DataSET
   const tendency =
     info.User_tendency &&
@@ -37,7 +37,11 @@ const Overview = ({ loggedUser, info }) => {
     Object.keys(info.User_log).map(key => {
       const date = key.split('/').splice(0, 2);
       const obj = {
-        date: `${date[0]}${ja.auth.MM} ${date[1]}${ja.auth.DD}`,
+        date: `${date[0]}${intl.formatMessage({
+          id: 'auth.MM',
+        })} ${date[1]}${intl.formatMessage({
+          id: 'auth.DD',
+        })}`,
         project: info.User_log[key].project_count,
         idea: info.User_log[key].idea_count,
       };
@@ -52,9 +56,13 @@ const Overview = ({ loggedUser, info }) => {
       };
 
       if (info.User_feed[key][0]) {
-        obj.date = `${date[2]}${ja.auth.YYYY} ${date[0]}${ja.auth.MM} ${
-          date[1]
-        }${ja.auth.DD}`;
+        obj.date = `${date[2]}${intl.formatMessage({
+          id: 'auth.YYYY',
+        })} ${date[0]}${intl.formatMessage({
+          id: 'auth.MM',
+        })} ${date[1]}${intl.formatMessage({
+          id: 'auth.DD',
+        })}`;
 
         return obj;
       }
@@ -165,8 +173,9 @@ const ActivityGroup = ({ date, repositories }) => (
                   >
                     {item.project_topic}
                   </Link>
-                  {ja.user.about}
-                  <span>{`${item.idea_count}${ja.user.numberIdea}`}</span>
+                  <FormattedMessage id="user.about" />
+                  <span>{item.idea_count}</span>
+                  <FormattedMessage id="user.numberIdea" />
                 </div>
               ))}
           </div>
@@ -176,4 +185,4 @@ const ActivityGroup = ({ date, repositories }) => (
   </div>
 );
 
-export default Overview;
+export default injectIntl(Overview);

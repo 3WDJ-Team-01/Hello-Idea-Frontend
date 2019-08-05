@@ -5,13 +5,13 @@ import React from 'react';
 import { MDBIcon } from 'mdbreact';
 import { Link } from 'react-router-dom';
 import { getTendencyColor } from 'tools/TendencyColor';
-import { ja } from 'data/locale';
+import { FormattedMessage } from 'react-intl';
 import styles from './Discover.module.scss';
 
 const Discover = ({ tendencyRepo }) => {
   return (
     <div className={styles.discover}>
-      <span>{ja.main.recommend}</span>
+      <FormattedMessage id="main.recommend" />
       <div className={styles.repoList}>
         {tendencyRepo.map((repository, i) => (
           <Item

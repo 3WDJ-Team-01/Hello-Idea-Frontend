@@ -7,11 +7,10 @@ import { MDBBtn } from 'mdbreact';
 import koreanStrings from 'react-timeago/lib/language-strings/ko';
 import japanStrings from 'react-timeago/lib/language-strings/ja';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
-import { ja } from 'data/locale';
+import { FormattedMessage } from 'react-intl';
 import styles from './Request.module.scss';
 
-// const formatter = buildFormatter(koreanStrings);
-const formatter = buildFormatter(japanStrings);
+const formatter = localStorage.getItem('lang') === 'ko' ? buildFormatter(koreanStrings) : buildFormatter(japanStrings);
 
 const Request = ({ request, handleConsent, handleRefuse }) => {
   const { request_id, group, is_accepted, created_at } = request;
@@ -27,7 +26,7 @@ const Request = ({ request, handleConsent, handleRefuse }) => {
           <Link to={`/group/${group_id}`}>
             <b>{group_name}</b>
           </Link>
-          <span>{ja.alert.inviteMe}</span>
+          <FormattedMessage id="alert.inviteMe" />
           <div className={styles.date}>
             <TimeAgo date={created_at} formatter={formatter} />
           </div>
@@ -40,20 +39,24 @@ const Request = ({ request, handleConsent, handleRefuse }) => {
                 handleConsent(request_id, group_id);
               }}
             >
-              {ja.alert.accept}
+              <FormattedMessage id="alert.accept" />
             </MDBBtn>
             <MDBBtn
               outline
               color="primary"
               onClick={() => handleRefuse(request_id)}
             >
-              {ja.alert.decline}
+              <FormattedMessage id="alert.decline" />
             </MDBBtn>
           </div>
         ) : is_accepted === 1 ? (
-          <span className={styles.message}>{ja.alert.isAccept}</span>
+          <span className={styles.message}>
+            <FormattedMessage id="alert.isAccept" />
+          </span>
         ) : (
-          <span className={styles.message}>{ja.alert.isDecline}</span>
+          <span className={styles.message}>
+            <FormattedMessage id="alert.isDecline" />
+          </span>
         )}
       </div>
       <div className={styles.detail}>

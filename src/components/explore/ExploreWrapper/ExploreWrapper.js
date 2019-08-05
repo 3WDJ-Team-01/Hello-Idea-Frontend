@@ -9,19 +9,19 @@ const ExploreWrapper = ({ news, children }) => {
           {news[0] && (
             <div className={styles.newsSide}>
               <a
-                href={news[0].img_href}
+                href={news[0].href}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <img
                   src={
-                    typeof news[0].img_src === 'string' &&
-                    news[0].img_src.split('?')[0]
+                    typeof news[0].img === 'string' &&
+                    news[0].img.split('?')[0]
                   }
-                  alt={news[0].Comment}
+                  alt={news[0].title}
                 />
                 <div className={styles.label}>
-                  <span>{news[0].Comment}</span>
+                  <span>{news[0].title}</span>
                 </div>
               </a>
             </div>
@@ -29,19 +29,19 @@ const ExploreWrapper = ({ news, children }) => {
           {news[1] && (
             <div className={styles.newsMain}>
               <a
-                href={news[1].img_href}
+                href={news[1].href}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <img
                   src={
-                    typeof news[1].img_src === 'string' &&
-                    news[1].img_src.split('?')[0]
+                    typeof news[1].img === 'string' &&
+                    news[1].img.split('?')[0]
                   }
-                  alt={news[1].Comment}
+                  alt={news[1].title}
                 />
                 <div className={styles.label}>
-                  <span>{news[1].Comment}</span>
+                  <span>{news[1].title}</span>
                 </div>
               </a>
             </div>
@@ -49,19 +49,19 @@ const ExploreWrapper = ({ news, children }) => {
           {news[2] && (
             <div className={styles.newsSide}>
               <a
-                href={news[2].img_href}
+                href={news[2].href}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <img
                   src={
-                    typeof news[2].img_src === 'string' &&
-                    news[2].img_src.split('?')[0]
+                    typeof news[2].img === 'string' &&
+                    news[2].img.split('?')[0]
                   }
-                  alt={news[2].Comment}
+                  alt={news[2].title}
                 />
                 <div className={styles.label}>
-                  <span>{news[2].Comment}</span>
+                  <span>{news[2].title}</span>
                 </div>
               </a>
             </div>

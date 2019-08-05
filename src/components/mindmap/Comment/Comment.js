@@ -6,10 +6,11 @@ import React from 'react';
 import { MDBIcon, MDBBtn } from 'mdbreact';
 import TimeAgo from 'react-timeago';
 import koreanStrings from 'react-timeago/lib/language-strings/ko';
+import japanStrings from 'react-timeago/lib/language-strings/ja';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import styles from './Comment.module.scss';
 
-const formatter = buildFormatter(koreanStrings);
+const formatter = localStorage.getItem('lang') === 'ko' ? buildFormatter(koreanStrings) : buildFormatter(japanStrings);
 
 const Comment = ({
   comment,

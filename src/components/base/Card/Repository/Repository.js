@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { MDBIcon } from 'mdbreact';
 import TimeAgo from 'react-timeago';
 import koreanStrings from 'react-timeago/lib/language-strings/ko';
+import japanStrings from 'react-timeago/lib/language-strings/ja';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import styles from './Repository.module.scss';
 
-const formatter = buildFormatter(koreanStrings);
+const formatter = localStorage.getItem('lang') === 'ko' ? buildFormatter(koreanStrings) : buildFormatter(japanStrings);
 
 const Repository = ({ author, value, isGroup = false }) =>
   author && value ? (

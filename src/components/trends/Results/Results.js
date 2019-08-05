@@ -16,7 +16,7 @@ import {
 } from 'recharts';
 import { Link } from 'react-router-dom';
 import ProgressIndicator from 'components/base/ProgressIndicator';
-import { ja } from 'data/locale';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import styles from './Results.module.scss';
 
 const COLORS = [
@@ -30,7 +30,7 @@ const COLORS = [
   '#4b6584',
 ];
 
-const Results = ({ state, keyword, attention, log, relate }) => {
+const Results = ({ state, keyword, attention, log, relate, intl }) => {
   const attentionData = attention.map(item => {
     const data = {};
     const key = Object.keys(item)[0];
@@ -48,12 +48,12 @@ const Results = ({ state, keyword, attention, log, relate }) => {
     Object.keys(log[item]).map(key => {
       if (key === 'Male')
         logData.push({
-          name: ja.auth.male,
+          name: intl.formatMessage({ id: 'auth.male' }),
           ratio: log[item][key],
         });
       else if (key === 'Female')
         logData.push({
-          name: ja.auth.female,
+          name: intl.formatMessage({ id: 'auth.female' }),
           ratio: log[item][key],
         });
       else
@@ -67,11 +67,11 @@ const Results = ({ state, keyword, attention, log, relate }) => {
   return (
     <div className={styles.trendsResultAll}>
       <div className={styles.searchWord}>
-        {ja.trend.keyword}
+        <FormattedMessage id="trend.keyword" />
         <h4>{keyword}</h4>
       </div>
       <div className={styles.section}>
-        <h5>{ja.trend.attention}</h5>
+        <h5>{intl.formatMessage({ id: 'trend.attention' })}</h5>
         {state.attention === 'success' ? (
           <div className={styles.graph}>
             <LineChart
@@ -102,9 +102,8 @@ const Results = ({ state, keyword, attention, log, relate }) => {
           <ProgressIndicator mini />
         )}
       </div>
-
       <div className={styles.section}>
-        <h5>{ja.trend.age}</h5>
+        <h5>{intl.formatMessage({ id: 'trend.age' })}</h5>
         {state.log === 'success' ? (
           <div className={styles.graph}>
             <BarChart
@@ -131,7 +130,7 @@ const Results = ({ state, keyword, attention, log, relate }) => {
 
       <div className={`${styles.section} ${styles.relate}`}>
         <div className={styles.article}>
-          <h5>{ja.trend.similarTopic}</h5>
+          <h5>{intl.formatMessage({ id: 'trend.similarTopic' })}</h5>
           {state.relate === 'success' ? (
             <div className={styles.list}>
               {relate.related_topic.map((item, i) => (
@@ -151,9 +150,9 @@ const Results = ({ state, keyword, attention, log, relate }) => {
                 </Link>
               ))}
               {relate.related_topic.length === 0 ? (
-                <div className={styles.null}>{`${ja.trend.similarTopic}${
-                  ja.trend.none
-                }`}
+                <div className={styles.null}>
+                  <FormattedMessage id="trend.similarTopic" />
+                  <FormattedMessage id="trend.none" />
                 </div>
               ) : null}
             </div>
@@ -162,7 +161,7 @@ const Results = ({ state, keyword, attention, log, relate }) => {
           )}
         </div>
         <div className={styles.article}>
-          <h5>{ja.trend.similarKeyword}</h5>
+          <h5>{intl.formatMessage({ id: 'trend.similarKeyword' })}</h5>
           {state.relate === 'success' ? (
             <div className={styles.list}>
               {relate.related_search.map((item, i) => (
@@ -176,9 +175,9 @@ const Results = ({ state, keyword, attention, log, relate }) => {
                 </Link>
               ))}
               {relate.related_search.length === 0 ? (
-                <div className={styles.null}>{`${ja.trend.similarKeyword}${
-                  ja.trend.none
-                }`}
+                <div className={styles.null}>
+                  <FormattedMessage id="trend.similarKeyword" />
+                  <FormattedMessage id="trend.none" />
                 </div>
               ) : null}
             </div>
@@ -191,4 +190,4 @@ const Results = ({ state, keyword, attention, log, relate }) => {
   );
 };
 
-export default Results;
+export default injectIntl(Results);
