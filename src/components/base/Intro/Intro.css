@@ -11,7 +11,6 @@
 
 /* First */
 .startFirst {
-  background-color: white;
 }
 .startFirst .fullscreen {
   height: 100vh;
@@ -126,7 +125,6 @@ h1 span {
 /* Second */
 .startSecond {
   position: relative;
-  background-color: white;
   height: 100vh;
 }
 
@@ -161,7 +159,6 @@ h1 span {
 /* Third */
 .startThird {
   position: relative;
-  background-color: #ececec;
 }
 
 .startThird .container {

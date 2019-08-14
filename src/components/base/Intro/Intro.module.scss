@@ -1,0 +1,72 @@
+@import '~styles/utils.scss';
+
+.intro_wrapper {
+  width: 100vw;
+  height: 300vh;
+  display: flex;
+  &::-webkit-scrollbar,
+  &::-webkit-scrollbar-thumb {
+    color: lightgray;
+    width: 25px;
+    border: 10px solid transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 0 10px;
+  }
+}
+.section {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  &:nth-child(2) {
+    justify-content: space-around;
+  }
+  img {
+    max-width: 90%;
+    margin: 2rem 0;
+  }
+  .desc {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  a {
+    margin-top: 2rem;
+    display: block;
+    max-width: 200px;
+    width: 100%;
+    button {
+      background-color: #4193ff !important;
+      width: 100%;
+    }
+  }
+  @include media('<medium') {
+    display: none;
+  }
+}
+.intro {
+  display: flex !important;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 90%;
+  justify-content: center;
+  align-items: center;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 33.3%;
+  }
+  h4 {
+    font-size: 1.5rem;
+    margin: 0 !important;
+  }
+  .content {
+    width: 50%;
+  }
+}
