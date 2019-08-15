@@ -22,6 +22,7 @@ import {
 import { HeaderNotify } from 'components/base/Card/Notification';
 import { HeaderRequest } from 'components/base/Card/Request';
 import styles from './Header.module.scss';
+import Logo from './Logo.png'
 
 const Header = ({
   history,
@@ -103,10 +104,7 @@ const Header = ({
         {/* Desktop env */}
         <div>
           <Link to="/" className={styles.logo}>
-            <img
-              src="https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/global/logo.png"
-              alt=""
-            />
+            <img src={Logo} alt="hello,idea" />
 
             <span>HelloIdea</span>
           </Link>
@@ -183,7 +181,7 @@ const Header = ({
 
           <div className={styles.dropdown}>
             <DropdownWrapper>
-              <DropdownTrigger caret>
+              <DropdownTrigger>
                 <MDBIcon icon="user-alt" />
               </DropdownTrigger>
               <DropdownMenuList>

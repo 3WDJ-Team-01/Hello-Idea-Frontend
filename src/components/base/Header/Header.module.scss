@@ -3,15 +3,16 @@
 .header_wrapper {
   width: 100%;
   height: 4rem;
-  background-color: #2f4e73;
+  background-color: white;
   box-shadow: $shadow2dp;
+  z-index: 999;
+  position: sticky;
   .header {
     width: 1380px;
     height: 100%;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-
     > div {
       display: flex;
       align-items: center;
@@ -30,7 +31,7 @@
 .logo {
   display: flex;
   align-items: center;
-  color: white;
+  color: black;
   font-size: 1.3rem;
   width: 150px;
   img {
@@ -39,9 +40,6 @@
   span {
     margin-left: 3%;
     font-family: 'Ubuntu', sans-serif;
-    &:hover {
-      color: #c5e6ef;
-    }
   }
 }
 
@@ -51,8 +49,8 @@
   flex-direction: column;
   input {
     font-weight: 300;
-    background-color: lighten(#2f4e73, 10%);
-    border-color: lighten(#2f4e73, 10%);
+    background-color: darken(white, 10%);
+    border-color: darken(white, 10%);
     padding-top: 0;
     padding-bottom: 0;
     line-height: 1rem;
@@ -131,9 +129,9 @@
 
 .link {
   a {
-    color: white;
+    color: grey;
     span:hover {
-      color: #c5e6ef;
+      color: black;
     }
   }
   a + a {
@@ -147,7 +145,7 @@
 }
 .menus {
   font-size: 1.5rem;
-  color: white;
+  color: #4285f4;
   .more {
     width: 100%;
     display: flex;
@@ -169,7 +167,7 @@
 .logout {
   margin-left: auto;
   margin-right: 1rem;
-  color: white;
+  color: black;
 
   font-weight: 800;
   font-size: 2rem;
