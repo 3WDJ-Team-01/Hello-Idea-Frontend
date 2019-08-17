@@ -46,7 +46,6 @@
   }
   .filter {
     display: inline;
-    width: 120px;
     margin-right: 3%;
     @include media('<medium') {
       display: none;
@@ -100,7 +99,6 @@
     }
   }
 }
-
 .ideabox {
   min-width: 240px;
   height: 100%;
@@ -114,11 +112,11 @@
     background-color: white;
     width: 240px;
     height: 100%;
-    z-index: 0;
     img {
       width: 100%;
       height: calc(100% - 3.4rem);
     }
+    z-index: 0;
   }
   .ideahov {
     position: relative;

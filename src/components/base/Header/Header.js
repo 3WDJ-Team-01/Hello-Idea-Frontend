@@ -22,7 +22,7 @@ import {
 import { HeaderNotify } from 'components/base/Card/Notification';
 import { HeaderRequest } from 'components/base/Card/Request';
 import styles from './Header.module.scss';
-import Logo from './Logo.png'
+import Logo from './Logo.png';
 
 const Header = ({
   history,
@@ -45,10 +45,7 @@ const Header = ({
     <div className={styles.header_wrapper} onClick={onClick}>
       <div className={styles.header}>
         {/* Mobile env */}
-        <div
-          className={styles.mobileMenu}
-          style={{ fontSize: '1.5rem', color: 'white' }}
-        >
+        <div className={styles.mobileMenu} style={{ fontSize: '1.5rem' }}>
           <MobileWrapper>
             <MobileTrigger>
               <MDBIcon icon="bars" />

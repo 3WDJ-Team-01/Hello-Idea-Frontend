@@ -6,6 +6,7 @@
 import React from 'react';
 import { MDBBtn, MDBIcon } from 'mdbreact';
 import styles from './Header.module.scss';
+import Logo from './Logo.png'
 
 const Header = ({ type, info, repository, exportMindmap, onClick }) => {
   return (
@@ -13,7 +14,7 @@ const Header = ({ type, info, repository, exportMindmap, onClick }) => {
       <div className={styles.brainLeftHeader}>
         <div className={styles.brainLogo} onClick={onClick}>
           <img
-            src="https://s3.ap-northeast-2.amazonaws.com/static.hello-idea.com/icons/global/logo.png"
+            src={Logo}
             alt="logo"
           />
         </div>

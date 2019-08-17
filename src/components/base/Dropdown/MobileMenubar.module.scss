@@ -18,8 +18,7 @@
     .menu {
       position: relative;
       z-index: 999;
-      background-color: #2f4e73;
-      color: white;
+      background-color: white;
       font-size: 0.9rem;
       div {
         padding: 0.25rem 0.5rem;
@@ -27,10 +26,30 @@
       }
       input {
         width: 100%;
+        font-weight: 300;
+        border: none;
+        background-color: darken(white, 10%);
+        border-color: darken(white, 10%);
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 1rem;
+        height: 2rem;
+        transition: all 0.2s;
+        color: white;
+        &::placeholder {
+          color: darken($gray, 10%);
+        }
+        &:focus {
+          color: black;
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+          border: none;
+          box-shadow: $shadow6dp;
+        }
       }
       a {
         font-weight: 400;
-        color: white;
+        color: black;
       }
       a:hover {
         color: #86bdff;

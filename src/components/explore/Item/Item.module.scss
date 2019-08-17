@@ -4,7 +4,10 @@
   min-width: 240px;
   height: 100%;
   box-shadow: $shadow2dp;
-
+  border-radius: 1rem;
+  * {
+    border-radius: 1rem;
+  }
   .ideaimg {
     position: relative;
     background-color: white;
@@ -26,10 +29,8 @@
     justify-content: flex-end;
     z-index: 1;
     .idealabel {
-      background-color: $gray;
       height: 3.4rem;
       padding: 1rem;
-
       .title {
         font-weight: 400;
         text-overflow: ellipsis;
