@@ -81,7 +81,7 @@ class CanvasContainer extends Component {
     pointerDown(e);
 
     if (this.isMobile) {
-      this.touchTimer = setTimeout(() => toggleContextMenu(e, true), 500);
+      toggleContextMenu(e);
     } else if (e.button === 2) toggleContextMenu(e);
   };
 
