@@ -23,8 +23,8 @@ import {
 } from './pages';
 
 addLocaleData([...ko, ...ja]);
-localStorage.setItem('lang', 'ko');
-const defaultLang = localStorage.getItem('lang') || 'ko';
+localStorage.setItem('lang', 'ja');
+const defaultLang = localStorage.getItem('lang') || 'ja';
 const Root = () => (
   <Provider store={store}>
     <IntlProvider locale={defaultLang} messages={locale[defaultLang]}>

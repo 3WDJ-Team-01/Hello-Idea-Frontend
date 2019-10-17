@@ -34,13 +34,12 @@ const Results = ({ state, keyword, attention, log, relate, intl }) => {
   const attentionData = attention.map(item => {
     const data = {};
     const key = Object.keys(item)[0];
-
     data.date = key;
     data[keyword] = item[key];
 
     return data;
   });
-
+  console.log(attention);
   const logData = [];
 
   // const genderData = log.Search_gender
@@ -138,9 +137,7 @@ const Results = ({ state, keyword, attention, log, relate, intl }) => {
                   key={i}
                   to={
                     item.group_id > 0
-                      ? `/group/${item.group_id}/repositories/${
-                          item.project_id
-                        }`
+                      ? `/group/${item.group_id}/repositories/${item.project_id}`
                       : `/user/${item.user_id}/repositories/${item.project_id}`
                   }
                   className={styles.item}

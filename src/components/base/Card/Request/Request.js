@@ -10,7 +10,10 @@ import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import { FormattedMessage } from 'react-intl';
 import styles from './Request.module.scss';
 
-const formatter = localStorage.getItem('lang') === 'ko' ? buildFormatter(koreanStrings) : buildFormatter(japanStrings);
+const formatter =
+  localStorage.getItem('lang') === 'ko'
+    ? buildFormatter(koreanStrings)
+    : buildFormatter(japanStrings);
 
 const Request = ({ request, handleConsent, handleRefuse }) => {
   const { request_id, group, is_accepted, created_at } = request;
@@ -26,39 +29,38 @@ const Request = ({ request, handleConsent, handleRefuse }) => {
           <Link to={`/group/${group_id}`}>
             <b>{group_name}</b>
           </Link>
-          <FormattedMessage id="alert.inviteMe" />
           <div className={styles.date}>
             <TimeAgo date={created_at} formatter={formatter} />
           </div>
         </div>
-        {is_accepted === 0 ? (
-          <div className={styles.btns}>
-            <MDBBtn
-              color="primary"
-              onClick={() => {
-                handleConsent(request_id, group_id);
-              }}
-            >
-              <FormattedMessage id="alert.accept" />
-            </MDBBtn>
-            <MDBBtn
-              outline
-              color="primary"
-              onClick={() => handleRefuse(request_id)}
-            >
-              <FormattedMessage id="alert.decline" />
-            </MDBBtn>
-          </div>
-        ) : is_accepted === 1 ? (
-          <span className={styles.message}>
-            <FormattedMessage id="alert.isAccept" />
-          </span>
-        ) : (
-          <span className={styles.message}>
-            <FormattedMessage id="alert.isDecline" />
-          </span>
-        )}
       </div>
+      {is_accepted === 0 ? (
+        <div className={styles.btns}>
+          <MDBBtn
+            color="primary"
+            onClick={() => {
+              handleConsent(request_id, group_id);
+            }}
+          >
+            <FormattedMessage id="alert.accept" />
+          </MDBBtn>
+          <MDBBtn
+            outline
+            color="primary"
+            onClick={() => handleRefuse(request_id)}
+          >
+            <FormattedMessage id="alert.decline" />
+          </MDBBtn>
+        </div>
+      ) : is_accepted === 1 ? (
+        <span className={styles.message}>
+          <FormattedMessage id="alert.isAccept" />
+        </span>
+      ) : (
+        <span className={styles.message}>
+          <FormattedMessage id="alert.isDecline" />
+        </span>
+      )}
       <div className={styles.detail}>
         <Detail
           thumbnail={group_img}
@@ -105,7 +107,7 @@ export const HeaderRequest = ({ request }) => {
           </div>
           <div className={styles.activity}>
             <b>{group_name}</b>
-            <span>에서 당신을 초대했습니다.</span>
+            <FormattedMessage id="alert.inviteMe" />
             <div className={styles.date}>
               <TimeAgo date={created_at} formatter={formatter} />
             </div>

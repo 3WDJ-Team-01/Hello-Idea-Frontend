@@ -10,7 +10,10 @@ import japanStrings from 'react-timeago/lib/language-strings/ja';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import styles from './Comment.module.scss';
 
-const formatter = localStorage.getItem('lang') === 'ko' ? buildFormatter(koreanStrings) : buildFormatter(japanStrings);
+const formatter =
+  localStorage.getItem('lang') === 'ko'
+    ? buildFormatter(koreanStrings)
+    : buildFormatter(japanStrings);
 
 const Comment = ({
   comment,
@@ -22,7 +25,7 @@ const Comment = ({
 }) => {
   const { project_topic } = repositoryInfo;
   const { head, feedbacks } = target;
-
+  console.log(feedbacks);
   return (
     <div className={styles.wrapper}>
       <div className={styles.card}>

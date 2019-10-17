@@ -15,10 +15,6 @@ const Header = ({
 }) => {
   return (
     <>
-      <div
-        className={styles.backgroundImg}
-        style={{ backgroundColor: modify.bgColor }}
-      />
       <div className={styles.userHeader}>
         <div
           className={styles.userProfileImg}
@@ -45,30 +41,30 @@ const Header = ({
           <div className={styles.userDescription}>
             {info.User_detail.user_intro}
           </div>
+          {user === loggedUser ? (
+            <Link to={`/user/${user}/modify`}>
+              {menu === 'modify' ? (
+                <MDBBtn color="elegant">EDIT</MDBBtn>
+              ) : (
+                <MDBBtn outline color="elegant">
+                  EDIT
+                </MDBBtn>
+              )}
+            </Link>
+          ) : (
+            <>
+              {isFollow ? (
+                <MDBBtn color="primary" onClick={handleFollow}>
+                  unfollow
+                </MDBBtn>
+              ) : (
+                <MDBBtn outline color="primary" onClick={handleFollow}>
+                  follow
+                </MDBBtn>
+              )}
+            </>
+          )}
         </div>
-        {user === loggedUser ? (
-          <Link to={`/user/${user}/modify`}>
-            {menu === 'modify' ? (
-              <MDBBtn color="elegant">EDIT</MDBBtn>
-            ) : (
-              <MDBBtn outline color="elegant">
-                EDIT
-              </MDBBtn>
-            )}
-          </Link>
-        ) : (
-          <div>
-            {isFollow ? (
-              <MDBBtn color="primary" onClick={handleFollow}>
-                unfollow
-              </MDBBtn>
-            ) : (
-              <MDBBtn outline color="primary" onClick={handleFollow}>
-                follow
-              </MDBBtn>
-            )}
-          </div>
-        )}
       </div>
       <div className={styles.userNavWrapper}>
         <div>

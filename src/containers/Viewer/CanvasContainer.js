@@ -74,15 +74,17 @@ class CanvasContainer extends Component {
 
   handlePointerDown = e => {
     const { getPointFromEvent } = this;
-    const { setPrevLoc, pointerDown, toggleContextMenu } = this.props;
+    const { pointer, setPrevLoc, pointerDown, toggleContextMenu } = this.props;
 
     e.persist();
     setPrevLoc(getPointFromEvent(e));
     pointerDown(e);
 
-    if (this.isMobile) {
-      toggleContextMenu(e);
-    } else if (e.button === 2) toggleContextMenu(e);
+    if (
+      e.target.className.baseVal === 'node' ||
+      e.target.className.baseVal === 'forked'
+    )
+      toggleContextMenu(e, true);
   };
 
   handlePointerMove = e => {

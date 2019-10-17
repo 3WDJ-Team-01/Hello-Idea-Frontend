@@ -8,7 +8,10 @@ import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import { FormattedMessage } from 'react-intl';
 import styles from './Notification.module.scss';
 
-const formatter = localStorage.getItem('lang') === 'ko' ? buildFormatter(koreanStrings) : buildFormatter(japanStrings);
+const formatter =
+  localStorage.getItem('lang') === 'ko'
+    ? buildFormatter(koreanStrings)
+    : buildFormatter(japanStrings);
 
 const Notification = ({ notify, loggedUserId }) => {
   const { notify_cont, created_at, send_id, send, target_id, target } = notify;
