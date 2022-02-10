@@ -57,7 +57,7 @@
     "include-media": "^1.4.9",
     "input-moment": "^0.4.0",
     "mdbreact": "^4.11.1",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "open-color": "^1.6.3",
     "react-color": "^2.17.0",
     "react-contenteditable": "^3.2.6",
